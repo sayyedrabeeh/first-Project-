@@ -1,0 +1,708 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <title>NanoRide Customers</title>
+    <style>
+        body {
+            background-color: #212529!important;
+        }
+        .sidebar {
+            width: 250px;
+            background-color:#212529;
+            color:#FFF;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+        }
+        
+        .logo {
+            width: 180px;
+            margin-bottom: 30px; /* Matches with the dashboard sidebar */
+        }
+        
+        .profile img {
+            width: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: #cbc4c4;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background-color: #f4f4f4;
+            color:black;
+            border-radius: 8px;
+        }
+        
+        .nav-icon {
+            width: 24px;
+            margin-right: 15px;
+        }
+        
+        /* Responsive behavior */
+        @media (max-width: 767px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .sidebar {
+                width: 220px;
+                position: fixed;
+            }
+        
+            .main-content {
+                margin-left: -20px!important;
+                padding: 20px;
+            }
+        }
+        
+        /* Add these for the search bar */
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        .search-bar input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 0 10px;
+        }
+        
+        .search-icon {
+            color: #888;
+        }
+        
+ 
+        .sidebar::-webkit-scrollbar {
+            width: 6px; /* Make scrollbar thinner */
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: #555; /* Customize thumb color */
+            border-radius: 10px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background-color: #777; /* Change color on hover */
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent; /* Track background */
+        }
+
+ 
+  
+        .nav-item i {
+            font-size: 1.2rem;
+        }
+
+        /* Responsive behavior */
+        @media (max-width: 767px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .sidebar {
+                width: 220px;
+                position: fixed;
+            }
+
+            .main-content {
+                margin-left: 220px;
+                padding: 20px;
+            }
+        }
+
+        /* Navbar styles */
+        .navbar-custom {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px 20px;
+        }
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .product-card {
+            width: 100%;
+            max-width: 280px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            min-width:280px;
+        }
+        
+        
+        
+        .product-title {
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        
+        .product-model, .product-size, .product-stock, .product-description, .product-price {
+            font-size: 0.9rem;
+        }
+        
+        .product-description {
+            color: #666;
+            font-size: 0.85rem;
+            margin: 8px 0;
+        }
+        
+        .product-price {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #28a745;
+        }
+       
+        .pagination-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }  
+        
+
+        .btn-action {
+            margin-right: 5px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .pagination-controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pagination-controls select {
+            width: auto;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-buttons button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .ad{
+            margin-left: 220px;
+            width: 920px;
+        }
+        .text-gray {
+            color: gray;
+        }
+        #previewContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Increase min size for larger images */
+            gap: 15px; /* Increase space between images */
+            margin-bottom: 20px; /* Space below the container */
+            padding: 10px; /* Padding inside the container */
+            border: 1px solid #ccc; /* Optional: border for visibility */
+        }
+        
+        #previewContainer img {
+            width: 100%; /* Full width of the grid cell */
+            height: 250px; /* Increased height for larger previews */
+            object-fit: cover; /* Maintain aspect ratio */
+            border-radius: 8px; /* Slightly rounded corners */
+            transition: transform 0.2s; /* Smooth hover effect */
+        }
+        
+        #previewContainer img:hover {
+            transform: scale(1.1); /* Slightly enlarge image on hover */
+        }
+        
+        .custom-modal-dialog {
+            max-width: 800px; /* Adjust the width as needed */
+            width: 100%; /* Ensures it fills the container */
+        }
+        
+        @media (max-width: 768px) {
+            .custom-modal-dialog {
+                max-width: 90%; /* Use a smaller width on mobile devices */
+            }
+        }
+        .product-description {
+            white-space: normal;      /* Allows text to wrap */
+            overflow-wrap: break-word; /* Breaks long words */
+            word-wrap: break-word;     /* Support for older browsers */
+            max-width: 100%;           /* Ensure it stays within container width */
+        }
+        .nav-menu .nav-item {
+            text-decoration: none; /* Remove underline */
+            color: #cbc4c4; /* Set your preferred text color */
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            transition: background-color 0.2s ease;
+        }
+    
+        .nav-menu .nav-item:hover {
+            background-color: #f0f0f0; /* Change background on hover */
+            color:black;
+        }
+    
+        .nav-menu .nav-item:focus {
+            outline: none; /* Remove focus outline */
+        }
+    
+        .nav-menu .nav-item i {
+            margin-right: 8px; /* Spacing between icon and text */
+        }
+        #productSizeCreate {
+            background-color: #f8f9fa; /* Light background for better contrast */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+        #productSizeCreate .form-check-label {
+            font-weight: 500; /* Slightly bold for better readability */
+        }
+        #productSizeCreate .form-control {
+            border-radius: 5px; /* Slightly rounded input fields */
+            border-color: #6c757d; /* Neutral gray border */
+        }
+        .custom-modal-width {
+            max-width: 80%;  /* Adjust the percentage to your desired width */
+            width: 80%;      /* You can also use px, em, or % */
+        }
+        
+        .modal.fade.show {
+            display: block !important;
+            opacity: 1 !important;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div class="d-flex">
+            <button class="btn btn-primary d-lg-none m-2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
+                aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="collapse d-lg-block sidebar" id="sidebarMenu">
+                <h5 class="text-center">NANORIDE</h5>
+                <div class="sidebar-header text-center">
+                    <img src="{% static 'images/3.jpeg' %}" alt="Logo" style="width:180px;" class="logo">
+                </div>
+                <nav class="nav-menu">
+                    <a href="{% url 'products:home'%}" class="nav-item">
+                        <i class="bi bi-house-door-fill"></i>
+                        <span>home</span>
+                    </a>
+                    <a href="{% url 'reports:admin_dashboard' %}" class="nav-item">
+                        <i class="bi bi-bar-chart-fill"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="{% url 'user_profile:users' %}" class="nav-item">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Customers</span>
+                    </a>
+                    <a href="{% url 'order:order_admin' %}" class="nav-item">
+                        <i class="bi bi-cart-fill"></i>
+                        <span>Orders</span>
+                    </a>
+                    <a href="{% url 'products:products_admin' %}" class="nav-item">
+                        <i class="bi bi-bag-fill"></i>
+                        <span>Products</span>
+                    </a>
+                    <a href="{% url 'offers_coupons:coupon'%}" class="nav-item">
+                        <i class="bi bi-credit-card-fill"></i>
+                        <span>Coupons</span>
+                    </a>
+                    
+                    <a href="#" class="nav-item">
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Categories</span>
+                    </a>
+                    <a href="{% url 'reports:sales_report'%}" class="nav-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Report</span>
+                    </a>
+                </nav>
+            </div>
+            
+        </div>
+
+         
+    </div>
+
+        <!-- Main content -->
+        <div class="main-content">
+            
+        
+            <div class="container mt-4 ad">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                    <h3>Categories</h3>
+                    <button class="btn btn-outline-primary mt-2"style=' margin-right:-110px;'  data-bs-toggle="modal" data-bs-target="#createModal">Create New</button>
+                </div>
+        
+                <div class="table-wrapper">
+                    <!-- Filter and search -->
+                    <div class="row mb-3 g-3">
+                        <!-- Search bar on small screens full width -->
+                        <div class="col-12 col-md-4">
+                            <div class="input-group">
+                                <form method="get" class="input-group mb-3">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="clearSearch()">
+                                        <i class="bi bi-x"></i> <!-- Close icon -->
+                                    </button>
+                                    <input type="text" name="search" value="{{ search_query }}" class="form-control" placeholder="Search">
+                                    <button type="submit" class="btn btn-outline-secondary">Search</button>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- Date range filter -->
+                        <div class="col-12 col-md-8 d-flex align-items-center flex-wrap">
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle" style='margin-bottom:15px;' data-bs-toggle="dropdown" aria-expanded="false">Sort</button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="?search={{ search_query }}&sort=brand_name">Sort by Name</a></li>
+                                    <li><a class="dropdown-item" href="?search={{ search_query }}&sort=-id">Sort by ID</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Table -->
+                    <div class="container mt-4" style="width: 115%;">
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover align-middle">
+                                <thead class="bg-dark text-light">
+                                    <tr>
+                                        <th scope="col" class="text-center">Image</th>
+                                         <th scope="col">category</th>
+                                        <th scope="col">offer</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Category Status</th>
+                                        <th scope="col" class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in categories %}
+                                    <tr>
+                                        <td class="text-center">
+                                            <img 
+                                            src="{% if i.image %}{{ i.image.url }}{% else %}/static/images/placeholder.png{% endif %}" 
+                                            alt="{{ i.brand_name }}" 
+                                            style="max-width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+                                                                                </td>
+                                        <td>{{ i.category }}</td>
+                                        <td>{{ i.offer }}%</td>
+                                        <td>
+                                            {% if i.active %}
+                                            <span class="badge bg-success">Active</span>
+                                            {% else %}
+                                            <span class="badge bg-danger">Inactive</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if i.status == 'listed' %}
+                                            <span class="badge" style="color: #28a745;">Listed</span>
+                                            {% elif i.status == 'dislisted' %}
+                                            <span class="badge" style="color: #dc3545;">Dislisted</span>
+                                            {% else %}
+                                            <span class="badge" style="color: #6c757d;">{{ i.status }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ i.id }}">Edit</button>
+                                                <form method="POST" action="{% url 'products:Type' %}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="action" value="toggle">
+                                                    <input type="hidden" name="catogery_id" value="{{ i.id }}">
+                                                    <button type="submit" class="btn {% if i.status == 'listed' %}btn-danger{% else %}btn-success{% endif %} btn-sm">
+                                                        {% if i.status == 'listed' %}Dislist{% else %}List{% endif %}
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    
+                        <!-- Pagination Controls -->
+                        <div class="pagination-controls d-flex justify-content-between align-items-center mt-4">
+                            
+                            <div class="pagination-controls d-flex justify-content-between align-items-center mt-4">
+                                <div>
+                                    {{ categories.start_index }}–{{ categories.end_index }} of {{ categories.paginator.count }}
+                                    {% if categories.has_previous %}
+                                        <a href="?page={{ categories.previous_page_number }}&search={{ search_query }}&sort={{ sort_field }}" class="btn btn-outline-secondary btn-sm">
+                                            <i class="bi bi-chevron-left"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if categories.has_next %}
+                                        <a href="?page={{ categories.next_page_number }}&search={{ search_query }}&sort={{ sort_field }}" class="btn btn-outline-secondary btn-sm">
+                                            <i class="bi bi-chevron-right"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+
+
+
+
+        <div id="createModal" class="modal {% if modal_open %}show{% endif %}" tabindex="-1" role="dialog" 
+                style="display: {% if modal_open %}block{% else %}none{% endif %};" 
+                aria-labelledby="createModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">Create New Category</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% if messages %}
+                        <div>
+                            {% for message in messages %}
+                            <p style="padding: 10px; border-radius: 4px; margin-bottom: 10px; 
+                                      {% if message.tags == 'error' %}
+                                          background-color: #f8d7da; color: #721c24;
+                                      {% elif message.tags == 'success' %}
+                                          background-color: #d4edda; color: #155724;
+                                      {% endif %}">
+                                {{ message }}
+                            </p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <form method='POST' action="{% url 'products:Type'%}" enctype="multipart/form-data">
+                            
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="add">
+                            <!-- Category Image Input -->
+                            <div class="mb-3">
+                                <label for="createCategoryImage" class="form-label">Category Image</label>
+                                <input type="file" class="form-control" name='catogeryimage' id="createCategoryImage" accept="image/*" required>
+                            </div>
+                            <div id="previewContainer"></div> <!-- Container for image previews -->
+
+                            <!-- Category Name Input -->
+                             
+                            <div class="mb-3">
+                                <label for="createCategoryName" class="form-label">Category Name</label>
+                                <input type="text" class="form-control" name='category' id="createCategoryName" placeholder="Enter category name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="createCategoryName" class="form-label">offer</label>
+                                <input type="number" class="form-control" name='offer' id="createCategoryName" placeholder="Enter offer price  ">
+                            </div>
+                            <div class="mb-3">
+                                <label for="createCategoryStatus" class="form-label">Category Status</label>
+                                <select class="form-control" name="status" id="createCategoryStatus">
+                                    <option value="True" selected>Active</option>
+                                    <option value="False">Inactive</option>
+                                    
+                                </select>
+                            </div>
+                            
+
+                      
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% for i in categories %}
+<div class="modal fade" id="editModal{{ i.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ i.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel{{ i.id }}">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'products:Type' %} ">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="edit">
+                     <input type="hidden" name="catogery_id" value="{{ i.id }}">
+                     <p>ID:{{ i.id }}</p>
+                     <div class="mb-3 text-center">
+                        {% if i.image %}
+                            <img src="{{ i.image.url }}" alt="{{ i.brand_name }}" class="img-fluid" width="100" height="100">
+                        {% else %}
+                            <img src="{% static 'images/placeholder.png' %}" alt="Placeholder" class="img-fluid" width="100" height="100">
+                        {% endif %}
+                    </div>
+                     
+                     <div class="mb-3">
+                        <label for="editCategoryName" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="editCategoryName" name="category" value="{{ i.category }}" required>
+                    </div>
+                     <div class="mb-3">
+                        <label for="editCategoryName" class="form-label">Offer</label>
+                        <input type="number" class="form-control" id="editCategoryName" name="offer" value="{{ i.offer }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editStatus" class="form-label">Status</label>
+                        <select class="form-select" id="editStatus" name="active">
+                            <option value="True" {% if i.active %}selected{% endif %}>Active</option>
+                            <option value="False" {% if not i.active %}selected{% endif %}>Inactive</option>
+                        </select>
+                    </div>
+                     <div class="mb-3">
+                        <label for="editCategoryImage" class="form-label">Change Category Image</label>
+                        <input type="file" class="form-control" id="editCategoryImage" name="image" accept="image/*">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
+    <!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        {% comment %} document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.getElementById('sidebarMenu').classList.toggle('show');
+        }); {% endcomment %}
+
+ 
+         
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if modal_open is set to true
+            {% if modal_open %}
+                const modalElement = document.getElementById('createModal');
+                if (modalElement) {
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();  // Show modal if modal_open is true
+                }
+            {% endif %}
+        });
+
+
+        let croppers = [];  // Array to store Cropper instances
+        let croppedImages = [];  // Array to store cropped image blobs
+        const previewContainer = document.getElementById('previewContainer');
+        const imagesInput = document.getElementById('createCategoryImage');
+        {% comment %} const productId = document.getElementById('productId').value; {% endcomment %}
+    
+        
+        imagesInput.addEventListener('change', function(event) {
+            previewContainer.innerHTML = '';  // Clear previous previews
+            croppedImages = [];  // Clear previous cropped images
+            croppers = [];  // Clear previous Cropper instances
+        
+            const files = event.target.files;
+        
+            if (files && files.length > 0) {
+                Array.from(files).forEach((file) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const previewDiv = document.createElement('div');
+                        const imgElement = document.createElement('img');
+        
+                        imgElement.src = e.target.result;
+                        imgElement.alt = 'Image Preview';
+                        imgElement.style.maxWidth = '300px';
+                        imgElement.style.maxHeight = '300px';
+                        imgElement.style.cursor = 'pointer';
+                        imgElement.style.border = '2px solid #ccc';
+                        imgElement.style.margin = '10px';
+        
+        
+                        previewDiv.appendChild(imgElement);
+                        previewContainer.appendChild(previewDiv);
+        
+                        // Initialize Cropper for this image
+                        const cropper = new Cropper(imgElement, {
+                            aspectRatio: 1,   
+                            viewMode: 3,
+                        });
+        
+                        croppers.push(cropper);  
+                    };
+                    reader.readAsDataURL(file);   
+                });
+            }
+        });
+
+
+        function clearSearch() {
+            window.location.href = "?search=";  
+        }
+
+    </script>
+</body>
+
+</html>

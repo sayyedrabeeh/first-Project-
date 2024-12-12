@@ -1,0 +1,560 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #2c3e50;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 30px 260px;
+        }
+
+        .form-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        form select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        h3 {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .card {
+            background: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+
+        .card-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .card-body {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .chart-container {
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #2ecc71;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .card-actions a {
+            text-decoration: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                padding: 10px;
+            }
+
+            .form-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .card-body {
+                flex-direction: column;
+            }
+        }
+
+        .product-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #212529;
+            color: #fff;
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar .nav-item {
+            padding: 10px;
+            color: #cbc4c4;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .sidebar .nav-item:hover, .sidebar .nav-item.active {
+            background-color: #f4f4f4;
+            color: #000;
+        }
+        .sidebar .nav-item i {
+            margin-right: 10px;
+        }
+        .content-wrapper {
+            margin-left: 260px;
+            padding: 20px;
+        }
+        .section-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .table thead {
+            background-color: #007bff;
+            color: white;
+        }
+        .sales-summary {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        .download-options a {
+            font-size: 18px;
+            padding: 12px 30px;
+            border-radius: 30px;
+            margin: 10px;
+        }
+        .download-options .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .download-options .btn-success:hover {
+            background-color: #218838;
+        }
+        @media (max-width: 767px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .content-wrapper {
+                margin-left: 0;
+            }
+        }
+   
+        .sidebar {
+            width: 250px;
+            background-color:#212529;
+            color:#FFF;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+        }
+        
+        .logo {
+            width: 180px;
+            margin-bottom: 30px; /* Matches with the dashboard sidebar */
+        }
+        
+        .profile img {
+            width: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: #cbc4c4;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background-color: #f4f4f4;
+            color:black;
+            border-radius: 8px;
+        }
+        
+        .nav-icon {
+            width: 24px;
+            margin-right: 15px;
+        }
+        
+        /* Responsive behavior */
+        @media (max-width: 767px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .sidebar {
+                width: 220px;
+                position: fixed;
+            }
+        
+            .main-content {
+                margin-left: -20px!important;
+                padding: 20px;
+            }
+        }
+        
+        /* Add these for the search bar */
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        .search-bar input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 0 10px;
+        }
+        
+        .search-icon {
+            color: #888;
+        }
+        
+ 
+        .sidebar::-webkit-scrollbar {
+            width: 6px; /* Make scrollbar thinner */
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: #555; /* Customize thumb color */
+            border-radius: 10px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background-color: #777; /* Change color on hover */
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent; /* Track background */
+        }
+
+ 
+  
+        .nav-item i {
+            font-size: 1.2rem;
+        }
+         a {
+            text-decoration: none; /* Removes underlines or other text decorations */
+        }
+        #bestSellingBrandsChart {
+            width: 400px;   /* Set the desired width */
+            height: 200px;  /* Set the desired height */
+        }
+        
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <h5 class="text-center">NANORIDE</h5>
+        <div class="sidebar-header text-center">
+            <img src="{% static 'images/3.jpeg' %}" alt="Logo" class="img-fluid rounded" style="width:180px;">
+        </div>
+        <nav class="nav-menu">
+            <a href="{% url 'products:home'%}" class="nav-item">
+                <i class="bi bi-house-door-fill"></i>
+                <span>home</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="bi bi-bar-chart-fill"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{% url 'user_profile:users' %}" class="nav-item">
+                <i class="bi bi-people-fill"></i>
+                <span>Customers</span>
+            </a>
+            <a href="{% url 'order:order_admin' %}" class="nav-item">
+                <i class="bi bi-cart-fill"></i>
+                <span>Orders</span>
+            </a>
+            <a href="{% url 'products:products_admin' %}" class="nav-item">
+                <i class="bi bi-bag-fill"></i>
+                <span>Products</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="bi bi-credit-card-fill"></i>
+                <span>Coupons</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="bi bi-gift-fill"></i>
+                <span>Offers</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="bi bi-grid-fill"></i>
+                <span>Categories</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Report</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Header -->
+    <header>
+        <h1>Admin Dashboard</h1>
+    </header>
+
+    <div class="container">
+        <!-- Filter Form for Time Period -->
+        <div class="form-container">
+            <form method="GET" action="">
+                <label for="filter">Select Time Period:</label>
+                <select name="filter" id="filter" onchange="this.form.submit()">
+                    <option value="monthly" {% if filter_option == 'monthly' %}selected{% endif %}>Monthly</option>
+                    <option value="yearly" {% if filter_option == 'yearly' %}selected{% endif %}>Yearly</option>
+                    <option value="daily" {% if filter_option == 'daily' %}selected{% endif %}>Daily</option>
+                </select>
+            </form>
+        </div>
+
+       <!-- Total Sales Card -->
+<div class="card" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <!-- Sales Chart -->
+    <div class="chart-container" style="flex: 1; min-width: 300px; max-width: 600px;">
+        <canvas id="salesChart" ></canvas>
+    </div>
+
+    <!-- Best Selling Brands Chart -->
+    <div class="chart-container" style="flex: 1; min-width: 200px; max-width: 400px;">
+        <canvas id="bestSellingBrandsChart"></canvas>
+    </div>
+</div>
+
+
+       
+        <!-- Best Selling Products Table -->
+        <div class="card">
+            <div class="card-header">
+                <h4>Best Selling Products</h4>
+            </div>
+            <div class="card-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Image</th>
+                            <th>Total Sales</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in best_selling_products %}
+                        <tr>
+                            <td>{{ item.product__name  }}</td>
+                            <td>
+                                <img src="{{ item.image_url }}" alt="{{ item.product__name }}" class="product-image">
+                            </td>
+                            
+                            <td>{{ item.total_sales }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card" style="max-width: 1200px; margin: 20px auto; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden; background-color: #ffffff;">
+            <div class="card-header" style="padding: 20px; background-color: #f4f4f4; border-bottom: 1px solid #ddd; text-align: center;">
+                <h4 style="margin: 0; font-size: 24px; font-weight: bold; color: #333;">Best Selling Categories</h4>
+            </div>
+            <div class="card-body" style="padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                {% for item in best_selling_categories %}
+                <div class="category-card" style="background-color: #fff; border: 1px solid #eaeaea; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+                    <div class="category-image" style="background-color: #f9f9f9; padding: 20px; text-align: center;">
+                        <img src="{{ item.category_image_url|default:'/media/default-category.jpg' }}" 
+                             alt="{{ item.product__Types__category }}" 
+                             style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    </div>
+                    <div class="category-details" style="padding: 20px; text-align: center;">
+                        <h5 style="margin: 0 0 10px; font-size: 18px; font-weight: bold; color: #333;">{{ item.product__Types__category }}</h5>
+                        <p style="margin: 0; font-size: 16px; color: #007bff; font-weight: bold;">Total Sales: {{ item.total_sales }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+
+
+        <!-- Best Selling Brands Table -->
+        <div class="card" style="max-width: 1200px; margin: 20px auto; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden; background-color: #ffffff;">
+            <div class="card-header" style="padding: 20px; background-color: #f4f4f4; border-bottom: 1px solid #ddd; text-align: center;">
+                <h4 style="margin: 0; font-size: 24px; font-weight: bold; color: #333;">Best Selling Brands</h4>
+            </div>
+            <div class="card-body" style="padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                {% for item in best_selling_categories %}
+                <div class="brand-card" style="background-color: #fff; border: 1px solid #eaeaea; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+                    <div class="brand-image" style="background-color: #f9f9f9; padding: 20px; text-align: center;">
+                        <img src="{{ item.brand_image_url }}" alt="{{ item.product__category__brand_name }}" 
+                             style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 3px solid #ddd; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    </div>
+                    <div class="brand-details" style="padding: 20px; text-align: center;">
+                        <h5 style="margin: 0 0 10px; font-size: 18px; font-weight: bold; color: #333;">{{ item.product__category__brand_name }}</h5>
+                        <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Total Sales</p>
+                        <p style="margin: 0; font-size: 20px; font-weight: bold; color: #007bff;">{{ item.total_sales }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+
+        
+    </div>
+
+    <script>
+        var salesData = {{ sales_by_month|safe }};
+        console.log(salesData);  // For debugging
+
+        // Set up the chart
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        var salesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                datasets: [{
+                    label: 'Total Sales',
+                    data: salesData,  // Use the data passed from Django
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            }
+        });
+
+
+ var bestSellingBrandsNames = {{ best_selling_brands_names|safe }};
+ var bestSellingBrandsSales = {{ best_selling_brands_sales|safe }};
+ var ctx3 = document.getElementById('bestSellingBrandsChart').getContext('2d');
+ var bestSellingBrandsChart = new Chart(ctx3, {
+     type: 'pie',
+     data: {
+         labels: bestSellingBrandsNames,
+         datasets: [{
+             label: 'Total Sales',
+             data: bestSellingBrandsSales,
+             backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+             hoverOffset: 4
+         }]
+     },
+     options: {
+         responsive: true,
+         plugins: {
+             legend: {
+                 position: 'top',
+             },
+             tooltip: {
+                 enabled: true
+             }
+         }
+     }
+ });
+
+    </script>
+
+</body>
+</html>

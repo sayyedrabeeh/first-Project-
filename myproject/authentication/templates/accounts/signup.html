@@ -1,0 +1,317 @@
+{% load static %}
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            background-color: #f4f7fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 85%;
+            max-width: 1200px;
+            min-height: 600px;
+        }
+
+        .login-image {
+            width: 50%;
+            background-image: url("{% static 'authentication/images/2.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .login-form {
+            width: 50%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        h3 {
+            font-size: 30px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-control {
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            padding: 12px;
+            margin-bottom: 18px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #F39C12;
+            box-shadow: 0 0 6px rgba(243, 156, 18, 0.4);
+            outline: none;
+        }
+
+        .btn-custom {
+            background-color: #F39C12;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 20px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .btn-custom:hover {
+            background-color: #e67e22;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .social-btn {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            background-color: #4285F4;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .google-btn:hover {
+            background-color: #357AE8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .google-btn img {
+            width: 22px;
+            margin-right: 12px;
+        }
+
+        .d-flex {
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        .d-flex a {
+            color: #5e5e5e;
+            font-size: 14px;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+                min-height: auto;
+            }
+
+            .login-image {
+                width: 100%;
+                height: 300px;
+                border-radius: 12px 12px 0 0;
+            }
+
+            .login-form {
+                width: 100%;
+                padding: 35px;
+            }
+
+            h3 {
+                font-size: 26px;
+            }
+        }
+
+        /* Google Button Container */
+.google-login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Google Button Styling */
+.google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background-color: #4285F4; /* Google Blue */
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 5px;
+    border: none;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Google Button Image */
+.google-img {
+    width: 20px;
+    height: auto;
+    margin-right: 10px;
+}
+
+/* Google Button Text */
+.google-btn-text {
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Hover Effects */
+.google-btn:hover {
+    background-color: #357AE8; /* Darker Blue on Hover */
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
+
+/* Focus Effects for Accessibility */
+.google-btn:focus {
+    outline: 2px solid #ffd700; /* Yellow outline for accessibility */
+    outline-offset: 4px;
+}
+
+/* Mobile-Friendly Styling */
+@media (max-width: 576px) {
+    .google-btn {
+        padding: 8px 15px; /* Reduce padding on small screens */
+    }
+    .google-btn-text {
+        font-size: 14px; /* Smaller font size for mobile */
+    }
+    .google-img {
+        width: 18px; /* Adjust image size for mobile */
+    }
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Image Section -->
+        <div class="login-image"></div>
+
+        <!-- Login Form Section -->
+        <div class="login-form">
+            <h3>Create Your Account</h3>
+            <form method="POST" action="{% url 'authentication:signup' %}">
+                {% csrf_token %}
+
+                <!-- Google Login Button -->
+               
+
+                <!-- Username Field -->
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" value="{{ request.POST.username }}">
+                    {% for message in messages %}
+                        {% if 'signup-page username' in message.tags %}
+                            <small class="text-danger">{{ message }}</small>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" value="{{ request.POST.email }}">
+                    {% for message in messages %}
+                        {% if 'signup-page email' in message.tags %}
+                            <small class="text-danger">{{ message }}</small>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label for="password1">Password</label>
+                    <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter your password">
+                    {% for message in messages %}
+                        {% if 'signup-page password' in message.tags %}
+                            <small class="text-danger">{{ message }}</small>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div class="form-group">
+                    <label for="password2">Confirm Password</label>
+                    <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm your password">
+                    {% for message in messages %}
+                        {% if 'signup-page password' in message.tags %}
+                            <small class="text-danger">{{ message }}</small>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- Remember Me Checkbox -->
+                <div class="form-check">
+                    {% comment %} <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe" {% if request.POST.rememberMe %}checked{% endif %}>
+                    <label class="form-check-label" for="rememberMe">Remember Me</label> {% endcomment %}
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-custom">Sign Up</button>
+
+                <!-- Link to Login Page -->
+                <div class="d-flex">
+                    <a href="{% url 'authentication:login' %}">Already have an account? Sign In</a>
+                </div>
+            </form>
+       
+  
+    <div class="social-btn">
+        <a href="{% provider_login_url 'google' %}" class="google-btn">
+            <img src="{% static 'images/google.webp' %}" alt="Google">
+            <span>Sign in with Google</span>
+        </a>
+    </div>
+</div>
+</div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

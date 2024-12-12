@@ -1,0 +1,684 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <title>NanoRide Dashboard</title>
+    <style>
+        body {
+            background-color: #212529!important;
+        }
+        .sidebar {
+            width: 250px;
+            background-color:#212529;
+            color:#FFF;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+        }
+        
+        .logo {
+            width: 180px;
+            margin-bottom: 30px; /* Matches with the dashboard sidebar */
+        }
+        
+        .profile img {
+            width: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: #cbc4c4;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background-color: #f4f4f4;
+            color:black;
+            border-radius: 8px;
+        }
+        
+        .nav-icon {
+            width: 24px;
+            margin-right: 15px;
+        }
+        
+        /* Responsive behavior */
+        @media (max-width: 767px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .sidebar {
+                width: 220px;
+                position: fixed;
+            }
+        
+            .main-content {
+                margin-left: 220px;
+                padding: 20px;
+            }
+        }
+        
+        /* Add these for the search bar */
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        .search-bar input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 0 10px;
+        }
+        
+        .search-icon {
+            color: #888;
+        }
+        
+ 
+        .sidebar::-webkit-scrollbar {
+            width: 6px; /* Make scrollbar thinner */
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: #555; /* Customize thumb color */
+            border-radius: 10px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background-color: #777; /* Change color on hover */
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent; /* Track background */
+        }
+
+ 
+  
+        .nav-item i {
+            font-size: 1.2rem;
+        }
+
+        /* Responsive behavior */
+        @media (max-width: 767px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .sidebar {
+                width: 220px;
+                position: fixed;
+            }
+
+            .main-content {
+                margin-left: 220px;
+                padding: 20px;
+            }
+        }
+
+        /* Navbar styles */
+        .navbar-custom {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px 20px;
+        }
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .product-card {
+            width: 100%;
+            max-width: 280px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            min-width:280px;
+        }
+        
+        
+        
+        .product-title {
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        
+        .product-model, .product-size, .product-stock, .product-description, .product-price {
+            font-size: 0.9rem;
+        }
+        
+        .product-description {
+            color: #666;
+            font-size: 0.85rem;
+            margin: 8px 0;
+        }
+        
+        .product-price {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #28a745;
+        }
+       
+        .pagination-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }  
+        
+
+        .btn-action {
+            margin-right: 5px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .pagination-controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pagination-controls select {
+            width: auto;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-buttons button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .ad{
+            margin-left: 220px;
+            width: 920px;
+        }
+        .text-gray {
+            color: gray;
+        }
+        #previewContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Increase min size for larger images */
+            gap: 15px; /* Increase space between images */
+            margin-bottom: 20px; /* Space below the container */
+            padding: 10px; /* Padding inside the container */
+            border: 1px solid #ccc; /* Optional: border for visibility */
+        }
+        
+        #previewContainer img {
+            width: 100%; /* Full width of the grid cell */
+            height: 250px; /* Increased height for larger previews */
+            object-fit: cover; /* Maintain aspect ratio */
+            border-radius: 8px; /* Slightly rounded corners */
+            transition: transform 0.2s; /* Smooth hover effect */
+        }
+        
+        #previewContainer img:hover {
+            transform: scale(1.1); /* Slightly enlarge image on hover */
+        }
+        
+        .custom-modal-dialog {
+            max-width: 800px; /* Adjust the width as needed */
+            width: 100%; /* Ensures it fills the container */
+        }
+        
+        @media (max-width: 768px) {
+            .custom-modal-dialog {
+                max-width: 90%; /* Use a smaller width on mobile devices */
+            }
+        }
+        .product-description {
+            white-space: normal;      /* Allows text to wrap */
+            overflow-wrap: break-word; /* Breaks long words */
+            word-wrap: break-word;     /* Support for older browsers */
+            max-width: 100%;           /* Ensure it stays within container width */
+        }
+        .nav-menu .nav-item {
+            text-decoration: none; /* Remove underline */
+            color: #cbc4c4; /* Set your preferred text color */
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            transition: background-color 0.2s ease;
+        }
+    
+        .nav-menu .nav-item:hover {
+            background-color: #f0f0f0; /* Change background on hover */
+            color:black;
+        }
+    
+        .nav-menu .nav-item:focus {
+            outline: none; /* Remove focus outline */
+        }
+    
+        .nav-menu .nav-item i {
+            margin-right: 8px; /* Spacing between icon and text */
+        }
+        #productSizeCreate {
+            background-color: #f8f9fa; /* Light background for better contrast */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+        #productSizeCreate .form-check-label {
+            font-weight: 500; /* Slightly bold for better readability */
+        }
+        #productSizeCreate .form-control {
+            border-radius: 5px; /* Slightly rounded input fields */
+            border-color: #6c757d; /* Neutral gray border */
+        }
+        .custom-modal-width {
+            max-width: 80%;  /* Adjust the percentage to your desired width */
+            width: 80%;      /* You can also use px, em, or % */
+        }
+        
+        .modal.fade.show {
+            display: block !important;
+            opacity: 1 !important;
+        }
+
+
+
+
+
+  
+
+
+
+        
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div class="d-flex">
+            
+            <button class="btn btn-primary d-lg-none m-2" type="button" data-toggle="collapse" data-target="#sidebarMenu"
+                aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <!-- Sidebar -->
+            <div class="collapse d-lg-block sidebar" id="sidebarMenu">
+                <h5 class="text-center">NANORIDE</h5>
+                <div class="sidebar-header text-center">
+                    <img src="{% static 'images/1.jpeg' %}" alt="Logo" style="width:180px;" class="logo">
+                </div>
+                <nav class="nav-menu">
+                    <a href="{% url 'products:home'%}" class="nav-item">
+                        <i class="bi bi-house-door-fill"></i>
+                        <span>home</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="bi bi-bar-chart-fill"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="{% url 'user_profile:users' %}" class="nav-item">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Customers</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="bi bi-cart-fill"></i>
+                        <span>Orders</span>
+                    </a>
+                    <a href="{% url 'products:products_admin' %}" class="nav-item">
+                        <i class="bi bi-bag-fill"></i>
+                        <span>Products</span>
+                    </a>
+                    <a href="{% url 'offers_coupons:coupon'%}" class="nav-item">
+                        <i class="bi bi-credit-card-fill"></i>
+                        <span>Coupons</span>
+                    </a>
+                    
+                    <a href="{% url 'products:catogery' %}" class="nav-item">
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Categories</span>
+                    </a>
+                    <a href="{% url 'reports:sales_report'%}" class="nav-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Report</span>
+                    </a>
+                </nav>
+            </div>
+            
+            
+        <!-- Main Content -->
+       
+    </div>
+
+
+    
+<div class="container ad">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <h1>Orders</h1>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast" class="toast" style="position: fixed; top: 10px; right: 10px; z-index: 9999;">
+        <div class="toast-body" id="toast-message">
+            <!-- Message will be dynamically updated -->
+        </div>
+    </div>
+
+    <div class="row mb-3 g-3">
+        <!-- Search bar -->
+         <div class="col-12 col-md-4">
+            <div class="input-group">
+                <form method="get" class="input-group mb-3">
+                    <button type="button" class="btn btn-outline-secondary" onclick="clearSearch()">
+                        <i class="bi bi-x"></i>
+                    </button>
+                    <input type="text" name="search" value="{{ search_query }}" class="form-control" placeholder="Search">
+                    <button type="submit" class="btn btn-outline-secondary">Search</button>
+                </form>
+            </div>
+        </div>
+    
+        <!-- Sort Dropdown -->
+        <div class="col-12 col-md-8 d-flex align-items-center flex-wrap">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Sort</button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="?search={{ search_query }}&sort=order_id">Sort by ID</a></li>
+                    <li><a class="dropdown-item" href="?search={{ search_query }}&sort=-order_id">Sort by ID Descending</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+      
+
+    <!-- Orders Table -->
+    <div class="container mt-4"style='width:130%'>
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle">
+                <thead class="bg-dark text-light">
+                    <tr>
+                        <th scope="col" class="text-center">Image</th>
+                        <th scope="col">Order ID</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Items</th>
+                        <th scope="col">Tracking Number</th>
+                        <th scope="col">Payment Method</th>
+                        <th scope="col">Order Date</th>
+                        <th scope="col" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        {% if order.items.all %}
+                        <tr>
+                            <td class="text-center">
+                                {% for item in order.items.all %}
+                                    {% if forloop.first %}
+                                        {% if item.product.additional_images.exists %}
+                                            <img src="{{ item.product.additional_images.first.image.url }}" alt="Product Image" class="rounded" style="max-width: 200px; height: auto;">
+                                        {% else %}
+                                            <img src="{% static 'images/default-product-image.jpg' %}" alt="Default Product Image" class="img-fluid rounded" style="height: 100px; object-fit: cover;">
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>#{{ order.tracking_number }}</td>
+                            <td>{{ order.user.username }}</td>
+                            <td>{{ order.items.count }}</td>
+                            <td>{{ order.tracking_number }}</td>
+                            <td>{{ order.payment_type }}</td>
+                            <td>{{ order.created_at|date:"M d, Y" }}</td>
+                            <td class="text-center">
+                                <a href="{% url 'order:order_admin_with_order' order_id=order.order_id %}" class="btn btn-primary btn-sm">View Order</a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-controls d-flex justify-content-between align-items-center mt-4">
+            <div>
+                {{ orders.start_index }}–{{ orders.end_index }} of {{ orders.paginator.count }}
+                {% if orders.has_previous %}
+                    <a href="?page={{ orders.previous_page_number }}&search={{ search_query }}&sort={{ sort_field }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                {% endif %}
+                {% if orders.has_next %}
+                    <a href="?page={{ orders.next_page_number }}&search={{ search_query }}&sort={{ sort_field }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Items Section (Initially Hidden) -->
+    {% if selected_order_id %}
+    <div class="container mt-4" style=''>
+        <h3 class="section-heading">Order Items</h3>
+        <div class="table-responsive" style='width:130%;'>
+            <table class="table table-dark table-hover align-middle">
+                <thead class="bg-dark text-light">
+                    <tr>
+                        <th scope="col" class="text-center">Image</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Price </th>
+                        <th scope="col">Total </th>
+                        <th scope="col">Status</th>
+                        <th scope="col" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order_items %}
+                    <tr>
+                        <td class="text-center">
+                            {% if item.product.additional_images.exists %}
+                                <img src="{{ item.product.additional_images.first.image.url }}" alt="Product Image" class="product-image" style="max-width: 200px; height: auto;">
+                            {% else %}
+                                <img src="{% static 'images/default-product-image.jpg' %}" alt="Default Product Image" class="product-image" style="max-width: 80px; height: auto;">
+                            {% endif %}
+                        </td>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.size }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ item.price }}</td>
+                        <td>${{ item.subtotal_price }} ({{ item.quantity }} x ₹{{ item.product.price }})</td>
+                        <td>
+                            <form method="post" action="{% url 'order:update_orderitem_status' item.orderitem_id %}">
+                                {% csrf_token %}
+                                <select class="form-select" id="order-status-{{ item.orderitem_id }}" name="status" onchange="updateOrderStatus({{ item.orderitem_id }}, this.value)">
+                                    <option value="Order Pending" {% if item.status == 'Order Pending' %}selected{% endif %}>Order Pending</option>
+                                    <option value="Order Confirmed" {% if item.status == 'Order Confirmed' %}selected{% endif %}>Order Confirmed</option>
+                                    <option value="Shipped" {% if item.status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                                    <option value="Out For Delivery" {% if item.status == 'Out For Delivery' %}selected{% endif %}>Out For Delivery</option>
+                                    <option value="Delivered" {% if item.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                    <option value="request cancel" {% if item.status == 'request cancel' %}selected{% endif %}>request Cancel</option>
+                                    <option value="Cancelled" {% if item.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                                </select>
+                            </form>
+                            <div id="status-error-{{ item.orderitem_id }}" class="alert alert-danger mt-2" style="display: none;">
+                                <strong>Error:</strong> You cannot change the status once it's marked as "Delivered" or "Cancelled".
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <p><strong>Shipping Address:</strong> {{ shipping_address }}</p>
+                            <p><strong>Estimated Delivery:</strong> {{ item.order.estimated_delivery_date }}</p>
+
+                            {% if item.discount_amount %}
+                                <p><strong>Discount Applied:</strong> ₹{{ item.discount_amount }}</p>
+                            {% endif %}
+                            {% if item.return_reason %}
+                                <p><strong>Return Reason:</strong> {{ item.return_reason }}</p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-controls d-flex justify-content-between align-items-center mt-4">
+            <div>
+                {{ orders.start_index }}–{{ orders.end_index }} of {{ orders.paginator.count }}
+                {% if orders.has_previous %}
+                    <a href="?page={{ orders.previous_page_number }}&search={{ search_query }}&sort={{ sort_field }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                {% endif %}
+                {% if orders.has_next %}
+                    <a href="?page={{ orders.next_page_number }}&search={{ search_query }}&sort={{ sort_field }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Back to Orders Button -->
+        <div class="mt-2">
+            <a href="{% url 'order:order_admin' %}" class="btn btn-secondary">Back to Orders</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+           <!-- JavaScript to toggle views -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script>
+            $(document).ready(function() {
+                $('.form-select').change(function() {
+                    var status = $(this).val();
+                    var orderItemId = $(this).attr('id').split('-')[2]; // Extract the orderitem_id
+                    var csrf_token = $('[name=csrfmiddlewaretoken]').val();
+            
+                    $.ajax({
+                        url: "/orders/update_orderitem_status/" + orderItemId + "/",
+                        method: 'POST',
+                        data: {
+                            'status': status,
+                            'csrfmiddlewaretoken': csrf_token
+                        },
+                        success: function(response) {
+                            $('#toast-message').text('Order item status updated successfully!');
+                            $('#toast').toast({ delay: 3000 }).toast('show');
+                        },
+                        error: function(xhr, errmsg, err) {
+                            console.log("XHR Response:", xhr.responseText);
+                            $('#toast-message').text('Failed to update order item status!').css('color', 'red');
+                            $('#toast').toast({ delay: 3000 }).toast('show');
+                        }
+                    });
+                });
+            });
+            
+            
+            function updateOrderStatus(orderItemId, newStatus) {
+                var dropdown = document.getElementById("order-status-" + orderItemId);
+                var options = dropdown.getElementsByTagName("option");
+            
+                // Enable all options first
+                for (var i = 0; i < options.length; i++) {
+                    options[i].disabled = false;
+                }
+            
+                // Disable options based on current status
+                switch(newStatus) {
+                    case 'Order Pending':
+                        disableOptions(dropdown, ['Shipped', 'Out For Delivery', 'Delivered']);
+                        break;
+                    case 'Order Confirmed':
+                        disableOptions(dropdown, ['Order Pending', 'Out For Delivery', 'Delivered']);
+                        break;
+                    case 'Shipped':
+                        disableOptions(dropdown, ['Order Pending', 'Order Confirmed', 'Delivered']);
+                        break;
+                    case 'Out For Delivery':
+                        disableOptions(dropdown, ['Order Pending', 'Order Confirmed', 'Shipped']);
+                        break;
+                    case 'Delivered':
+                        disableOptions(dropdown, ['Order Pending', 'Order Confirmed', 'Shipped', 'Out For Delivery','Cancelled']);
+                        break;
+                    case 'request cancel':
+                        disableOptions(dropdown, ['Order Pending', 'Order Confirmed', 'Shipped', 'Out For Delivery','Delivered']);
+                        break;
+                    case 'Cancelled':
+                        disableOptions(dropdown, ['Order Pending', 'Order Confirmed', 'Shipped', 'Out For Delivery', 'Delivered']);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+            // Function to disable specific options
+            function disableOptions(dropdown, statusArray) {
+                for (var i = 0; i < dropdown.options.length; i++) {
+                    if (statusArray.includes(dropdown.options[i].value)) {
+                        dropdown.options[i].disabled = true;
+                    }
+                }
+            }
+            
+            // Ensure that the correct status flow is set when the page loads
+            window.onload = function() {
+                {% for item in order_items %}
+                    updateOrderStatus({{ item.orderitem_id }}, '{{ item.status }}');
+                {% endfor %}
+            }
+            
+             function clearSearch() {
+            window.location.href = "?search=";  
+        }
+            
+            
+        </script>
+        
+     
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1439 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Product Detail</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href="{% static 'images/icons/favicon.png' %}"/>
+    
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+    
+        <!-- Font Awesome -->
+        <link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+    
+        <!-- Material Design Icons -->
+        <link rel="stylesheet" type="text/css" href="{% static 'fonts/iconic/css/material-design-iconic-font.min.css' %}">
+    
+        <!-- Linearicons -->
+        <link rel="stylesheet" type="text/css" href="{% static 'fonts/linearicons-v1.0.0/icon-font.min.css' %}">
+    
+        <!-- Animations -->
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/animate/animate.css' %}">
+    
+        <!-- Hamburgers -->
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}">
+    
+        <!-- Animsition (Page Transition) -->
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/animsition/css/animsition.min.css' %}">
+    
+        <!-- Select2 -->
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/select2/select2.min.css' %}">
+    
+        <!-- Daterangepicker -->
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/daterangepicker/daterangepicker.css' %}">
+    
+        <!-- Slick Carousel -->
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/slick/slick.css' %}">
+    
+        <!-- Magnific Popup -->
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/MagnificPopup/magnific-popup.css' %}">
+    
+        <!-- Perfect Scrollbar -->
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.css' %}">
+    
+        <!-- Custom Styles -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+
+        <style>
+            .size-radio {
+                margin-right: 10px;
+            }
+            #stockDisplay {
+                font-size: 1rem;
+                color: #333;
+            }
+
+            /* Styling the container to center the radio buttons */
+.size-204 {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+/* Custom radio button styling */
+.custom-radio .form-check-input {
+    opacity:0;
+    }
+
+.custom-radio .form-check-label {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border: 2px solid #ddd;
+    border-radius: 5px; /* Square with rounded corners */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fff;
+    color: #333;
+    text-align: center;
+    width: auto;
+}
+
+/* Active state when radio button is selected */
+.custom-radio .form-check-input:checked + .form-check-label {
+    background-color: #007bff !important;
+    color: #fff !important;
+    border-color: #007bff !important;
+}
+
+/* Hover effect */
+.custom-radio .form-check-label:hover {
+    background-color: #f5f5f5;
+    border-color: #888;
+}
+
+/* Optional: Focused state */
+.custom-radio .form-check-input:focus + .form-check-label {
+    outline: 2px solid #007bff;
+}
+.tab-pane .row {
+    margin: 0; /* Remove default row margins */
+    padding: 0; /* Remove default padding */
+}
+
+.w-100 {
+    width: 100%;
+}.size-label {
+    transition: all 0.3s ease-in-out;
+}
+/* Hide the default radio button */
+.size-radio {
+    display: none;
+}
+
+/* Style the label for all size options */
+.size-label {
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-align: center;
+    border: 2px solid #007bff;
+    background-color: #fff;
+}
+
+/* Hover effect on size options */
+.size-label:hover {
+    background-color: black; /* Light hover background */
+    transform: scale(1.03);
+}
+
+/* Selected radio button - Blue background */
+.size-radio:checked + .size-label {
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+    border-color: #007bff; /* Matching border */
+    transform: scale(1.05); /* Slightly larger */
+}
+
+/* Out-of-stock size options */
+.size-radio:disabled + .size-label {
+    cursor: not-allowed;
+    opacity: 0.6;
+    text-decoration: line-through;
+}
+
+/* Out-of-stock message styling */
+.size-label .out-of-stock {
+    color: red;
+}
+
+/* Optional: Disabled state for the label when out of stock */
+.size-label.text-muted {
+    background-color: #e9ecef;
+    color: #6c757d;
+    border-color: #ddd;
+}
+ 
+.size-box {
+    width: 80px; /* Set fixed width */
+    height: 80px; /* Set fixed height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px auto; /* Add spacing between boxes */
+}
+
+.size-label {
+    width: 100%; /* Ensure label fits within the fixed box */
+    height: 100%;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+}
+
+.size-label.bg-light.text-muted {
+    cursor: not-allowed; /* Indicate unavailable sizes */
+    opacity: 0.6; /* Add a faded look to unavailable sizes */
+}
+
+.size-radio:checked + .size-label {
+    background-color: #007bff; /* Change background on selection */
+    color: white;
+    border: 2px solid #0056b3;
+}/* Ensure the size options have a consistent fixed height and width */
+.size-box {
+    width: 80px; /* Fixed width */
+    height: 100px; /* Fixed height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 10px; /* Add spacing between boxes */
+}
+
+/* Style the label for each size option */
+.size-label {
+    width: 100%; /* Ensure the label fits within the fixed box */
+    height: 100%;
+    padding: 12px 10px; /* Add padding to make the text more readable */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px; /* Rounded corners */
+    border: 2px solid #007bff; /* Border color */
+    background-color: #fff; /* Default background */
+    transition: all 0.3s ease-in-out; /* Smooth transition */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+/* Hover effect on size options */
+.size-label:hover {
+    background-color: #f5f5f5; /* Light hover background */
+    transform: scale(1.05); /* Slight scale effect */
+}
+
+/* Selected radio button - Blue background */
+.size-radio:checked + .size-label {
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+    border-color: #0056b3; /* Matching border */
+    transform: scale(1.05); /* Slightly larger on selection */
+}
+
+/* Out-of-stock size options */
+.size-radio:disabled + .size-label {
+    cursor: not-allowed;
+    opacity: 0.6;
+    text-decoration: line-through; /* Strike-through for out-of-stock */
+}
+
+/* Out-of-stock message styling */
+.size-label .out-of-stock {
+    color: red;
+}
+
+/* Optional: Disabled state for the label when out of stock */
+.size-label.bg-light.text-muted {
+    background-color: #e9ecef; /* Light grey background */
+    color: #6c757d; /* Muted color for out-of-stock text */
+    border-color: #ddd; /* Light grey border */
+}
+
+/* Badge for unavailable items */
+.badge-unavailable {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #f44336; /* Red background for "Unavailable" badge */
+    color: white;
+    padding: 5px 10px;
+    font-size: 10px;
+  
+}
+.elevatezoom-window {
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+    border: 2px solid #fff; /* White border around the zoom window */
+}
+#zoom_01 {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+#zoom_01 {
+    max-width: 100%;
+    display: block; /* Ensure it's visible */
+}
+
+        </style>
+    </head>
+    
+
+
+
+<body class="animsition">
+	
+	<!-- Header -->
+	<header class="header-v4">
+		<!-- Header desktop -->
+		<div class="container-menu-desktop">
+			<!-- Topbar -->
+			<div class="top-bar">
+				<div class="content-topbar flex-sb-m h-full container">
+					<div class="left-top-bar">
+						Free shipping for standard order over ₹100
+					</div>
+
+					<div class="right-top-bar flex-w h-full">
+						<a href="#" class="flex-c-m trans-04 p-lr-25">
+							Help & FAQs
+						</a>
+
+						<a href="{% url 'products:home' %}" class="flex-c-m trans-04 p-lr-25">
+							My Account
+						</a>
+
+						<a href="#" class="flex-c-m trans-04 p-lr-25">
+							EN
+						</a>
+
+						<a href="#" class="flex-c-m trans-04 p-lr-25">
+							USD
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="wrap-menu-desktop how-shadow1">
+				<nav class="limiter-menu-desktop container">
+					
+					<!-- Logo desktop -->		
+					<a href="#" class="logo">
+                        <a href="{% url 'products:home' %}"><span class="sidebar-title" style='color: black;font-size: 35px;font-weight: 900; '>NANORIDE</span>
+
+ 					</a>
+
+					<!-- Menu desktop -->
+					<div class="menu-desktop">
+						<ul class="main-menu">
+							<li>
+								<a href="{% url 'products:home' %}">Home</a>
+								 
+							</li>
+
+							<li>
+								<a href="{% url 'products:products' %}">Shop</a>
+							</li>
+
+							{% comment %} <li class="label1" data-label1="hot">
+								<a href="#">Features</a>
+							</li>
+
+							<li>
+								<a href="#">Blog</a>
+							</li>
+
+							<li>
+								<a href="#">About</a>
+							</li>
+
+							<li>
+								<a href="#">Contact</a>
+							</li> {% endcomment %}
+						</ul>
+					</div>	
+
+					<!-- Icon header -->
+					<div class="wrap-icon-header flex-w flex-r-m">
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+							<i class="zmdi zmdi-search"></i>
+						</div>
+
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="{{ cart_items_count }}">
+							<i class="zmdi zmdi-shopping-cart"></i>
+						</div>
+
+						<a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
+							<i class="zmdi zmdi-favorite-outline"></i>
+						</a>
+					</div>
+				</nav>
+			</div>	
+		</div>
+
+		<!-- Header Mobile -->
+ 
+<div class="wrap-header-mobile">
+    <!-- Logo mobile -->        
+    <div class="logo-mobile">
+        <a href="index.html"><img src="{% static 'images/icons/logo-01.png' %}" alt="IMG-LOGO"></a>
+    </div>
+
+    <!-- Icon header -->
+    <div class="wrap-icon-header flex-w flex-r-m m-r-15">
+        <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-show-modal-search">
+            <i class="zmdi zmdi-search"></i>
+        </div>
+
+        <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="2">
+            <i class="zmdi zmdi-shopping-cart"></i>
+        </div>
+
+        <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify="0">
+            <i class="zmdi zmdi-favorite-outline"></i>
+        </a>
+    </div>
+
+    <!-- Button show menu -->
+    <div class="btn-show-menu-mobile hamburger hamburger--squeeze">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </div>
+</div>
+
+<!-- Menu Mobile -->
+<div class="menu-mobile">
+    <ul class="topbar-mobile">
+        <li>
+            <div class="left-top-bar">
+                Free shipping for standard order over ₹100
+            </div>
+        </li>
+
+        <li>
+            <div class="right-top-bar flex-w h-full">
+                <a href="#" class="flex-c-m p-lr-10 trans-04">
+                    Help & FAQs
+                </a>
+
+                <a href="{% url 'user_profile:profile' %}" class="flex-c-m p-lr-10 trans-04">
+                    My Account
+                </a>
+
+                <a href="#" class="flex-c-m p-lr-10 trans-04">
+                    EN
+                </a>
+
+                <a href="#" class="flex-c-m p-lr-10 trans-04">
+                    USD
+                </a>
+            </div>
+        </li>
+    </ul>
+
+    <ul class="main-menu-m">
+        <li>
+            <a href="{% url 'products:home' %}">Home</a>
+           
+            <span class="arrow-main-menu-m">
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </span>
+        </li>
+
+        <li>
+            <a href="product.html">Shop</a>
+        </li>
+
+        <li>
+            <a href="shoping-cart.html" class="label1 rs1" data-label1="hot">Features</a>
+        </li>
+
+        <li>
+            <a href="blog.html">Blog</a>
+        </li>
+
+        <li>
+            <a href="about.html">About</a>
+        </li>
+
+        <li>
+            <a href="contact.html">Contact</a>
+        </li>
+    </ul>
+</div>
+
+<!-- Modal Search -->
+<div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+    <div class="container-search-header">
+        <button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
+            <img src="{% static 'images/icons/icon-close2.png' %}" alt="CLOSE">
+        </button>
+
+        <form class="wrap-search-header flex-w p-l-15">
+            <button class="flex-c-m trans-04">
+                <i class="zmdi zmdi-search"></i>
+            </button>
+            <input class="plh3" type="text" name="search" placeholder="Search...">
+        </form>
+    </div>
+</div>
+</header>
+
+	<!-- Cart -->
+ 
+ 
+	<!-- breadcrumb -->
+	<div class="container">
+		<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+			<a href="{% url 'products:home' %}" class="stext-109 cl8 hov-cl1 trans-04">
+				Home
+				<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+			</a>
+
+			<a href="{% url 'products:products'%}" class="stext-109 cl8 hov-cl1 trans-04">
+				{{categories.brand_name}}
+				<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+			</a>
+
+			<span class="stext-109 cl4">
+                {{  product.name }}
+			</span>
+		</div>
+	</div>
+		
+
+	<!-- Product Detail -->
+    <section class="sec-product-detail bg0 p-t-65 p-b-60">
+        <div class="container">
+            <div class="row">
+                <!-- Product Images Section -->
+                <div class="col-md-6 col-lg-7 p-b-30">
+                    <div class="p-l-25 p-r-30 p-lr-0-lg">
+                        <div class="wrap-slick3 flex-sb flex-w">
+                            <div class="wrap-slick3-dots"></div>
+                            <div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
+    
+                            <div class="slick3 gallery-lb">
+                                {% if product.additional_images.exists %}
+                                    {% for image in product.additional_images.all %}
+                                        <div class="item-slick3" data-thumb="{{ image.image.url }}">
+                                            <div class="wrap-pic-w pos-relative">
+                                                <img src="{{ image.image.url }}" alt="IMG-PRODUCT" class="zoom-img" id="zoom_01" data-zoom-image="{{ image.image.url }}">
+                                                
+                                                <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="{{ image.image.url }}">
+                                                    <i class="fa fa-expand"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="item-slick3" data-thumb="{% static 'images/default-product.jpg' %}">
+                                        <div class="wrap-pic-w pos-relative">
+                                            <img src="{% static 'images/default-product.jpg' %}" alt="IMG-PRODUCT">
+                                            <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="{% static 'images/default-product.jpg' %}">
+                                                <i class="fa fa-expand"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Product Details Section -->
+                <div class="col-md-6 col-lg-5 p-b-30">
+                    <div class="p-r-50 p-t-5 p-lr-0-lg">
+                        <h4 class="mtext-105 cl2 js-name-detail p-b-14">{{ product.name }}</h4>
+    
+                               <!-- Original Price -->
+                               <span class="mtext-106 cl2">
+                                ₹{{ product.original_price|floatformat:2 }}
+                            </span>
+                    
+                            <!-- Check if there is an offer/discount -->
+                            {% if product.offer %}
+                                <div class="offer-info mt-3">
+                                    <span class="text-muted">Offer: </span>
+                                    <span class="fw-bold text-danger">{{ product.offer }}% OFF</span>
+                                </div>
+                    
+                                <!-- Display the discounted price -->
+                                <div class="mt-2">
+                                    <span class="text-success">Discounted Price: ₹{{ product.discounted_price|floatformat:2 }}</span>
+                                </div>
+                            {% endif %}
+
+                        <div class="mt-3" id="stockDisplay" style="display: none;">
+                            <span class="text-muted">Stock:</span>
+                            <span id="stockCount" class="fw-bold"></span>
+                        </div>
+    
+                        <p class="stext-102 cl3 p-t-23" style="word-wrap: break-word; white-space: normal;">
+                            {{ product.description }}
+                        </p>
+                            
+                        <!-- Add to Cart Section -->
+                        <div class="p-t-33">
+                            {% if messages %}
+                                <div class="alert alert-danger">
+                                    {% for message in messages %}
+                                        <p>{{ message }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <form method="POST" action="{% url 'cart:cart_view' 'add'  %}" id="add-to-cart-form">
+                                {% csrf_token %}
+                                <input type='hidden' name='product_id' value={{product.id}}
+                                <div class="flex-w  p-b-10">
+                                    
+                                    <div class="size-204 respon6-next">
+                                        <div class="size-selection mt-3">
+                                            <h6 class="text-primary fw-bold">Select Size</h6>
+                                            
+                                                <div class="row">
+                                                    {% for size in sizes_stock %}
+                                                        <div class="col-6 col-md-4">
+                                                            <div class="form-check custom-radio position-relative size-box">
+                                                                <!-- Hidden radio button for size selection -->
+                                                                <input 
+                                                                    class="form-check-input size-radio d-none" 
+                                                                    type="radio" 
+                                                                    name="size" 
+                                                                    id="size_{{ size.id }}" 
+                                                                    value="{{ size.id }}" 
+                                                                    data-stock="{{ size.stock }}" 
+                                                                    {% if size.stock == 0 %} disabled {% endif %}>
+                                                                
+                                                                <!-- Label for size option -->
+                                                                <label 
+                                                                    class="form-check-label size-label {% if size.stock == 0 %}bg-light text-muted {% else %}bg-white text-dark border-primary{% endif %}" 
+                                                                    for="size_{{ size.id }}">
+                                                                    <span class="fw-bold">{{ size.name }}</span>
+                                                                    <br>
+                                                                    <!-- Display stock information -->
+                                                                    <small class="{% if size.stock == 0 %}text-danger{% else %}text-success{% endif %}">
+                                                                        {% if size.stock == 0 %} Out of Stock {% else %} {{ size.stock }} in Stock {% endif %}
+                                                                    </small>
+                                                                </label>
+                                                                
+                                                                <!-- "Unavailable" Badge for out-of-stock items -->
+                                                                {% if size.stock == 0 %}
+                                                                    <span class="badge badge-unavailable position-absolute top-0 start-100 translate-middle">Unavailable</span>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                                
+                                            
+                                        </div>
+                                        
+                                        
+                                    </div>
+                                </div>
+                                <p id="size-error" style="color: red; display: none; margin-top: 10px;">Please select a size before adding the product to the cart.</p>
+                                <div style='display:flex;'>
+                                <div class="wrap-num-product flex-w m-r-20 m-tb-10">
+                                    <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+                                        <i class="fs-16 zmdi zmdi-minus"></i>
+                                    </div>
+                                    <input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1" min="1" id="product-quantity"
+                                        max="10" required>
+                                    <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+                                        <i class="fs-16 zmdi zmdi-plus"></i>
+                                    </div>
+                                </div>
+                                
+                                <!-- Stock error message -->
+                                {% comment %} <p id="stock-error-message" style="color: red; display: none;">
+                                    <strong>Error:</strong> You cannot add more items than available in stock.
+                                </p> {% endcomment %}
+                                
+                                
+                                
+                                <button type="submit" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04" style='margin-top:10px;'>Add to cart</button>
+                            </div>
+                            </form>
+                        </div>
+    
+                        <!-- Wishlist and Social Media Links -->
+                        <div class="flex-w flex-m p-l-100 p-t-40 respon7">
+                            <div class="flex-m bor9 p-r-10 m-r-11">
+                                <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist">
+                                    <i class="zmdi zmdi-favorite"></i>
+                                </a>
+                            </div>
+                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Facebook">
+                                <i class="fa fa-facebook"></i>
+                            </a>
+                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Twitter">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Google Plus">
+                                <i class="fa fa-google-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Reviews and Tabs Section -->
+            <div class="bor10 m-t-50 p-t-43 p-b-40">
+                <ul class="nav nav-tabs justify-content-center" role="tablist">
+                    <li class="nav-item p-b-10">
+                        <a class="nav-link" href="#reviews" data-toggle="tab" role="tab" aria-controls="reviews" aria-selected="false">Reviews (1)</a>
+                    </li>
+                </ul>
+    
+                <div class="tab-content p-t-43">
+                    <div class="tab-pane fade show active d-flex justify-content-center align-items-center" id="reviews" role="tabpanel" style="min-height: 300px;">
+                        <div class="p-b-30 m-lr-15-sm">
+                            <!-- Review -->
+                            <div class="flex-w flex-t p-b-68">
+                                <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
+                                    <img src="{% static 'images/profile.png' %}" alt="AVATAR">
+                                </div>
+                                <div class="size-207">
+                                    <div class="flex-w flex-sb-m p-b-17">
+                                        <span class="mtext-107 cl2 p-r-20">Ariana Grande</span>
+                                        <span class="fs-18 cl11">
+                                            <i class="zmdi zmdi-star"></i>
+                                            <i class="zmdi zmdi-star"></i>
+                                            <i class="zmdi zmdi-star"></i>
+                                            <i class="zmdi zmdi-star"></i>
+                                            <i class="zmdi zmdi-star-half"></i>
+                                        </span>
+                                    </div>
+                                    <p class="stext-102 cl6">Quod autem in homine praestantissimum atque optimum est, id deseruit. Apud ceteros autem philosophos.</p>
+                                </div>
+                            </div>
+    
+                            <!-- Add Review Form -->
+                            <form class="w-full">
+                                <h5 class="mtext-108 cl2 p-b-7">Add a review</h5>
+                                <p class="stext-102 cl6">Your email address will not be published. Required fields are marked *</p>
+                                <div class="flex-w flex-m p-t-50 p-b-23">
+                                    <span class="stext-102 cl3 m-r-16">Your Rating</span>
+                                    <span class="wrap-rating fs-18 cl11 pointer">
+                                        <i class="item-rating pointer zmdi zmdi-star-outline"></i>
+                                        <i class="item-rating pointer zmdi zmdi-star-outline"></i>
+                                        <i class="item-rating pointer zmdi zmdi-star-outline"></i>
+                                        <i class="item-rating pointer zmdi zmdi-star-outline"></i>
+                                        <i class="item-rating pointer zmdi zmdi-star-outline"></i>
+                                        <input class="dis-none" type="number" name="rating">
+                                    </span>
+                                </div>
+                                <div class="row p-b-25">
+                                    <div class="col-12 p-b-5">
+                                        <label class="stext-102 cl3" for="review">Your review</label>
+                                        <textarea class="size-110 bor8 stext-102 cl2 p-lr-20 p-tb-10" id="review" name="review"></textarea>
+                                    </div>
+                                    <div class="col-sm-6 p-b-5">
+                                        <label class="stext-102 cl3" for="name">Name</label>
+                                        <input class="size-111 bor8 stext-102 cl2 p-lr-20" id="name" type="text" name="name">
+                                    </div>
+                                    <div class="col-sm-6 p-b-5">
+                                        <label class="stext-102 cl3" for="email">Email</label>
+                                        <input class="size-111 bor8 stext-102 cl2 p-lr-20" id="email" type="text" name="email">
+                                    </div>
+                                </div>
+                                <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+
+	<!-- Related Products -->
+	<section class="sec-relate-product bg0 p-t-45 p-b-105">
+		<div class="container">
+			<div class="p-b-45">
+				<h3 class="ltext-106 cl5 txt-center">
+					Related Products
+				</h3>
+			</div>
+
+			<!-- Slide2 -->
+			<div class="wrap-slick2">
+				<div class="slick2">
+ 
+<div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+    <!-- Block2 -->
+    <div class="block2">
+        <div class="block2-pic hov-img0">
+            <!-- Use static for product image -->
+            <img src="{% static 'images/1.jpg' %}" alt="IMG-PRODUCT">
+
+            <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                Quick View
+            </a>
+        </div>
+
+        <div class="block2-txt flex-w flex-t p-t-14">
+            <div class="block2-txt-child1 flex-col-l">
+                <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                    Esprit Ruffle Shirt
+                </a>
+
+                <span class="stext-105 cl3">
+                    $16.64
+                </span>
+            </div>
+
+            <div class="block2-txt-child2 flex-r p-t-3">
+                <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                    <!-- Use static for heart icon images -->
+                    <img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                    <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+<div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+    <!-- Block2 -->
+    <div class="block2">
+        <div class="block2-pic hov-img0">
+            <!-- Use static for product image -->
+            <img src="{% static 'images/2.jpg' %}" alt="IMG-PRODUCT">
+
+            <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                Quick View
+            </a>
+        </div>
+
+        <div class="block2-txt flex-w flex-t p-t-14">
+            <div class="block2-txt-child1 flex-col-l">
+                <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                    Herschel Supply
+                </a>
+
+                <span class="stext-105 cl3">
+                    $35.31
+                </span>
+            </div>
+
+            <div class="block2-txt-child2 flex-r p-t-3">
+                <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                    <!-- Use static for heart icon images -->
+                    <img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                    <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+ 
+<div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+    <!-- Block2 -->
+    <div class="block2">
+        <div class="block2-pic hov-img0">
+            <!-- Use static for product image -->
+            <img src="{% static 'images/1.jpg' %}" alt="IMG-PRODUCT">
+
+            <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                Quick View
+            </a>
+        </div>
+
+        <div class="block2-txt flex-w flex-t p-t-14">
+            <div class="block2-txt-child1 flex-col-l">
+                <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                    Only Check Trouser
+                </a>
+
+                <span class="stext-105 cl3">
+                    $25.50
+                </span>
+            </div>
+
+            <div class="block2-txt-child2 flex-r p-t-3">
+                <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                    <!-- Use static for heart icon images -->
+                    <img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                    <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+<div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+    <!-- Block2 -->
+    <div class="block2">
+        <div class="block2-pic hov-img0">
+            <!-- Use static for product image -->
+            <img src="{% static 'images/1.jpg' %}" alt="IMG-PRODUCT">
+
+            <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                Quick View
+            </a>
+        </div>
+
+        <div class="block2-txt flex-w flex-t p-t-14">
+            <div class="block2-txt-child1 flex-col-l">
+                <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                    Classic Trench Coat
+                </a>
+
+                <span class="stext-105 cl3">
+                    $75.00
+                </span>
+            </div>
+
+            <div class="block2-txt-child2 flex-r p-t-3">
+                <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                    <!-- Use static for heart icon images -->
+                    <img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                    <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+<div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+    <!-- Block2 -->
+    <div class="block2">
+        <div class="block2-pic hov-img0">
+            <!-- Use static to load the product image -->
+            <img src="{% static 'images/1.jpg' %}" alt="IMG-PRODUCT">
+
+            <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                Quick View
+            </a>
+        </div>
+
+        <div class="block2-txt flex-w flex-t p-t-14">
+            <div class="block2-txt-child1 flex-col-l">
+                <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                    Front Pocket Jumper
+                </a>
+
+                <span class="stext-105 cl3">
+                    $34.75
+                </span>
+            </div>
+
+            <div class="block2-txt-child2 flex-r p-t-3">
+                <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                    <!-- Use static to load the heart icon images -->
+                    <img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                    <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+<div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+    <!-- Block2 -->
+    <div class="block2">
+        <div class="block2-pic hov-img0">
+            <!-- Use static to load the product image -->
+            <img src="{% static 'images/2.jpg' %}" alt="IMG-PRODUCT">
+
+            <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                Quick View
+            </a>
+        </div>
+
+        <div class="block2-txt flex-w flex-t p-t-14">
+            <div class="block2-txt-child1 flex-col-l">
+                <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                    Vintage Inspired Classic 
+                </a>
+
+                <span class="stext-105 cl3">
+                    $93.20
+                </span>
+            </div>
+
+            <div class="block2-txt-child2 flex-r p-t-3">
+                <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                    <!-- Use static to load the heart icon images -->
+                    <img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                    <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+<div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+    <!-- Block2 -->
+    <div class="block2">
+        <div class="block2-pic hov-img0">
+            <!-- Use static tag to load the product image -->
+            <img src="{% static 'images/2.jpg' %}" alt="IMG-PRODUCT">
+
+            <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                Quick View
+            </a>
+        </div>
+
+        <div class="block2-txt flex-w flex-t p-t-14">
+            <div class="block2-txt-child1 flex-col-l">
+                <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                    Shirt in Stretch Cotton
+                </a>
+
+                <span class="stext-105 cl3">
+                    $52.66
+                </span>
+            </div>
+
+            <div class="block2-txt-child2 flex-r p-t-3">
+                <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                    <!-- Use static tag to load the heart icon images -->
+                    <img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                    <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+<div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+    <!-- Block2 -->
+    <div class="block2">
+        <div class="block2-pic hov-img0">
+            <!-- Use static tag to load the product image -->
+            <img src="{% static 'images/1.jpg' %}" alt="IMG-PRODUCT">
+
+            <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                Quick View
+            </a>
+        </div>
+
+        <div class="block2-txt flex-w flex-t p-t-14">
+            <div class="block2-txt-child1 flex-col-l">
+                <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                    Pieces Metallic Printed
+                </a>
+
+                <span class="stext-105 cl3">
+                    $18.96
+                </span>
+            </div>
+
+            <div class="block2-txt-child2 flex-r p-t-3">
+                <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                    <!-- Use static tag to load the heart icon images -->
+                    <img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                    <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+				</div>
+			</div>
+		</div>
+	</section>
+		
+
+	<!-- Footer -->
+	<footer class="bg3 p-t-75 p-b-32">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 col-lg-3 p-b-50">
+					<h4 class="stext-301 cl0 p-b-30">
+						Categories
+					</h4>
+
+					<ul>
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Women
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Men
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Shoes
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Watches
+							</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="col-sm-6 col-lg-3 p-b-50">
+					<h4 class="stext-301 cl0 p-b-30">
+						Help
+					</h4>
+
+					<ul>
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Track Order
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Returns 
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Shipping
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								FAQs
+							</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="col-sm-6 col-lg-3 p-b-50">
+					<h4 class="stext-301 cl0 p-b-30">
+						GET IN TOUCH
+					</h4>
+
+					<p class="stext-107 cl7 size-201">
+						Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us on (+1) 96 716 6879
+					</p>
+
+					<div class="p-t-27">
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+							<i class="fa fa-facebook"></i>
+						</a>
+
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+							<i class="fa fa-instagram"></i>
+						</a>
+
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+							<i class="fa fa-pinterest-p"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="col-sm-6 col-lg-3 p-b-50">
+					<h4 class="stext-301 cl0 p-b-30">
+						Newsletter
+					</h4>
+
+					<form>
+						<div class="wrap-input1 w-full p-b-4">
+							<input class="input1 bg-none plh1 stext-107 cl7" type="text" name="email" placeholder="email@example.com">
+							<div class="focus-input1 trans-04"></div>
+						</div>
+
+						<div class="p-t-18">
+							<button class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
+								Subscribe
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="p-t-40">
+ 
+<div class="flex-c-m flex-w p-b-18">
+    <a href="#" class="m-all-1">
+        <img src="{% static 'images/icons/icon-pay-01.png' %}" alt="ICON-PAY">
+    </a>
+
+    <a href="#" class="m-all-1">
+        <img src="{% static 'images/icons/icon-pay-02.png' %}" alt="ICON-PAY">
+    </a>
+
+    <a href="#" class="m-all-1">
+        <img src="{% static 'images/icons/icon-pay-03.png' %}" alt="ICON-PAY">
+    </a>
+
+    <a href="#" class="m-all-1">
+        <img src="{% static 'images/icons/icon-pay-04.png' %}" alt="ICON-PAY">
+    </a>
+
+    <a href="#" class="m-all-1">
+        <img src="{% static 'images/icons/icon-pay-05.png' %}" alt="ICON-PAY">
+    </a>
+</div>
+
+
+				 
+			</div>
+		</div>
+	</footer>
+
+
+	<!-- Back to top -->
+	<div class="btn-back-to-top" id="myBtn">
+		<span class="symbol-btn-back-to-top">
+			<i class="zmdi zmdi-chevron-up"></i>
+		</span>
+	</div>
+
+	<!-- Modal1 -->
+ 
+ 
+
+<!--===============================================================================================-->	
+{% load static %}
+
+<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/animsition/js/animsition.min.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/bootstrap/js/popper.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+<script>
+    $(".js-select2").each(function(){
+        $(this).select2({
+            minimumResultsForSearch: 20,
+            dropdownParent: $(this).next('.dropDownSelect2')
+        });
+    })
+</script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/daterangepicker/moment.min.js' %}"></script>
+<script src="{% static 'vendor/daterangepicker/daterangepicker.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/slick/slick.min.js' %}"></script>
+<script src="{% static 'js/slick-custom.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/parallax100/parallax100.js' %}"></script>
+<script>
+    $('.parallax100').parallax100();
+</script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/MagnificPopup/jquery.magnific-popup.min.js' %}"></script>
+<script>
+    $('.gallery-lb').each(function() { // the containers for all your galleries
+        $(this).magnificPopup({
+            delegate: 'a', // the selector for gallery item
+            type: 'image',
+            gallery: {
+                enabled:true
+            },
+            mainClass: 'mfp-fade'
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/isotope/isotope.pkgd.min.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/sweetalert/sweetalert.min.js' %}"></script>
+<script>
+    $('.js-addwish-b2, .js-addwish-detail').on('click', function(e){
+        e.preventDefault();
+    });
+
+    $('.js-addwish-b2').each(function(){
+        var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
+        $(this).on('click', function(){
+            swal(nameProduct, "is added to wishlist !", "success");
+
+            $(this).addClass('js-addedwish-b2');
+            $(this).off('click');
+        });
+    });
+
+    $('.js-addwish-detail').each(function(){
+        var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
+
+        $(this).on('click', function(){
+            swal(nameProduct, "is added to wishlist !", "success");
+
+            $(this).addClass('js-addedwish-detail');
+            $(this).off('click');
+        });
+    });
+
+    /*---------------------------------------------*/
+
+    $('.js-addcart-detail').each(function(){
+        var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+        $(this).on('click', function(){
+            swal(nameProduct, "is added to cart !", "success");
+        });
+    });
+
+</script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+<script>
+    $('.js-pscroll').each(function(){
+        $(this).css('position','relative');
+        $(this).css('overflow','hidden');
+        var ps = new PerfectScrollbar(this, {
+            wheelSpeed: 1,
+            scrollingThreshold: 1000,
+            wheelPropagation: false,
+        });
+
+        $(window).on('resize', function(){
+            ps.update();
+        })
+    });
+</script>
+<!--===============================================================================================-->
+<script src="{% static 'js/main.js' %}"></script>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const quantityInput = document.getElementById('product-quantity');
+        const stockErrorMessage = document.getElementById('stock-error-message');
+        const sizeRadios = document.querySelectorAll('.size-radio');
+        let availableStock = 0; // Default stock
+    
+        // Function to update max quantity based on stock
+        function updateMaxQuantity(stock) {
+            quantityInput.setAttribute('max', stock); // Set max value to available stock
+            if (parseInt(quantityInput.value) > stock) {
+                quantityInput.value = stock; // Reset to stock value if the input exceeds the max
+            }
+        }
+    
+        // Event listener for size selection
+        sizeRadios.forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                const stock = this.getAttribute('data-stock'); // Fetch stock from selected radio button
+                if (stock) {
+                    availableStock = parseInt(stock, 10); // Convert stock to an integer
+                    console.log('Selected size stock:', availableStock); // Debugging log
+                    updateMaxQuantity(availableStock); // Update max quantity for the input field
+                    stockErrorMessage.style.display = 'none'; // Reset stock error message
+                } else {
+                    console.error('Data-stock attribute is missing or invalid.');
+                }
+            });
+        });
+    
+        // Form submission validation
+        document.getElementById('add-to-cart-form').addEventListener('submit', function (e) {
+            const selectedQuantity = parseInt(quantityInput.value, 10);
+            if (selectedQuantity > availableStock) {
+                e.preventDefault(); // Prevent form submission if quantity exceeds stock
+                stockErrorMessage.style.display = 'block'; // Show stock error message
+            }
+        });
+    });
+    
+    
+        const sizeRadios = document.querySelectorAll('.size-radio');
+        const addToCartForm = document.getElementById('add-to-cart-form');
+        const sizeError = document.getElementById('size-error');
+        const stockErrorMessage = document.getElementById('stock-error-message');
+        const quantityInput = document.getElementById('product-quantity');
+        
+        // Assume stock data comes from Django's template
+        const availableStock = parseInt("{{ size.stock }}", 10); // Replace with actual stock value
+    
+        // Update max value of the quantity input based on available stock
+        if (availableStock > 10) {
+            quantityInput.setAttribute('max', 10);
+        } else {
+            quantityInput.setAttribute('max', availableStock);
+        }
+    
+        // Event listener for the size selection
+        sizeRadios.forEach(radio => {
+            radio.addEventListener('change', function () {
+                sizeError.style.display = 'none'; // Hide size error once size is selected
+            });
+        });
+    
+        // Form submission logic
+        addToCartForm.addEventListener('submit', function (e) {
+            const sizeSelected = document.querySelector('input[name="size"]:checked');
+            const quantity = parseInt(quantityInput.value, 10);
+    
+            // Check if a size is selected
+            if (!sizeSelected) {
+                e.preventDefault();  // Prevent the form from submitting
+                sizeError.style.display = 'block';  // Show the size error message
+            } else {
+                sizeError.style.display = 'none';  // Hide the size error message
+    
+                // Check if the quantity exceeds available stock
+                if (quantity > availableStock) {
+                    e.preventDefault();  // Prevent the form from submitting
+                    stockErrorMessage.style.display = 'block';  // Show the stock error message
+                } else {
+                    stockErrorMessage.style.display = 'none';  // Hide the stock error message
+                }
+            }
+        });
+    
+    
+    
+    
+</script>
+<!-- Load jQuery -->
+<!-- Load jQuery (only once) -->
+<!-- Load jQuery -->
+<!-- Include jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Include Zoom.js -->
+<script src="https://cdn.rawgit.com/jackmoore/zoom/master/jquery.zoom.min.js"></script>
+
+<!-- Image with zoom functionality -->
+
+<<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Include Zoom.js -->
+<script src="https://cdn.jsdelivr.net/npm/zoom.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        console.log("Zoom plugin loaded:", $.fn.zoom);
+
+        // Apply zoom to the image
+        if ($('#zoom_01').length) {
+            $('#zoom_01').zoom({
+                on: 'mouseover',
+                magnify: 1.5
+            });
+        } else {
+            console.log("Zoom element not found!");
+        }
+    });
+</script>
+    
+</script>
+
+ 
+</body>
+</html>

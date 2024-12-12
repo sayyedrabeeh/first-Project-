@@ -1,0 +1,336 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #212529;
+            color: #fff;
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar .nav-item {
+            padding: 10px;
+            color: #cbc4c4;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .sidebar .nav-item:hover, .sidebar .nav-item.active {
+            background-color: #f4f4f4;
+            color: #000;
+        }
+        .sidebar .nav-item i {
+            margin-right: 10px;
+        }
+        .content-wrapper {
+            margin-left: 260px;
+            padding: 20px;
+        }
+        .section-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .table thead {
+            background-color: #007bff;
+            color: white;
+        }
+        .sales-summary {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        .download-options a {
+            font-size: 18px;
+            padding: 12px 30px;
+            border-radius: 30px;
+            margin: 10px;
+        }
+        .download-options .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .download-options .btn-success:hover {
+            background-color: #218838;
+        }
+        @media (max-width: 767px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .content-wrapper {
+                margin-left: 0;
+            }
+        }
+   
+        .sidebar {
+            width: 250px;
+            background-color:#212529;
+            color:#FFF;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+        }
+        
+        .logo {
+            width: 180px;
+            margin-bottom: 30px; /* Matches with the dashboard sidebar */
+        }
+        
+        .profile img {
+            width: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: #cbc4c4;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background-color: #f4f4f4;
+            color:black;
+            border-radius: 8px;
+        }
+        
+        .nav-icon {
+            width: 24px;
+            margin-right: 15px;
+        }
+        
+        /* Responsive behavior */
+        @media (max-width: 767px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .sidebar {
+                width: 220px;
+                position: fixed;
+            }
+        
+            .main-content {
+                margin-left: -20px!important;
+                padding: 20px;
+            }
+        }
+        
+        /* Add these for the search bar */
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        .search-bar input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 0 10px;
+        }
+        
+        .search-icon {
+            color: #888;
+        }
+        
+ 
+        .sidebar::-webkit-scrollbar {
+            width: 6px; /* Make scrollbar thinner */
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: #555; /* Customize thumb color */
+            border-radius: 10px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background-color: #777; /* Change color on hover */
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent; /* Track background */
+        }
+
+ 
+  
+        .nav-item i {
+            font-size: 1.2rem;
+        }
+         a {
+            text-decoration: none; /* Removes underlines or other text decorations */
+        }
+        
+
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h5 class="text-center">NANORIDE</h5>
+        <div class="sidebar-header text-center">
+            <img src="{% static 'images/3.jpeg' %}" alt="Logo" class="img-fluid rounded" style="width:180px;">
+        </div>
+        <nav class="nav-menu">
+            <a href="{% url 'products:home'%}" class="nav-item">
+                <i class="bi bi-house-door-fill"></i>
+                <span>home</span>
+            </a>
+            <a href="{% url 'reports:admin_dashboard' %}" class="nav-item">
+                <i class="bi bi-bar-chart-fill"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{% url 'user_profile:users' %}" class="nav-item">
+                <i class="bi bi-people-fill"></i>
+                <span>Customers</span>
+            </a>
+            <a href="{% url 'order:order_admin' %}" class="nav-item">
+                <i class="bi bi-cart-fill"></i>
+                <span>Orders</span>
+            </a>
+            <a href="{% url 'products:products_admin' %}" class="nav-item">
+                <i class="bi bi-bag-fill"></i>
+                <span>Products</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="bi bi-credit-card-fill"></i>
+                <span>Coupons</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="bi bi-gift-fill"></i>
+                <span>Offers</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="bi bi-grid-fill"></i>
+                <span>Categories</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Report</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+        <h2 class="section-title text-center">Sales Report</h2>
+
+        <!-- Filter Form -->
+        <form method="GET" action="{% url 'reports:sales_report' %}" class="mb-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="report_type" class="form-label">Report Type</label>
+                    <select class="form-select" name="report_type" id="report_type">
+                        <option value="daily" {% if request.GET.report_type == 'daily' %}selected{% endif %}>Daily</option>
+                        <option value="weekly" {% if request.GET.report_type == 'weekly' %}selected{% endif %}>Weekly</option>
+                        <option value="monthly" {% if request.GET.report_type == 'monthly' %}selected{% endif %}>Monthly</option>
+                        <option value="custom" {% if request.GET.report_type == 'custom' %}selected{% endif %}>Custom</option>
+                    </select>
+                </div>
+                <div class="col-md-6" id="custom_dates" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="start_date" class="form-label">Start Date</label>
+                            <input type="date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="end_date" class="form-label">End Date</label>
+                            <input type="date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Generate Report</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Sales Table -->
+        <table class="table table-striped shadow">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Total Amount</th>
+                    <th>Discount</th>
+                    <th>Payment Type</th>
+                    <th>Order Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.user.username }}</td>
+                    <td>₹{{ order.total_price }}</td>
+                    <td>₹{{ total_discount }}</td>
+                    <td>{{ order.payment_type }}</td>
+                    <td>{{ order.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Sales Summary -->
+        <div class="sales-summary mt-4">
+            <h4>Sales Summary</h4>
+            <p><strong>Total Sales Count:</strong> {{ total_sales_count }}</p>
+            <p><strong>Total Sales Amount:</strong> ₹{{ total_sales_amount }}</p>
+            <p><strong>Total Discount:</strong> ₹{{ total_discount }}</p>
+        </div>
+
+        <!-- Download Buttons -->
+        <div class="download-options text-center mt-4">
+            <a href="{% url 'reports:download_report' 'pdf' %}?report_type={{ report_type }}" class="btn btn-danger">Download PDF</a>
+            <a href="{% url 'reports:download_report' 'excel' %}?report_type={{ report_type }}" class="btn btn-success">Download Excel</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("report_type").addEventListener("change", function () {
+            const customDates = document.getElementById("custom_dates");
+            customDates.style.display = this.value === 'custom' ? 'block' : 'none';
+        });
+
+        if (document.getElementById("report_type").value === 'custom') {
+            document.getElementById("custom_dates").style.display = 'block';
+        }
+    </script>
+</body>
+</html>

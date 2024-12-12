@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+    <head>
+        <title>Product</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+        <link rel="icon" type="image/png" href="{% static 'images/icons/favicon.png' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'fonts/iconic/css/material-design-iconic-font.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'fonts/linearicons-v1.0.0/icon-font.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/animate/animate.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/animsition/css/animsition.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/select2/select2.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/daterangepicker/daterangepicker.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/slick/slick.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/MagnificPopup/magnific-popup.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+        <style>
+            /* Search Panel Styling */
+            /* Search Panel Styling */
+            .search-panel {
+                display:flex;
+                width: 100%;
+                max-width: 700px; /* Increased width */
+                margin: 20px auto;
+                padding: 10px;
+                background-color: #f9f9f9;
+                border: 1px solid #ddd;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            
+            /* Form styling */
+            .search-form {
+                display: flex;
+                align-items: center;
+                gap: 15px; /* Increased gap */
+            }
+            
+            /* Input Styling */
+            .search-input {
+                flex: 1;
+                padding: 15px 20px; /* Increased padding */
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                font-size: 18px; /* Larger font */
+                transition: border-color 0.3s ease;
+            }
+            
+            .search-input:focus {
+                border-color: #007bff;
+                outline: none;
+            }
+            
+            /* Button Styling */
+            .search-btn {
+                padding: 15px 25px; /* Increased padding */
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 18px; /* Larger font */
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                transition: background-color 0.3s ease;
+            }
+            
+            .search-btn i {
+                font-size: 22px; /* Larger icon */
+            }
+            
+            .search-btn:hover {
+                background-color: #0056b3;
+            }
+            
+            /* Responsive Styling */
+            @media (max-width: 600px) {
+                .search-form {
+                    flex-direction: column;
+                    gap: 15px;
+                }
+            
+                .search-btn {
+                    width: 100%;
+                }
+            }
+            .panel-search input {
+                height: 40px; /* Increase input height */
+                width: 80%;  /* Set width to fit your design */
+                padding-left: 10px; /* Space for the icon */
+            }
+            
+            .panel-search button {
+                background-color: #4CAF50;  /* Change background color */
+                color: white;
+                border: none;
+                padding: 10px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+            
+            .panel-search button i {
+                font-size: 20px;  /* Size of the search icon */
+            }
+            
+            /* Styling for bottom-only borders */
+            form .form-select, 
+            form .form-control {
+                border-radius: 0; /* Remove default border radius */
+                border-width: 0 0 2px 0; /* Bottom border only */
+                transition: border-color 0.3s ease;
+                padding: 6px 10px;
+            }
+            
+            /* Focus Effect */
+            form .form-select:focus, 
+            form .form-control:focus {
+                {% comment %} outline: none; {% endcomment %}
+                {% comment %} box-shadow: none; {% endcomment %}
+                border-color: #007bff; /* Add professional blue highlight */
+            }
+            
+            /* Subtle Placeholder Text */
+            form .form-control::placeholder {
+                color: #6c757d; /* Muted gray for professional look */
+                opacity: 1; /* Fully visible */
+            }
+            
+            /* Button Styling */
+            form button {
+                border-radius: 4px;
+                padding: 8px 12px;
+                font-weight: 500;
+            }
+            
+            form button:hover {
+                background-color: #0056b3; /* Slightly darker blue on hover */
+            }
+            
+            .pagination-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 8px;
+                margin-top: 20px;
+            }
+            
+            .pagination-link {
+                display: inline-block;
+                padding: 8px 12px;
+                color: #555;
+                background-color: #f9f9f9;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                text-decoration: none;
+                font-size: 14px;
+                transition: all 0.3s ease;
+            }
+            
+            .pagination-link:hover {
+                background-color: #007bff;
+                color: #fff;
+                border-color: #007bff;
+            }
+            
+            .pagination-link.active {
+                background-color: #007bff;
+                color: #fff;
+                border-color: #007bff;
+                cursor: default;
+            }
+            
+            .pagination-link.disabled {
+                background-color: #e9ecef;
+                color: #6c757d;
+                border-color: #e9ecef;
+                cursor: not-allowed;
+            }
+            
+            .pagination-prev,
+            .pagination-next {
+                font-weight: bold;
+            }  
+            .filters-form {
+                border: 1px solid #ddd;
+                padding: 15px;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+            }
+            .filter-container {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+        
+            .filters-form {
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                background-color: #ffffff;
+            }
+        
+            .filter-group h5 {
+                border-bottom: 2px solid #007bff;
+                padding-bottom: 8px;
+                margin-bottom: 15px;
+                font-weight: bold;
+            }
+        
+            .filter-group label {
+                font-size: 14px;
+                color: #555;
+            }
+        
+            .filter-group input[type="checkbox"] {
+                transform: scale(1.2);
+            }
+        
+            .btn-outline-primary {
+                font-weight: bold;
+            }
+        
+            .btn-outline-primary:hover {
+                background-color: #007bff;
+                color: #fff;
+            }
+        
+            .btn-primary {
+                background-color: #007bff;
+                border-color: #007bff;
+            }
+        
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+        
+            .card {
+                border-radius: 8px;
+            }
+        
+            .shadow-sm {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+        </style>
+    </head>
+
+<body class="animsition">
+	
+    <header class="header-v4">
+        <!-- Header desktop -->
+        <div class="container-menu-desktop">
+            <!-- Topbar -->
+            <div class="top-bar">
+                <div class="content-topbar flex-sb-m h-full container">
+                    <div class="left-top-bar">
+                        Free shipping for standard order over ₹100
+                    </div>
+    
+                    <div class="right-top-bar flex-w h-full">
+                        <a href="#" class="flex-c-m trans-04 p-lr-25">
+                            Help & FAQs
+                        </a>
+    
+                        <a href="{% url 'user_profile:profile'%}" class="flex-c-m trans-04 p-lr-25">
+                            My Account
+                        </a>
+    
+                        <a href="#" class="flex-c-m trans-04 p-lr-25">
+                            EN
+                        </a>
+    
+                        <a href="#" class="flex-c-m trans-04 p-lr-25">
+                            USD
+                        </a>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="wrap-menu-desktop how-shadow1">
+                <nav class="limiter-menu-desktop container">
+                    <!-- Logo desktop -->
+                    <a href="{% url 'products:home'%}" class="logo">
+                        <a href="{% url 'products:home' %}"><span class="sidebar-title" style='color: Black;font-size: 35px;font-weight: 900; '>NANORIDE</span>
+                        </a>
+    
+                    <!-- Menu desktop -->
+                    <div class="menu-desktop">
+                        <ul class="main-menu">
+                            <li>
+                                <a href="{% url 'products:home'%}">Home</a>
+                                
+                            </li>
+    
+                            <li class="active-menu">
+                                <a href="{% url 'products:products'%}">Shop</a>
+                            </li>
+    
+                           
+                        </ul>
+                    </div>    
+    
+                    <!-- Icon header -->
+                    <div class="wrap-icon-header flex-w flex-r-m">
+                        <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+                            <i class="zmdi zmdi-search"></i>
+                        </div>
+    
+                        <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="{{ cart_items_count }}">
+                            <i class="zmdi zmdi-shopping-cart"></i>
+                        </div>
+    
+                        <a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
+                            <i class="zmdi zmdi-favorite-outline"></i>
+                        </a>
+                    </div>
+                </nav>
+            </div>    
+        </div>
+    
+        <!-- Header Mobile -->
+        <div class="wrap-header-mobile">
+            <!-- Logo moblie -->        
+            <div class="logo-mobile">
+                <a href="{% url 'products:home' %}"><span class="sidebar-title" style='color: black;font-size: 35px;font-weight: 900; '>NANORIDE</span>
+                </div>
+    
+            <!-- Icon header -->
+            <div class="wrap-icon-header flex-w flex-r-m m-r-15">
+                <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-show-modal-search">
+                    <i class="zmdi zmdi-search"></i>
+                </div>
+    
+                <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="2">
+                    <i class="zmdi zmdi-shopping-cart"></i>
+                </div>
+    
+                <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify="0">
+                    <i class="zmdi zmdi-favorite-outline"></i>
+                </a>
+            </div>
+    
+            <!-- Button show menu -->
+            <div class="btn-show-menu-mobile hamburger hamburger--squeeze">
+                <span class="hamburger-box">
+                    <span class="hamburger-inner"></span>
+                </span>
+            </div>
+        </div>
+    
+        <!-- Menu Mobile -->
+        <div class="menu-mobile">
+            <ul class="topbar-mobile">
+                <li>
+                    <div class="left-top-bar">
+                        Free shipping for standard order over ₹100
+                    </div>
+                </li>
+    
+                <li>
+                    <div class="right-top-bar flex-w h-full">
+                        <a href="#" class="flex-c-m p-lr-10 trans-04">
+                            Help & FAQs
+                        </a>
+    
+                        <a href="#" class="flex-c-m p-lr-10 trans-04">
+                            My Account
+                        </a>
+    
+                        <a href="#" class="flex-c-m p-lr-10 trans-04">
+                            EN
+                        </a>
+    
+                        <a href="#" class="flex-c-m p-lr-10 trans-04">
+                            USD
+                        </a>
+                    </div>
+                </li>
+            </ul>
+    
+            <ul class="main-menu-m">
+                <li>
+                    <a href="{% url 'products:home' %}">Home</a>
+                     
+                    <span class="arrow-main-menu-m">
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </span>
+                </li>
+    
+                <li>
+                    <a href="">Shop</a>
+                </li>
+    
+                <li>
+                    <a href="" class="label1 rs1" data-label1="hot">Features</a>
+                </li>
+    
+                <li>
+                    <a href="">Blog</a>
+                </li>
+    
+                <li>
+                    <a href="">About</a>
+                </li>
+    
+                <li>
+                    <a href="">Contact</a>
+                </li>
+            </ul>
+        </div>
+    
+        <!-- Modal Search -->
+        <div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+            <div class="container-search-header">
+                <button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
+                    <img src="{% static 'images/icons/icon-close2.png' %}" alt="CLOSE">
+                </button>
+    
+                <form class="wrap-search-header flex-w p-l-15">
+                    <button class="flex-c-m trans-04">
+                        <i class="zmdi zmdi-search"></i>
+                    </button>
+                    <input class="plh3" type="text" name="search" placeholder="Search...">
+                </form>
+            </div>
+        </div>
+    </header>
+
+
+
+
+
+
+
+
+	<!-- Cart -->
+ 
+
+
+	
+	<!-- Product -->
+	<div class="bg0 m-t-23 p-b-140">
+		<div class="container">
+			<div class="flex-w flex-sb-m p-b-52">
+				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
+						All Products
+					</button>
+                    {% if categories %}
+                    {% for category in categories %}
+                        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".{{ category.brand_name|slugify }}">
+                            <p>{{ category.brand_name }}</p>
+                        </button>
+                    {% endfor %}
+                {% else %}
+                    <p>No categories found.</p>
+                {% endif %}
+				</div>
+
+				<div class="d-flex flex-wrap align-items-center justify-content-between py-3 border-bottom me-5">
+                    <!-- Sorting Dropdown -->
+                    <form method="get" action="{% url 'products:products' %}" class="d-flex align-items-center">
+                        <input type="hidden" name="q" value="{{ request.GET.q }}">
+                        <label for="sort" class="me-2 fw-bold text-muted">Sort By:</label>
+                        <select id="sort" name="sort" class="form-select  border-bottom shadow-none" 
+                                style="min-width: 200px;margin-right: 30px;" onchange="this.form.submit()">
+                            <option value="default" {% if request.GET.sort == 'default' %}selected{% endif %}>Default</option>
+                            <option value="popularity" {% if request.GET.sort == 'popularity' %}selected{% endif %}>Popularity</option>
+                            <option value="rating" {% if request.GET.sort == 'rating' %}selected{% endif %}>Average Rating</option>
+                            <option value="newness" {% if request.GET.sort == 'newness' %}selected{% endif %}>Newness</option>
+                            <option value="price_low_to_high" {% if request.GET.sort == 'price_low_to_high' %}selected{% endif %}>Price: Low to High</option>
+                            <option value="price_high_to_low" {% if request.GET.sort == 'price_high_to_low' %}selected{% endif %}>Price: High to Low</option>
+                            <option value="a_z" {% if request.GET.sort == 'a_z' %}selected{% endif %}>A-Z</option>
+                            <option value="z_a" {% if request.GET.sort == 'z_a' %}selected{% endif %}>Z-A</option>
+                        </select>
+                    </form>
+                
+                    <!-- Search Bar -->
+                    <form method="get" action="{% url 'products:products' %}" class="d-flex align-items-center mt-3 mt-md-0">
+                        <input type="hidden" name="sort" value="{{ request.GET.sort }}">
+                        
+                        <!-- Search input field with clear button -->
+                        <div class="position-relative" style="max-width: 350px; display:flex;">
+                            <!-- Search input -->
+                            <input type="text" name="q" class="form-control border-bottom shadow-none pe-5" 
+                                   placeholder="Search products..." value="{{ request.GET.q }}">
+                            
+                            <!-- Clear button (X) inside the input field -->
+                            <button type="button" class="position-absolute top-50 end-0 translate-middle-y btn-clear" onclick="clearSearch()" 
+                                    style="border: none; background: transparent; cursor: pointer; padding: 0;margin-left:-10px">
+                                <i class="fas fa-times" style="font-size: 18px; color: #999;"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Search button -->
+                        <button type="submit" class="btn btn-primary ms-2" style='margin-left :10px;'>
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </form>
+                    
+                </div>
+                
+                <button id="filter-btn" class="filter-btn">
+                    Filter Options
+                </button>
+                {% comment %} <form method="get" action="{% url 'products:products' %}" class="filters-form" style='display:flex;'>
+                  
+                 
+                    <!-- Filter by categories (checkboxes) -->
+                    <div class="checkbox-group" style='display:flex;'>
+                        <p><strong>Select Categories</strong></p>
+                        {% for category in categories %}
+                            <label>
+                                <input type="checkbox" name="category" value="{{ category.id }}" {% if category.id in category_ids %}checked{% endif %}>
+                                {{ category.category }}
+                            </label><br>
+                        {% endfor %}
+                    </div>
+                
+               
+                    <div class="checkbox-group"style='display:flex;'>
+                        <p><strong>Select Brands</strong></p>
+                        {% for category in categories %}
+                            <label>
+                                <input type="checkbox" name="brand" value="{{ category.brand_name }}" {% if category.brand_name in brand_names %}checked{% endif %}>
+                                {{ category.brand_name }}
+                            </label><br>
+                        {% endfor %}
+                    </div>
+                
+                    <!-- Filter by price range -->
+                    <div class="price-range"style='display:flex;'>
+                        <input type="number" name="min_price" value="{{ min_price }}" placeholder="Min Price" class="form-control">
+                        <input type="number" name="max_price" value="{{ max_price }}" placeholder="Max Price" class="form-control">
+                    </div>
+                
+                    <!-- Sorting options -->
+                    
+                
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                </form> {% endcomment %}
+				<!-- Filter -->
+                <form id="filters-form" method="get" action="{% url 'products:products' %}" class="filters-form card shadow-sm p-4" style="display: none;">
+                    <!-- Filter by Categories -->
+                    <div class="filter-group mb-4">
+                        <h5 class="text-primary">Select Categories</h5>
+                        <div class="row">
+                            {% for category in Type %}
+                                <div class="col-md-6">
+                                    <label class="d-flex align-items-center">
+                                        <input type="checkbox" name="category" value="{{ category.id }}" {% if category.id in category_ids %}checked{% endif %} class="me-2">
+                                        {{ category.category }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+            
+                    <!-- Filter by Brands -->
+                    <div class="filter-group mb-4">
+                        <h5 class="text-primary">Select Brands</h5>
+                        <div class="row">
+                            {% for category in categories %}
+                                <div class="col-md-6">
+                                    <label class="d-flex align-items-center">
+                                        <input type="checkbox" name="brand" value="{{ category.brand_name }}" {% if category.brand_name in brand_names %}checked{% endif %} class="me-2">
+                                        {{ category.brand_name }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+            
+                    <!-- Filter by Price Range -->
+                    <div class="filter-group mb-4">
+                        <h5 class="text-primary">Price Range</h5>
+                        <div class="d-flex">
+                            <input type="number" name="min_price" value="{{ min_price }}" placeholder="Min Price" class="form-control me-2" style="max-width: 150px;">
+                            <input type="number" name="max_price" value="{{ max_price }}" placeholder="Max Price" class="form-control" style="max-width: 150px;">
+                        </div>
+                    </div>
+            
+                    <!-- Apply Filters -->
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-check"></i> Apply Filters
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+             <div class="row isotope-grid">
+                {% for i in products %}
+                <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item {{ i.category.brand_name|slugify }}">
+                    <!-- Block2 -->
+                    
+                    <div class="block2">
+                        <a href="{% url 'products:products_detail' i.id %}">
+                            <div class="block2-pic hov-img0 label-new" data-label="New">
+                                {% if i.additional_images.all %}
+                                <img src="{{ i.additional_images.first.image.url }}" alt="IMG-PRODUCT">
+                                {% else %}
+                                <img src="{% static 'images/default-product.jpg' %}" alt="IMG-PRODUCT">
+                                {% endif %}
+                            </div>
+            
+                            <div class="block2-txt flex-w flex-t p-t-14">
+                                <div class="block2-txt-child1 flex-col-l">
+                                    <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                        {{i.name}}
+                                    </a>
+            
+                                    <span class="stext-105 cl3">
+                                        ₹{{i.price}}
+                                    </span>
+                                </div>
+            
+                                <div class="block2-txt-child2 flex-r p-t-3">
+                                    <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                                        <img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                                        <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON">
+                                    </a>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    
+                </div>
+                {% endfor %}
+            </div>
+            <div class="pagination-container">
+                <!-- Previous Button -->
+                {% if products.has_previous %}
+                    <a href="{% url 'products:home' %}?page={{ products.previous_page_number }}&q={{ query }}&sort={{ sort_by }}" 
+                       class="pagination-link pagination-prev" 
+                       aria-label="Previous Page">
+                        &laquo; Previous
+                    </a>
+                {% else %}
+                    <span class="pagination-link pagination-prev disabled" aria-disabled="true">
+                        &laquo; Previous
+                    </span>
+                {% endif %}
+            
+                <!-- Page Numbers -->
+                {% for page_num in products.paginator.page_range %}
+                    {% if page_num == products.number %}
+                        <span class="pagination-link active" aria-current="page">{{ page_num }}</span>
+                    {% else %}
+                        <a href="{% url 'products:products' %}?page={{ page_num }}&q={{ query }}&sort={{ sort_by }}" 
+                           class="pagination-link" 
+                           aria-label="Go to page {{ page_num }}">
+                            {{ page_num }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            
+                <!-- Next Button -->
+                {% if products.has_next %}
+                    <a href="{% url 'products:products' %}?page={{ products.next_page_number }}&q={{ query }}&sort={{ sort_by }}" 
+                       class="pagination-link pagination-next" 
+                       aria-label="Next Page">
+                        Next &raquo;
+                    </a>
+                {% else %}
+                    <span class="pagination-link pagination-next disabled" aria-disabled="true">
+                        Next &raquo;
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+       </div>     
+
+	<!-- Footer -->
+	<footer class="bg3 p-t-75 p-b-32">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 col-lg-3 p-b-50">
+					<h4 class="stext-301 cl0 p-b-30">
+						Categories
+					</h4>
+
+					<ul>
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Women
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Men
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Shoes
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Watches
+							</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="col-sm-6 col-lg-3 p-b-50">
+					<h4 class="stext-301 cl0 p-b-30">
+						Help
+					</h4>
+
+					<ul>
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Track Order
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Returns 
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								Shipping
+							</a>
+						</li>
+
+						<li class="p-b-10">
+							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+								FAQs
+							</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="col-sm-6 col-lg-3 p-b-50">
+					<h4 class="stext-301 cl0 p-b-30">
+						GET IN TOUCH
+					</h4>
+
+					<p class="stext-107 cl7 size-201">
+						Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us on (+1) 96 716 6879
+					</p>
+
+					<div class="p-t-27">
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+							<i class="fa fa-facebook"></i>
+						</a>
+
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+							<i class="fa fa-instagram"></i>
+						</a>
+
+						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+							<i class="fa fa-pinterest-p"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="col-sm-6 col-lg-3 p-b-50">
+					<h4 class="stext-301 cl0 p-b-30">
+						Newsletter
+					</h4>
+
+					<form>
+						<div class="wrap-input1 w-full p-b-4">
+							<input class="input1 bg-none plh1 stext-107 cl7" type="text" name="email" placeholder="email@example.com">
+							<div class="focus-input1 trans-04"></div>
+						</div>
+
+						<div class="p-t-18">
+							<button class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
+								Subscribe
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="p-t-40">
+                 <div class="flex-c-m flex-w p-b-18">
+                    <a href="#" class="m-all-1">
+                        <img src="{% static 'images/icons/icon-pay-01.png' %}" alt="ICON-PAY">
+                    </a>
+                
+                    <a href="#" class="m-all-1">
+                        <img src="{% static 'images/icons/icon-pay-02.png' %}" alt="ICON-PAY">
+                    </a>
+                
+                    <a href="#" class="m-all-1">
+                        <img src="{% static 'images/icons/icon-pay-03.png' %}" alt="ICON-PAY">
+                    </a>
+                
+                    <a href="#" class="m-all-1">
+                        <img src="{% static 'images/icons/icon-pay-04.png' %}" alt="ICON-PAY">
+                    </a>
+                
+                    <a href="#" class="m-all-1">
+                        <img src="{% static 'images/icons/icon-pay-05.png' %}" alt="ICON-PAY">
+                    </a>
+                </div>
+                
+
+			 
+			</div>
+		</div>
+	</footer>
+
+
+	<!-- Back to top -->
+	<div class="btn-back-to-top" id="myBtn">
+		<span class="symbol-btn-back-to-top">
+			<i class="zmdi zmdi-chevron-up"></i>
+		</span>
+	</div>
+
+	<!-- Modal1 -->
+  
+<!--===============================================================================================-->	
+<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/animsition/js/animsition.min.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/bootstrap/js/popper.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+<script>
+    $(".js-select2").each(function(){
+        $(this).select2({
+            minimumResultsForSearch: 20,
+            dropdownParent: $(this).next('.dropDownSelect2')
+        });
+    })
+</script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/daterangepicker/moment.min.js' %}"></script>
+<script src="{% static 'vendor/daterangepicker/daterangepicker.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/slick/slick.min.js' %}"></script>
+<script src="{% static 'js/slick-custom.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/parallax100/parallax100.js' %}"></script>
+<script>
+    $('.parallax100').parallax100();
+</script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/MagnificPopup/jquery.magnific-popup.min.js' %}"></script>
+<script>
+    $('.gallery-lb').each(function() { // the containers for all your galleries
+        $(this).magnificPopup({
+            delegate: 'a', // the selector for gallery item
+            type: 'image',
+            gallery: {
+                enabled:true
+            },
+            mainClass: 'mfp-fade'
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/isotope/isotope.pkgd.min.js' %}"></script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/sweetalert/sweetalert.min.js' %}"></script>
+<script>
+    $('.js-addwish-b2, .js-addwish-detail').on('click', function(e){
+        e.preventDefault();
+    });
+
+    $('.js-addwish-b2').each(function(){
+        var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
+        $(this).on('click', function(){
+            swal(nameProduct, "is added to wishlist !", "success");
+
+            $(this).addClass('js-addedwish-b2');
+            $(this).off('click');
+        });
+    });
+
+    $('.js-addwish-detail').each(function(){
+        var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
+
+        $(this).on('click', function(){
+            swal(nameProduct, "is added to wishlist !", "success");
+
+            $(this).addClass('js-addedwish-detail');
+            $(this).off('click');
+        });
+    });
+
+    /*---------------------------------------------*/
+
+    $('.js-addcart-detail').each(function(){
+        var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+        $(this).on('click', function(){
+            swal(nameProduct, "is added to cart !", "success");
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script src="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+<script>
+    $('.js-pscroll').each(function(){
+        $(this).css('position','relative');
+        $(this).css('overflow','hidden');
+        var ps = new PerfectScrollbar(this, {
+            wheelSpeed: 1,
+            scrollingThreshold: 1000,
+            wheelPropagation: false,
+        });
+
+        $(window).on('resize', function(){
+            ps.update();
+        })
+    });
+
+
+
+    function clearSearch() {
+        // Clear the value of the search input
+        document.querySelector('input[name="q"]').value = '';
+        
+        // Submit the form to reset the search query in the URL
+        document.querySelector('form').submit();
+    }
+</script>
+<!--===============================================================================================-->
+<script src="{% static 'js/main.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Toggle filter form visibility
+        $("#filter-btn").click(function () {
+            $("#filters-form").toggle();
+        });
+    });
+</script>
+
+
+</body>
+</html>

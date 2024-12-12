@@ -1,0 +1,178 @@
+
+
+
+
+1. Authentication App (Handles user authentication)
+User-side: User login, signup, password reset, OTP verification.
+Admin-side: Admin user login and authentication.
+2. Products App (Handles product-related features)
+User-side:home, Product catalog, product details, add to cart, add to wishlist, and product recommendations.
+Admin-side: Admin product management (Add, Edit, View, Remove), product search, manage categories and brands.
+3. Cart App (Handles the shopping cart system)
+User-side: Manage cart items, checkout process.
+Admin-side: Admin order management (viewing orders, updating order status, invoice generation, cancellations).
+4. Order Management App (Handles orders and payments)
+User-side: Order history, payment methods (multi-step payment).
+Admin-side: Order and payment management, configure payment gateways, view and manage orders.
+5. Profile App (Handles user profiles and addresses)
+User-side: Edit profile details, change passwords, manage addresses.
+Admin-side: Admin user management (search, block, delete users).
+6. Offers & Coupons App (Handles discounts and promotional codes)
+User-side: View available offers and apply coupons during checkout.
+Admin-side: Admin create, edit, and view offers and coupons.
+7. Reports App (Handles sales and transaction reports)
+User-side: N/A (optional depending on user access).
+Admin-side: Generate and export sales reports, filter by date.
+8. Wallet App (Handles user wallets and transactions)
+User-side: View wallet balance, make transactions.
+Admin-side: Admin manages wallet transactions (add money to users’ wallets).
+9. Miscellaneous Pages App (Handles static pages like success page, error page, etc.)
+User-side: Success page, 404 error page, contact us, about page.
+Admin-side: N/A (static pages can be managed in a content management system or by admins directly).
+
+
+
+
+nanoride/
+├── authentication/                    
+│   ├── migrations/
+│   ├── static/
+│   │   ├── authentication/            
+│   │   │   ├── css/
+│   │   │   ├── js/
+│   │   │   ├── images/
+│   ├── templates/
+│   │   ├── authentication/
+│   │   │   ├── login.html
+│   │   │   ├── signup.html
+│   │   │   ├── password_reset.html
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+├── products/                        
+│   ├── migrations/
+│   ├── static/
+│   │   ├── products/                   
+│   │   │   ├── css/
+│   │   │   ├── js/
+│   │   │   ├── images/
+│   ├── templates/
+│   │   ├── products/
+│   │   │   ├── product_list.html
+│   │   │   ├── product_detail.html
+│   │   │   ├── product_search.html
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+├── cart/                             
+│   ├── migrations/
+│   ├── static/
+│   │   ├── cart/                      
+│   │   │   ├── css/
+│   │   │   ├── js/
+│   │   │   ├── images/
+│   ├── templates/
+│   │   ├── cart/
+│   │   │   ├── cart_view.html
+│   │   │   ├── checkout.html
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+├── orders/                          
+│   ├── migrations/
+│   ├── static/
+│   │   ├── orders/                     
+│   │   │   ├── css/
+│   │   │   ├── js/
+│   │   │   ├── images/
+│   ├── templates/
+│   │   ├── orders/
+│   │   │   ├── order_detail.html
+│   │   │   ├── order_history.html
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+├── profile/                          
+│   ├── migrations/
+│   ├── static/
+│   │   ├── profile/                   
+│   │   │   ├── css/
+│   │   │   ├── js/
+│   │   │   ├── images/
+│   ├── templates/
+│   │   ├── profile/
+│   │   │   ├── edit_profile.html
+│   │   │   ├── password_change.html
+│   │   │   ├── address_management.html
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+├── offers/                             
+│   ├── migrations/
+│   ├── static/
+│   │   ├── offers/                     
+│   │   │   ├── css/
+│   │   │   ├── js/
+│   │   │   ├── images/
+│   ├── templates/
+│   │   ├── offers/
+│   │   │   ├── offer_list.html
+│   │   │   ├── apply_coupon.html
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+├── reports/                    
+│   ├── migrations/
+│   ├── static/
+│   │   ├── reports/                   
+│   │   │   ├── css/
+│   │   │   ├── js/
+│   │   │   ├── images/
+│   ├── templates/
+│   │   ├── reports/
+│   │   │   ├── sales_report.html
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+├── wallet/                           
+│   ├── migrations/
+│   ├── static/
+│   │   ├── wallet/                    
+│   │   │   ├── css/
+│   │   │   ├── js/
+│   │   │   ├── images/
+│   ├── templates/
+│   │   ├── wallet/
+│   │   │   ├── wallet_balance.html
+│   │   │   ├── transaction_history.html
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+├── nanoride/                         
+│   ├── __init__.py
+│   ├── settings.py                     
+│   ├── urls.py                        
+│   ├── wsgi.py
+│   ├── asgi.py
+├── manage.py                           
+└── static/                             
+    ├── css/
+    ├── js/
+    └── images/
+

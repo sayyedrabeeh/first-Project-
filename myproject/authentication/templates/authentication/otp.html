@@ -1,0 +1,289 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>Product</title>
+    <link rel="icon" type="image/png" href="{% static 'images/icons/favicon.png' %}" />
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/iconic/css/material-design-iconic-font.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Custom Styles -->
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        /* Header/Footer Styles */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        /* OTP Form Styles */
+        .otp-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .otp-form {
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+
+        .otp-form h4 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .otp-form p {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .otp-input-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 2rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .otp-form button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .otp-form button:disabled {
+            background-color: #ccc;
+        }
+
+        .otp-form .form-text {
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .otp-form .form-text a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .otp-form {
+                padding: 20px;
+            }
+
+            .otp-input-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .otp-input {
+                margin-bottom: 10px;
+            }
+        } 
+         
+    input[type="number"] {
+         -moz-appearance: textfield;
+         -webkit-appearance: none;
+         appearance: none;
+     }
+ 
+     input[type="number"]::-ms-clear {
+         display: none;
+     }
+     .otp-input {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        text-align: center;
+        margin: 5px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .otp-input:valid {
+        border-color: green;
+        background-color: #d4edda;
+    }
+
+    {% comment %} .otp-input:invalid {
+        border-color: red;
+        background-color: #f8d7da;
+    } {% endcomment %}
+
+    .otp-input:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+    input[type="number"] {
+        -moz-appearance: textfield; /* For Firefox */
+        appearance: none; /* For other browsers */
+    }
+        
+
+    </style>
+</head>
+
+<body>
+
+    <!-- OTP Verification Section -->
+    <div class="container otp-container">
+        <div class="otp-form">
+            <h4>Verify Your Email Address</h4>
+            <p>We’ve sent an OTP to your email address. Please enter it below.</p>
+
+            <!-- OTP Inputs -->
+            <form id="otp-form" method="POST" action="{% url 'authentication:verify_otp' %}">
+                {% csrf_token %}
+                <div class="otp-input-container">
+                    <input type="number" class="otp-input" maxlength="1" required name="otp_1">
+                    <input type="number" class="otp-input" maxlength="1" required name="otp_2">
+                    <input type="number" class="otp-input" maxlength="1" required name="otp_3">
+                    <input type="number" class="otp-input" maxlength="1" required name="otp_4">
+                    <input type="number" class="otp-input" maxlength="1" required name="otp_5">
+                    <input type="number" class="otp-input" maxlength="1" required name="otp_6">
+                </div>
+                <div class="form-text">
+                    <small>OTP Resend in: <strong id="timer">00:30</strong></small>
+                </div>
+                <button type="submit" id="verifyOtpButton" class="btn">Verify OTP</button>
+                <button id="resendOtpButton" class="btn" onclick="resendOtp()" disabled>Resend OTP</button>
+            </form>
+            
+
+            <!-- Messages -->
+            <div class="container">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <p class="form-text">Want to change your email? <a href="#">Click Here</a></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 NANORIDE. All rights reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <!-- OTP Timer Script -->
+    <script>
+        let timer = document.getElementById('timer');
+        let resendOtpButton = document.getElementById('resendOtpButton');
+        let otpExpiryTime = 30;
+
+        const countdown = () => {
+            otpExpiryTime -= 1;
+            let minutes = Math.floor(otpExpiryTime / 60);
+            let seconds = otpExpiryTime % 60;
+            timer.innerHTML = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+            if (otpExpiryTime <= 0) {
+                clearInterval(otpTimer);
+                resendOtpButton.disabled = false;
+            }
+        };
+
+        const otpTimer = setInterval(countdown, 1000);
+
+        function resendOtp() {
+            otpExpiryTime = 30;
+            resendOtpButton.disabled = true;
+            clearInterval(otpTimer);
+            otpTimer;
+        }
+
+
+
+
+    const otpInputs = document.querySelectorAll('.otp-input');
+
+    // Add event listeners to all OTP input fields
+    otpInputs.forEach((input, index) => {
+        input.addEventListener('input', () => {
+            // If the current input field is filled, move to the next input field
+            if (input.value.length === input.maxLength) {
+                if (index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();  // Focus on the next field
+                }
+            }
+        });
+
+        // Move focus to the previous input field when backspace is pressed and current field is empty
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && input.value === '' && index > 0) {
+                otpInputs[index - 1].focus();  // Focus on the previous field
+            }
+        });
+    });
+    </script>
+
+</body>
+
+</html>
