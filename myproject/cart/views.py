@@ -17,6 +17,7 @@ from django.utils import timezone
 from django.conf import settings
 from wallet.models import Wallet
 import decimal
+from order.models import Order,OrderItem
 from decimal import Decimal
 
 
@@ -219,6 +220,9 @@ def payment(request):
                 item.save()
                 product_size.stock = 0
                 product_size.save()
+            # if coupon_code:
+            #     coupon = Coupon.objects.get(code=coupon_code)
+            #     CouponUsage.objects.create(user=request.user, coupon=coupon)
         if payment_method == 'razorpay':
             discounted_price = total_price - discount
             print('discountr:',discount)
@@ -245,8 +249,14 @@ def payment(request):
             }
             return render(request, 'cart/payment.html', context)
         elif payment_method=='wallet':
-             wallet.balance-=total_price
-             wallet.save()
+            
+            wallet.balance-=total_price
+            wallet.save()
+            order = Order.objects.get(user=request.user, payment_status='Pending')
+            
+            order.payment_status = 'Success'
+            order.save()
+            print('order:',order)
         return redirect('cart:success_page')
 
     context = {
@@ -301,20 +311,48 @@ def apply_coupon(request):
                 coupon = Coupon.objects.get(code=coupon_code)
                 if not coupon.is_active():
                     messages.error(request, "This coupon is either inactive or has reached its usage limit.")
+                    context={
+                        'cart_items': cart_items,
+                        'addresses': Address.objects.filter(user=request.user, status='listed'),
+                        'total_price':total_price,
+                    }
+                    return render(request, 'cart/payment.html',context)
                 elif CouponUsage.objects.filter(user=request.user, coupon=coupon).exists():
                     messages.error(request, "You have already applied this coupon.")
+                    context={
+                        'cart_items': cart_items,
+                        'addresses': Address.objects.filter(user=request.user, status='listed'),
+                        'total_price':total_price,
+                    }
+                    return render(request, 'cart/payment.html',context)
                 else:
+                    order = Order.objects.filter(user=request.user, payment_status='Pending').first()
                     discount = coupon.discount
                     if total_price >= 1000:
+                        order.coupon_code = coupon.code
+                        order.save()
                         CouponUsage.objects.create(user=request.user, coupon=coupon)
+               
                         messages.success(request, f"Coupon applied! You saved ₹{discount}.")
                     else:
                         messages.error(
                             request,
                             f"This coupon is valid only for orders above ₹1000."
                         )
+                        context={
+                        'cart_items': cart_items,
+                        'addresses': Address.objects.filter(user=request.user, status='listed'),
+                        'total_price':total_price,
+                        }
+                        return render(request, 'cart/payment.html',context)
             except Coupon.DoesNotExist:
                 messages.error(request, "Invalid coupon code.")
+                context={
+                        'cart_items': cart_items,
+                        'addresses': Address.objects.filter(user=request.user, status='listed'),
+                        'total_price':total_price,
+                    }
+                return render(request, 'cart/payment.html',context)
         else:
             messages.error(request, "Please enter a coupon code.")
 

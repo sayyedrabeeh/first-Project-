@@ -35,8 +35,11 @@ def order(request, order_id=None):
         order_items = OrderItem.objects.filter(order=selected_order)
      
         total_price_in_paise = int(selected_order.total_price * 100)
+        coupon = None
+        if selected_order.coupon_code:
+            coupon = Coupon.objects.filter(code=selected_order.coupon_code).first()
 
-       
+        print('coupon:',coupon)
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
         razorpay_order = client.order.create(dict(
                 amount=total_price_in_paise,   
@@ -53,7 +56,8 @@ def order(request, order_id=None):
             'selected_order': selected_order,
             'razorpay_key': settings.RAZORPAY_KEY_ID,
             'total_price_in_paise': total_price_in_paise,
-            'order_id': selected_order.order_id
+            'order_id': selected_order.order_id,
+            'coupon':coupon
         }
 
     else:
@@ -74,10 +78,17 @@ def download_invoice(request, order_id):
     order = Order.objects.get(order_id=order_id)
     order_items = order.items.exclude(status='Cancelled')
     total_price = sum(item.subtotal_price for item in order_items)
+    total_price_after_discount = order.total_price
+    print('total_price_after_discount:',total_price_after_discount)
+    discount_amount = total_price-total_price_after_discount
+    print('discount_amount:',discount_amount)
     context = {
         'order': order,
         'order_items': order_items,
-        'total_price':total_price
+        'total_price':total_price,
+        # 'coupon_code': coupon_code,   
+        'discount_amount': discount_amount ,
+        'total_after_discount':total_price_after_discount
     }
     html_content = render_to_string('order/invoice.html', context)
     response = HttpResponse(content_type='application/pdf')

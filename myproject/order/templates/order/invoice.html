@@ -52,9 +52,9 @@
         <h1>Invoice - Order #{{ order.order_id }}</h1>
         <div class="invoice-header">
             <div>
-                <p><strong>Company:</strong> Your Company</p>
-                <p><strong>Email:</strong> info@company.com</p>
-                <p><strong>Phone:</strong> +1 (123) 456-7890</p>
+                <p><strong>Company:</strong> NANORIDE</p>
+                <p><strong>Email:</strong> nanoride@company.com</p>
+                <p><strong>Phone:</strong> +91 9207286895</p>
             </div>
             <div>
                  <p><strong>Date:</strong> {{ order.created_at }}</p>
@@ -87,7 +87,18 @@
         <div class="totals">
             <p>Subtotal: {{ total_price }}</p>
             <p class="total">Total: {{ total_price }}</p>
-        </div>
+      
+       
+        <div class="totals">
+            <p><strong>Discount Applied:</strong> {{ discount_amount }}</p>
+            <h3 class='total'>Total after Discount: {{ total_after_discount }}</h3>
+        </div>  
+    </div>
+ </table>
+        
+       
+   
+
     </div>
 </body>
 </html>

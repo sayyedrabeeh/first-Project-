@@ -288,8 +288,7 @@
                     <th>Order ID</th>
                     <th>Customer</th>
                     <th>Total Amount</th>
-                    <th>Discount</th>
-                    <th>Payment Type</th>
+                     <th>Payment Type</th>
                     <th>Order Date</th>
                 </tr>
             </thead>
@@ -299,8 +298,7 @@
                     <td>{{ order.order_id }}</td>
                     <td>{{ order.user.username }}</td>
                     <td>₹{{ order.total_price }}</td>
-                    <td>₹{{ total_discount }}</td>
-                    <td>{{ order.payment_type }}</td>
+                     <td>{{ order.payment_type }}</td>
                     <td>{{ order.created_at }}</td>
                 </tr>
                 {% endfor %}
@@ -312,8 +310,7 @@
             <h4>Sales Summary</h4>
             <p><strong>Total Sales Count:</strong> {{ total_sales_count }}</p>
             <p><strong>Total Sales Amount:</strong> ₹{{ total_sales_amount }}</p>
-            <p><strong>Total Discount:</strong> ₹{{ total_discount }}</p>
-        </div>
+         </div>
 
         <!-- Download Buttons -->
         <div class="download-options text-center mt-4">

@@ -23,6 +23,7 @@ from reportlab.pdfgen import canvas
 from datetime import datetime
 from products.models import Product,ProductImage,ProductSize
 from django.conf import settings
+from xhtml2pdf import pisa
 
 
 # def admin_required(function):
@@ -151,85 +152,108 @@ def generate_sales_excel(orders):
 
 
 
-def generate_sales_pdf(orders):
+# def generate_sales_pdf(orders):
   
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = 'attachment; filename="sales_report.pdf"'
+
+#     buffer = BytesIO()
+#     p = canvas.Canvas(buffer, pagesize=letter)
+    
+   
+#     margin_left = 30
+#     margin_top = 750
+#     column_width = 100   
+
+    
+#     p.setFont('Helvetica-Bold', 18)
+#     p.setFillColor(colors.white)
+#     p.rect(0, 740, 600, 40)   
+#     p.setFillColor(colors.blue)
+#     p.drawString(180, 755, f"Sales Report: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    
+    
+#     p.setFont('Helvetica-Bold', 12)
+#     p.setFillColor(colors.white)
+#     p.rect(margin_left, margin_top - 50, 550, 20, fill=1)  
+#     p.setFillColor(colors.black)
+#     p.drawString(margin_left + 10, margin_top - 40, "Order ID")
+#     p.drawString(margin_left + column_width, margin_top - 40, "Total Price")
+#     p.drawString(margin_left + 2 * column_width, margin_top - 40, "Discount")
+#     p.drawString(margin_left + 3 * column_width, margin_top - 40, "Payment Type")
+#     p.drawString(margin_left + 4 * column_width, margin_top - 40, "Order Date")
+
+    
+#     y_position = margin_top - 70
+#     p.setFont('Helvetica', 10)
+
+    
+#     for order in orders:
+#         cart = Cart.objects.get(user=order.user)
+#         discount = cart.discount
+#         row_color = colors.grey if y_position % 2 == 0 else colors.whitesmoke
+#         p.setFillColor(row_color)
+#         p.rect(margin_left, y_position - 10, 550, 20, fill=1)  
+#         p.setFillColor(colors.black)
+
+#         p.drawString(margin_left + 10, y_position, str(order.order_id))
+#         p.drawString(margin_left + column_width + 10, y_position, f"₹{order.total_price}")
+#         p.drawString(margin_left + 2 * column_width + 10, y_position, f"₹{discount}")
+#         p.drawString(margin_left + 3 * column_width + 10, y_position, order.payment_type)
+#         p.drawString(margin_left + 4 * column_width + 10, y_position, order.created_at.strftime('%Y-%m-%d %H:%M:%S'))
+
+#         y_position -= 20
+
+        
+#         if y_position < 60:
+#             p.showPage() 
+#             p.setFont('Helvetica-Bold', 18)
+#             p.setFillColor(colors.blue)
+#             p.drawString(180, 755, f"Sales Report: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}")
+#             p.setFont('Helvetica-Bold', 12)
+#             p.setFillColor(colors.white)
+#             p.rect(margin_left, margin_top - 50, 550, 20, fill=1)
+#             p.setFillColor(colors.black)
+#             p.drawString(margin_left + 10, margin_top - 40, "Order ID")
+#             p.drawString(margin_left + column_width, margin_top - 40, "Total Price")
+#             p.drawString(margin_left + 2 * column_width, margin_top - 40, "Discount")
+#             p.drawString(margin_left + 3 * column_width, margin_top - 40, "Payment Type")
+#             p.drawString(margin_left + 4 * column_width, margin_top - 40, "Order Date")
+#             y_position = margin_top - 70   
+
+    
+#     p.setFont('Helvetica', 8)
+#     p.drawString(270, 30, f"Page {p.getPageNumber()}")
+#     p.showPage()
+#     p.save()
+#     buffer.seek(0)
+#     response.write(buffer.read())
+#     return response
+
+
+def generate_sales_pdf(orders):
+    total_sales_value = sum(order.total_price for order in orders)
+    average_order_value = total_sales_value / len(orders) if orders else 0
+    discount=total_price-order.total_price
+    context = {
+        'orders': orders,
+        'timestamp': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'total_sales_value': total_sales_value,
+        'average_order_value': average_order_value,
+    }
+
+    html_content = render_to_string('reports/sales.html', context)
+
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="sales_report.pdf"'
 
-    buffer = BytesIO()
-    p = canvas.Canvas(buffer, pagesize=letter)
-    
-   
-    margin_left = 30
-    margin_top = 750
-    column_width = 100   
+    pisa_status = pisa.CreatePDF(html_content, dest=response)
 
-    
-    p.setFont('Helvetica-Bold', 18)
-    p.setFillColor(colors.white)
-    p.rect(0, 740, 600, 40)   
-    p.setFillColor(colors.blue)
-    p.drawString(180, 755, f"Sales Report: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    
-    
-    p.setFont('Helvetica-Bold', 12)
-    p.setFillColor(colors.white)
-    p.rect(margin_left, margin_top - 50, 550, 20, fill=1)  
-    p.setFillColor(colors.black)
-    p.drawString(margin_left + 10, margin_top - 40, "Order ID")
-    p.drawString(margin_left + column_width, margin_top - 40, "Total Price")
-    p.drawString(margin_left + 2 * column_width, margin_top - 40, "Discount")
-    p.drawString(margin_left + 3 * column_width, margin_top - 40, "Payment Type")
-    p.drawString(margin_left + 4 * column_width, margin_top - 40, "Order Date")
+    if pisa_status.err:
+        return HttpResponse('Error generating PDF', status=500)
 
-    
-    y_position = margin_top - 70
-    p.setFont('Helvetica', 10)
-
-    
-    for order in orders:
-        cart = Cart.objects.get(user=order.user)
-        discount = cart.discount
-        row_color = colors.grey if y_position % 2 == 0 else colors.whitesmoke
-        p.setFillColor(row_color)
-        p.rect(margin_left, y_position - 10, 550, 20, fill=1)  
-        p.setFillColor(colors.black)
-
-        p.drawString(margin_left + 10, y_position, str(order.order_id))
-        p.drawString(margin_left + column_width + 10, y_position, f"₹{order.total_price}")
-        p.drawString(margin_left + 2 * column_width + 10, y_position, f"₹{discount}")
-        p.drawString(margin_left + 3 * column_width + 10, y_position, order.payment_type)
-        p.drawString(margin_left + 4 * column_width + 10, y_position, order.created_at.strftime('%Y-%m-%d %H:%M:%S'))
-
-        y_position -= 20
-
-        
-        if y_position < 60:
-            p.showPage() 
-            p.setFont('Helvetica-Bold', 18)
-            p.setFillColor(colors.blue)
-            p.drawString(180, 755, f"Sales Report: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}")
-            p.setFont('Helvetica-Bold', 12)
-            p.setFillColor(colors.white)
-            p.rect(margin_left, margin_top - 50, 550, 20, fill=1)
-            p.setFillColor(colors.black)
-            p.drawString(margin_left + 10, margin_top - 40, "Order ID")
-            p.drawString(margin_left + column_width, margin_top - 40, "Total Price")
-            p.drawString(margin_left + 2 * column_width, margin_top - 40, "Discount")
-            p.drawString(margin_left + 3 * column_width, margin_top - 40, "Payment Type")
-            p.drawString(margin_left + 4 * column_width, margin_top - 40, "Order Date")
-            y_position = margin_top - 70   
-
-    
-    p.setFont('Helvetica', 8)
-    p.drawString(270, 30, f"Page {p.getPageNumber()}")
-    p.showPage()
-    p.save()
-    buffer.seek(0)
-    response.write(buffer.read())
     return response
 
- 
 
  
 def admin_dashboard(request):

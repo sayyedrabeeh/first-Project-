@@ -176,6 +176,7 @@ onmouseout="this.style.backgroundColor='transparent'; this.style.color='#007bff'
                 <th>Item Price</th> 
                 <th>Quantity</th>
                 <th>Total Price</th>  
+                <th>Total Price with coupon discount</th>  
                 <th>Order Date</th>
                 <th>Status</th>
                  <th>Action</th>
@@ -195,7 +196,8 @@ onmouseout="this.style.backgroundColor='transparent'; this.style.color='#007bff'
                 Retry
             </a>
         {% endif %}
-        
+     
+      
         <!-- Move this button outside the loop so it appears only once -->
         <a href="{% url 'order:download_invoice' selected_order.order_id %}" style="margin-left:580px;" class="btn btn-primary">Download Invoice</a>
       
@@ -214,6 +216,7 @@ onmouseout="this.style.backgroundColor='transparent'; this.style.color='#007bff'
                         <td>₹{{ item.price }}</td>  <!-- Display Item Price -->
                         <td>{{ item.quantity }}</td>
                         <td>₹{{ item.subtotal_price }}</td>  <!-- Total Price -->
+                        <td>₹{{ selected_order.total_price }}</td>  <!-- Total Price -->
                         <td>{{ item.order.created_at|date:"Y-m-d H:i" }}</td>
                         <td>
                             <span class="order-status {% if item.status == 'Delivered' %}completed{% elif item.status == 'Cancelled' %}cancelled{% else %}pending{% endif %}">

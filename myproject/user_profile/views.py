@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.http import JsonResponse
 from cart.models import Cart,CartItem
 from products.models import Size,ProductSize
-
+from offers_coupons.models import Coupon,CouponUsage
 
 User = get_user_model()
 def admin_required(function):
@@ -26,6 +26,7 @@ def address(request):
     next_page = request.GET.get('next', None) 
     print('next_page:',next_page)
     address = Address.objects.filter(user=request.user, status='listed').order_by('-id')
+    coupon_code=request.POST.get('coupon_code','')
     msg=None
     cart_items = []
     field_errors = {}
@@ -45,6 +46,16 @@ def address(request):
               'size': item.size,
               'item_total': item_total,
           })
+        if coupon_code:
+             
+                coupon = Coupon.objects.get(code=coupon_code)
+                 
+             
+                discount = coupon.discount
+                   
+                        
+                messages.success(request, f"Coupon applied! You saved ₹{discount}.")
+                     
         print("POST Data:", request.POST)
         user, created = User.objects.get_or_create(id=request.user.id)
         if created:
@@ -103,16 +114,21 @@ def address(request):
                 'country':country,
                 'phone_number':phone_number,
                 'field_errors': field_errors,
-                'has_errors': bool(field_errors) 
+                'has_errors': bool(field_errors),
+                'coupon_code':coupon_code,
+                'total_price': total_price - (discount if 'discount' in locals() else 0),
+                'discount': discount if 'discount' in locals() else 0,
             }
             return render(request, 'cart/payment.html', context)
         return redirect('user_profile:address')
     print('field_errors:',field_errors)
     context={
         'address':address,
+        'cart_items':cart_items,
         'msg':msg,
         'next_page': next_page,
-        'field_errors':field_errors
+        'field_errors':field_errors,
+
     }
     return render(request,'user_profile/address.html',context)  
 

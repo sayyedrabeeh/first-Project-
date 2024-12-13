@@ -264,19 +264,33 @@
     font-size: 10px;
   
 }
-.elevatezoom-window {
-    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
-    border: 2px solid #fff; /* White border around the zoom window */
-}
-#zoom_01 {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
+.wrap-pic-w {
+    position: relative;
+    overflow: hidden; /* Ensures the zoomed image doesn't overflow outside its container */
 }
 
-#zoom_01 {
-    max-width: 100%;
-    display: block; /* Ensure it's visible */
+.wrap-pic-w img.zoom-img {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform-origin: center; /* Makes the zoom effect start from the center */
+}
+
+.wrap-pic-w:hover img.zoom-img {
+    transform: scale(1.5); /* Zoom effect */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Adds shadow on hover */
+}
+
+.wrap-pic-w img.zoom-img {
+    transition: transform 0.3s ease-in-out;
+    will-change: transform; /* Prepares the element for smoother performance */
+}
+
+.wrap-pic-w img.zoom-img {
+    cursor: pointer; /* Indicates interactivity */
+}
+
+.wrap-pic-w:hover img.zoom-img {
+    transform: scale(1.5); /* Zoom effect */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); /* Shadow with more intensity */
 }
 
         </style>
@@ -534,7 +548,7 @@
                                 {% else %}
                                     <div class="item-slick3" data-thumb="{% static 'images/default-product.jpg' %}">
                                         <div class="wrap-pic-w pos-relative">
-                                            <img src="{% static 'images/default-product.jpg' %}" alt="IMG-PRODUCT">
+                                            <img src="{% static 'images/default-product.jpg' %}" class='zoom-img' alt="IMG-PRODUCT">
                                             <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="{% static 'images/default-product.jpg' %}">
                                                 <i class="fa fa-expand"></i>
                                             </a>
@@ -1415,20 +1429,18 @@
 
 <!-- Include Zoom.js -->
 <script src="https://cdn.jsdelivr.net/npm/zoom.js"></script>
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        console.log("Zoom plugin loaded:", $.fn.zoom);
+<!-- Include jQuery Zoom Plugin -->
+<!-- Use unpkg CDN for Zooming -->
+<script src="https://unpkg.com/zooming@2.1.0/dist/zooming.min.js"></script>
+<script>
 
-        // Apply zoom to the image
-        if ($('#zoom_01').length) {
-            $('#zoom_01').zoom({
-                on: 'mouseover',
-                magnify: 1.5
-            });
-        } else {
-            console.log("Zoom element not found!");
-        }
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Zooming after the page is loaded
+        const zooming = new Zooming();
+        zooming.listen('.zoom-img');
     });
 </script>
     

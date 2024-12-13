@@ -709,6 +709,7 @@
             <!-- Modal Body -->
             <div class="modal-body">
                 <form id="addressForm" method="POST" action="{% url 'user_profile:address' %}?next=/cart/payment/">
+                    <input type='hidden' name='coupon_code' value={{coupon_code}}>
                     {% csrf_token %}
                     
                     <!-- Address Details Section -->
