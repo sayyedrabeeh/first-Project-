@@ -117,8 +117,9 @@ def cart_view(request, action=None):
 @never_cache
 @login_required(login_url='authentication:login')
 def payment(request):
-    wallet = get_object_or_404(Wallet, user=request.user)
-    wallet_balance=wallet.balance
+    wallet, created = Wallet.objects.get_or_create(user=request.user)
+    wallet_balance = wallet.balance
+    
     cart = Cart.objects.get(user=request.user)
     total_price = 0
     discount =  0
