@@ -10,10 +10,6 @@ __pycache__/
 # Ignore SQLite database file
 db.sqlite3
 
-# Ignore media and static files
-/media/
-/static/
-
 # Ignore other files that shouldn't be tracked
 *.log
 *.pot
