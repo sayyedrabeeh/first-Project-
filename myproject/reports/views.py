@@ -36,10 +36,10 @@ from xhtml2pdf import pisa
 # @admin_required
 def sales_report(request):
     start_date = request.GET.get('start_date')
-    print('start_date:',start_date)
+    
     end_date = request.GET.get('end_date')
     report_type = request.GET.get('report_type', 'daily')
-    print('report_type:',report_type)
+     
 
     orders = Order.objects.all()
     
@@ -84,7 +84,7 @@ def download_report(request, report_format):
     if end_date:
         end_date = datetime.strptime(end_date, "%b. %d, %Y").strftime("%Y-%m-%d")
 
-    print('report_type:',report_type)
+  
  
     orders = Order.objects.all()
 
@@ -299,12 +299,12 @@ def admin_dashboard(request):
 
         
         brand_image = category['product__category__image']
-        print('brand_image:',brand_image)
+        
         if brand_image:
             category['brand_image_url'] = settings.MEDIA_URL + brand_image
         else:
             category['brand_image_url'] = '/media/default-brand.jpg'
-        print("Category Data:", category['brand_image_url'])
+        
 
     
     best_selling_brands = OrderItem.objects.values('product__category__brand_name') \

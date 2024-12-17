@@ -24,7 +24,6 @@ from decimal import Decimal
 @never_cache
 @login_required(login_url='authentication:login')
 def cart_view(request, action=None):
-    print('action:',action)
     try:
          cart = Cart.objects.get(user=request.user)
     except Cart.DoesNotExist:
@@ -33,7 +32,6 @@ def cart_view(request, action=None):
         product_id=request.POST.get('product_id')
         product = get_object_or_404(Product, id=product_id)
         size_id = request.POST.get('size')
-        print('size_id:',size_id)
         if not size_id:
             size =(ProductSize.objects.filter(product=product).first())
             size = size.size
@@ -90,9 +88,7 @@ def cart_view(request, action=None):
         for item in cart.items.all():
             product_size = get_object_or_404(ProductSize, product=item.product, size=item.size)
             stock=product_size.stock
-            print('stock:',stock)
             item_total = item.product.price * item.quantity
-            print('item.quantity:',item.quantity)
             total_price += item_total
             cart_items.append({
                 'product': item.product,
@@ -106,9 +102,6 @@ def cart_view(request, action=None):
                 messages1='seleted product is out of stock'
                  
     total_price1=total_price-discount
-   
-    print('coupons:',coupons)
-    print('out_of_stock_items:',out_of_stock_items)
     context = {
         'cart_items': cart_items,
         'total_price': total_price,
@@ -126,7 +119,6 @@ def cart_view(request, action=None):
 def payment(request):
     wallet = get_object_or_404(Wallet, user=request.user)
     wallet_balance=wallet.balance
-    print('wallet_balance:',wallet_balance)
     cart = Cart.objects.get(user=request.user)
     total_price = 0
     discount =  0
@@ -163,16 +155,16 @@ def payment(request):
         payment_method = request.POST.get('payment_method')
         coupon_code = request.POST.get('coupon_code', '').strip()
         discount = request.POST.get('discount')
-        print('discount:',discount)
+    
         message = ""
         
         discount =Decimal(discount)
-        print('discountl:',discount)
+     
         total_price_in_paise = int((total_price - discount) * 100)  
-        print("total_price_in_paise:",total_price_in_paise)
+      
 
         if not shipping_address_id or not payment_method:
-            print('rech')
+   
             context = {
                 'error': "Please Add a shipping address and payment method.",
                 'cart_items': cart_items,
@@ -182,7 +174,7 @@ def payment(request):
             return render(request, 'cart/payment.html', context)
       
         shipping_address = get_object_or_404(Address, id=shipping_address_id, user=request.user)
-        print('dicount1:',discount)
+     
         order = Order.objects.create(
             user=request.user,
             shipping_address=shipping_address,
@@ -225,9 +217,7 @@ def payment(request):
             #     CouponUsage.objects.create(user=request.user, coupon=coupon)
         if payment_method == 'razorpay':
             discounted_price = total_price - discount
-            print('discountr:',discount)
-            print('discounted_price:',discounted_price)
-            print(f"Total Price: {total_price}, Discount: {discount}, Discounted Price: {discounted_price}")
+
             total_price_in_paise = int(discounted_price * 100)
             client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
             razorpay_order = client.order.create(dict(
@@ -256,7 +246,6 @@ def payment(request):
             
             order.payment_status = 'Success'
             order.save()
-            print('order:',order)
         return redirect('cart:success_page')
 
     context = {
@@ -271,7 +260,6 @@ def success_page(request):
     cancel = request.GET.get('cancel', False)
 
     order_id = request.GET.get("order_id")  
-    print('order_id:',order_id)
     if order_id:
         order = get_object_or_404(Order, order_id=order_id)
         order.payment = True
@@ -305,7 +293,7 @@ def apply_coupon(request):
 
     if request.method == 'POST':
         coupon_code = request.POST.get('coupon_code', '').strip()
-        print('coupon_code:',coupon_code)
+       
         if coupon_code:
             try:
                 coupon = Coupon.objects.get(code=coupon_code)

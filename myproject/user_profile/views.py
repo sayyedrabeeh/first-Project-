@@ -24,7 +24,7 @@ def admin_required(function):
 @login_required(login_url='authentication:login')
 def address(request):
     next_page = request.GET.get('next', None) 
-    print('next_page:',next_page)
+    
     address = Address.objects.filter(user=request.user, status='listed').order_by('-id')
     coupon_code=request.POST.get('coupon_code','')
     msg=None
@@ -32,8 +32,7 @@ def address(request):
     field_errors = {}
     total_price = 0
     cart = Cart.objects.get(user=request.user) 
-    print('address:',address)
-    print('user:',request.user)
+ 
     if request.method=='POST':
         for item in cart.items.all():
           product_size = get_object_or_404(ProductSize, product=item.product, size=item.size)
@@ -56,15 +55,15 @@ def address(request):
                         
                 messages.success(request, f"Coupon applied! You saved ₹{discount}.")
                      
-        print("POST Data:", request.POST)
+         
         user, created = User.objects.get_or_create(id=request.user.id)
         if created:
             messages.error(request, "User authentication issue. Please log in again.")
             return redirect('login')
         address_line1=request.POST.get('address_line1').strip()
-        print('address_line1:',address_line1)
+       
         city=request.POST.get('city','').strip()
-        print('city:',city)
+        
         state=request.POST.get('state','').strip()
         postal_code=request.POST.get('postal_code','').strip()
         country=request.POST.get('country','').strip()
@@ -99,9 +98,9 @@ def address(request):
                adress=Address.objects.create(user=request.user,address_line1=address_line1,city=city,state=state,postal_code=postal_code,country=country,phone_number=phone_number)
                msg='address created sucessfully!!!'
                response_data = {'success': True}
-        print('address:',address)
+       
         if next_page:
-            print('address:',address)
+           
             context = {
                 'cart_items':cart_items,
                 'addresses': address ,
@@ -121,7 +120,7 @@ def address(request):
             }
             return render(request, 'cart/payment.html', context)
         return redirect('user_profile:address')
-    print('field_errors:',field_errors)
+     
     context={
         'address':address,
         'cart_items':cart_items,
@@ -186,17 +185,14 @@ def users(request):
 @login_required(login_url='authentication:login')
 def profile(request):
     user=request.user
-    print(user)
-    if user.is_authenticated:
-        print(f"User is authenticated: {user.username}") 
-    else:
-        print("User is not authenticated")
+  
+  
     if request.method=='POST' and request.FILES.get('profile_picture'):
         profile_picture=request.FILES.get('profile_picture')
         user.profile_image=profile_picture
         user.save()
         return redirect('user_profile:profile')
-    print('user:', user)
+    
     context={
          'user': user
     }
@@ -222,17 +218,16 @@ def editprofile(request):
 def change_password(request):
     error_messageprofile=None
     modal_open = False
-    print('hii')
+ 
     if request.method=="POST":
-        print('hlo')
+    
         currentpassword=request.POST.get('current_password')
         newpasssword=request.POST.get('new_password')
         comfirmpassword=request.POST.get('confirm_password')
         if not request.user.check_password(currentpassword):
             error_messageprofile= "The current password is incorrect."
             modal_open = True
-            print("error_messageprofile :",error_messageprofile)
-            print('modal_open :',modal_open)
+ 
             return render(request, 'user_profile/profile.html', {
                 'error_messageprofile': error_messageprofile,
                 'modal_open': modal_open
@@ -247,7 +242,7 @@ def change_password(request):
         if newpasssword:
             request.user.set_password('newpasssword')
             request.user.save()
-            print('password changed')
+            
             update_session_auth_hash(request, request.user)
             messages.success(request, "Your password was successfully updated!")
             return redirect('user_profile:profile')

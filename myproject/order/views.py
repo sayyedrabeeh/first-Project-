@@ -39,7 +39,7 @@ def order(request, order_id=None):
         if selected_order.coupon_code:
             coupon = Coupon.objects.filter(code=selected_order.coupon_code).first()
 
-        print('coupon:',coupon)
+     
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
         razorpay_order = client.order.create(dict(
                 amount=total_price_in_paise,   
@@ -79,9 +79,8 @@ def download_invoice(request, order_id):
     order_items = order.items.exclude(status='Cancelled')
     total_price = sum(item.subtotal_price for item in order_items)
     total_price_after_discount = order.total_price
-    print('total_price_after_discount:',total_price_after_discount)
     discount_amount = total_price-total_price_after_discount
-    print('discount_amount:',discount_amount)
+    
     context = {
         'order': order,
         'order_items': order_items,
@@ -168,18 +167,17 @@ def update_orderitem_status(request, orderitem_id):
         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
     try:
-        print("Starting update_orderitem_status...")
+      
 
         # Use the correct field name 'orderitem_id'
         order_item = get_object_or_404(OrderItem, orderitem_id=orderitem_id)
-        print('order_item:',order_item)
-        print('order_item id:',order_item.orderitem_id)
+     
         new_status = request.POST.get('status')
-        print('new_status:',new_status)
+      
         return_reason = request.POST.get('return_reason', '')   
         order_item.status = new_status
         order_item.save()
-        print(f"Order item: {order_item}, New status: {new_status}, Return reason: {return_reason}")
+     
 
         if not new_status:
             return JsonResponse({'error': 'Status is required'}, status=400)
@@ -189,12 +187,12 @@ def update_orderitem_status(request, orderitem_id):
         
         with transaction.atomic():
             if order_item.status == "Cancelled":
-                print("Processing cancellation...")
+      
 
                 product_size = get_object_or_404(ProductSize, product=order_item.product, size=order_item.size)
                 product_size.stock += order_item.quantity
                 product_size.save()
-                print(f"Restocked product size: {product_size}")
+                
 
                 
                 wallet, _ = Wallet.objects.get_or_create(user=order_item.order.user)
@@ -207,19 +205,19 @@ def update_orderitem_status(request, orderitem_id):
                         status='Completed',
                         transaction_type='Credit'
                     )
-                    print(f"Transaction created: {transaction_instance.transaction_id}")
+                   
                     messages.success(request, f"Order item cancelled and ${order_item.price} added to your wallet!")
                 else:
-                    print("Failed to add funds to wallet.")
+                 
                     return JsonResponse({'error': 'Failed to add funds to wallet'}, status=500)
 
             elif new_status == "Requested Return":
-                print("Processing return approval...")
+               
  
                 product_size = get_object_or_404(ProductSize, product=order_item.product, size=order_item.size)
                 product_size.stock += order_item.quantity
                 product_size.save()
-                print(f"Restocked product size: {product_size}")
+                
 
                
                 wallet, _ = Wallet.objects.get_or_create(user=order_item.order.user)
@@ -232,27 +230,27 @@ def update_orderitem_status(request, orderitem_id):
                         status='Completed',
                         transaction_type='Credit'
                     )
-                    print(f"Transaction created for return: {transaction_instance.transaction_id}")
+                     
                     messages.success(request, f"Order item returned and ${order_item.price} credited to your wallet!")
                 else:
-                    print("Failed to add funds for return.")
+                   
                     return JsonResponse({'error': 'Failed to add funds to wallet for return'}, status=500)
 
             
             order_item.status = new_status
             order_item.save()
-            print(f"Order item status updated to {new_status}")
+           
 
           
             if transaction_instance:
-                print(f"Transaction ID: {transaction_instance.transaction_id}")
+               
 
              
-            return redirect('order:orders') 
+             return redirect('order:orders') 
 
     except Exception as e:
        
-        print(f"Error occurred: {e}") 
+      
 
       
         return JsonResponse({'error': f'Something went wrong: {str(e)}'}, status=500)
@@ -263,14 +261,14 @@ def update_return_orderitem_status(request, orderitem_id):
     if request.method == 'POST':
         try:
             
-            print("POST Request Data:", request.POST)
+         
              
             order_item = get_object_or_404(OrderItem, orderitem_id=orderitem_id)
             new_status = request.POST.get('status')
             return_reason = request.POST.get('return_reason', '')   
             
             
-            print(f"Order Item: {order_item}, New Status: {new_status}, Return Reason: {return_reason}")
+           
 
             if not new_status:
                 return JsonResponse({'error': 'Status is required'}, status=400)
@@ -293,14 +291,13 @@ def update_return_orderitem_status(request, orderitem_id):
             response = JsonResponse({'message': 'Order item return request updated successfully!', 'new_status': new_status}, status=200)
 
           
-            print("Response being returned:", response)
-
+  
              
             return response
 
         except Exception as e:
            
-            print(f"Error occurred: {str(e)}")  
+            
 
            
             return JsonResponse({'error': f'Something went wrong: {str(e)}'}, status=500)

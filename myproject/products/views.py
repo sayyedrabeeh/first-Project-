@@ -131,7 +131,7 @@ def products(request):
 def products_detail(request, id):
     product = get_object_or_404(Product, id=id)
     sizes_with_stock = ProductSize.objects.filter(product=product).select_related('size').order_by('size__id') 
-    print('sizes_with_stock:',sizes_with_stock)
+   
     cart_items_count = CartItem.objects.filter(cart__user=request.user).count()
     categories = Categories.objects.filter(status='listed').order_by('-id')
     sizes_stock = [
@@ -190,16 +190,12 @@ def catogery(request):
                 offer=offer
             )
             catogeryimage = request.FILES.get('catogeryimage')
-            print("catogeryimage:",catogeryimage)
-            if catogeryimage:
-                try:
-                    catogery.image.save(catogeryimage.name, catogeryimage)
-                except Exception as e:
-                    print(f"Error saving image: {e}")
+            
+          
             messages.success(request, "Category added successfully!")
             return redirect('products:catogery')
         elif action=='edit'  :
-            print('hi')
+        
             catogery_id=request.POST.get('catogery_id')
             catogery=get_object_or_404(Categories,id=catogery_id)
             catogery.brand_name=request.POST.get('brand_name')
@@ -210,7 +206,7 @@ def catogery(request):
             if image:
                 catogery.image.save(image.name, image)
                 catogery.save()
-                print('catogery:',catogery)
+          
             return redirect('products:catogery')
         elif action =='toggle':
             catogery_id=request.POST.get('catogery_id')
@@ -242,7 +238,7 @@ def catogery(request):
     return render(request, 'products/catogery.html', context)
 
 def Type(request):
-    print('shitttttttttttttttt')
+    
     action=request.POST.get('action')
     if request.method=='POST':
         if action =='add':
@@ -276,16 +272,12 @@ def Type(request):
                 offer=offer
             )
             catogeryimage = request.FILES.get('catogeryimage')
-            print("catogeryimage:",catogeryimage)
-            if catogeryimage:
-                try:
-                    catogery.image.save(catogeryimage.name, catogeryimage)
-                except Exception as e:
-                    print(f"Error saving image: {e}")
+          
+           
             messages.success(request, "Category added successfully!")
             return redirect('products:Type')
         elif action=='edit'  :
-            print('hi')
+           
             catogery_id=request.POST.get('catogery_id')
             catogery=get_object_or_404(Types,id=catogery_id)
             catogery.category=request.POST.get('category')
@@ -296,11 +288,11 @@ def Type(request):
             if image:
                 catogery.image.save(image.name, image)
                 catogery.save()
-                print('catogery:',catogery)
+              
             return redirect('products:Type')
         elif action =='toggle':
             catogery_id=request.POST.get('catogery_id')
-            print('catogery_id:',catogery_id)
+          
             catogery=get_object_or_404(Types,id=catogery_id)
             if catogery.status=='listed':
                 catogery.status='dislisted'

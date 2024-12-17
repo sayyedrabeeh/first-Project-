@@ -151,9 +151,11 @@ SITE_ID = 1
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+# Path to the main static folder
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
+# Optional: Collect static files into a separate folder for production
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Media files (for uploads)
 MEDIA_URL = '/media/'
