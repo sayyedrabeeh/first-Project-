@@ -99,7 +99,53 @@
     font-weight: bold;
 }
 
+.toast-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    color: white;
+    max-width: 350px;
+    display: none;
+    z-index: 9999;
+    transition: all 0.5s ease;
+}
 
+/* Success message */
+.toast-message.success {
+    background: linear-gradient(145deg, #56ab2f, #a8e063); 
+    border-left: 6px solid #388e3c;
+}
+
+/* Error message */
+.toast-message.error {
+    background: linear-gradient(145deg, #f85032, #e73827);
+    border-left: 6px solid #d32f2f;
+}
+
+/* Info message */
+.toast-message.info {
+    background: linear-gradient(145deg, #1e3c72, #2a5298);
+    border-left: 6px solid #0288d1;
+}
+
+/* Warning message */
+.toast-message.warning {
+    background: linear-gradient(145deg, #ff6a00, #ee0979);
+    border-left: 6px solid #ff5722;
+}
+
+/* Close button */
+.toast-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+}
 
 </style>
 </head>
@@ -222,7 +268,7 @@
 		</div>
 
 		<!-- Modal Search -->
-		<div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+		{% comment %} <div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
 			<button class="flex-c-m btn-hide-modal-search trans-04">
 				<i class="zmdi zmdi-close"></i>
 			</button>
@@ -236,7 +282,7 @@
 					</button>
 				</div>
 			</form>
-		</div>
+		</div> {% endcomment %}
 	</header>
 
 
@@ -543,7 +589,10 @@
 					Product Overview
 				</h3>
 			</div>
-
+            <div id="toastMessage" class="toast-message">
+                <span id="toastMsgText"></span>
+                <span class="toast-close" onclick="closeToast()">x</span>
+            </div>
 			<div class="flex-w flex-sb-m p-b-52">
 				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
@@ -561,8 +610,8 @@
 				</div>
 				 
 			</div>
-
-			<div class="row isotope-grid">
+           
+			<div class="row isotope-grid" id="wishlist-section" >
                 {% for i in products %}
                 <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item {{ i.category.brand_name|slugify }}">
                     <!-- Block2 -->
@@ -922,6 +971,40 @@
 
 
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+ 
+      // Function to show the toast message
+      function showToast(message, type) {
+        const toastMessage = document.getElementById('toastMessage');
+        const toastText = document.getElementById('toastMsgText');
 
+        toastMessage.classList.add(type);  // Add the specific type class (success, error, etc.)
+        toastText.textContent = message;  // Set the message text
+
+        toastMessage.style.display = 'block';  // Show the toast message
+
+        // Auto hide after 5 seconds
+        setTimeout(() => {
+            toastMessage.style.display = 'none';
+            toastMessage.classList.remove(type);  // Remove the class after the message disappears
+        }, 3000);  // Adjust the duration as needed
+    }
+
+    // Close button action for the toast message
+    function closeToast() {
+        const toastMessage = document.getElementById('toastMessage');
+        toastMessage.style.display = 'none';
+    }
+
+    // Trigger toast only if Django messages are present
+    {% if messages %}
+        {% for message in messages %}
+            showToast("{{ message }}", "{{ message.tags }}");  // Show the message with its type (success, error)
+        {% endfor %}
+    {% endif %}
+
+
+</script>
 </body>
 </html>  

@@ -184,11 +184,15 @@ onmouseout="this.style.backgroundColor='transparent'; this.style.color='#007bff'
         </thead>
         <tbody>
           
-            {% if selected_order.payment %}
+            {% if selected_order.payment == 'Success' %}
             <span style="font-size: 16px; font-weight: bold; color: #28a745; background-color: #e9f7e9; padding: 5px 10px; border-radius: 5px; display: inline-block; margin-bottom: 10px;">
                 Payment: Success
             </span>
-        {% else %}
+            {% elif selected_order.payment == 'pending' %}
+              <span style="font-size: 16px; font-weight: bold; color: #ffc107; background-color: #fff3cd; padding: 5px 10px; border-radius: 5px; display: inline-block; margin-bottom: 10px;">
+                  Payment: Pending
+              </span>
+           {% else %}
             <span style="font-size: 16px; font-weight: bold; color: #dc3545; background-color: #f8d7da; padding: 5px 10px; border-radius: 5px; display: inline-block; margin-bottom: 10px;">
                 Payment: Failure
             </span>
@@ -199,9 +203,10 @@ onmouseout="this.style.backgroundColor='transparent'; this.style.color='#007bff'
 
         <p> coupon discount : ₹{{ cupon_discount }} </p> 
         <p>Total Price with coupon discount : ₹{{ selected_order.total_price }} </p> 
+        {% comment %} <p>Total Price after canceled item  : ₹{{ updated_total_price }} </p>  {% endcomment %}
       
         <!-- Move this button outside the loop so it appears only once -->
-        <a href="{% url 'order:download_invoice' selected_order.order_id %}" style="margin-left:1130px;" class="btn btn-primary">Download Invoice</a>
+        <a href="{% url 'order:download_invoice' selected_order.order_id %}" style="margin-left:1000px;" class="btn btn-primary">Download Invoice</a>
       
                 {% for item in order_items %}
               
@@ -229,13 +234,19 @@ onmouseout="this.style.backgroundColor='transparent'; this.style.color='#007bff'
                         <td>
                         {% if item.status == 'Delivered' %}
                             <!-- If the item is delivered, show the return option -->
-                            <form method="post" action="{% url 'order:update_orderitem_status' orderitem_id=item.orderitem_id %}">
+                            {% comment %} <form method="post" action="{% url 'order:update_orderitem_status' orderitem_id=item.orderitem_id %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="status" value="Requested Return">
-                                <textarea name="return_reason" placeholder="Reason for return (optional)"></textarea>  <!-- Field for return reason -->
+                                <textarea name="return_reason" placeholder="Reason for return (optional)"></textarea>  
                                 <button class="return-btn" type="submit">Return Order</button>
-                            </form>
+                            </form> {% endcomment %}
+                            <button type="button" class="return-btn" data-bs-toggle="modal" data-bs-target="#returnModal-{{ item.orderitem_id }}">
+                                Return  Order
+                            </button>
                         {% elif item.status == 'Requested Return' %}
+                            <!-- If the item is in "Requested Return" status, show return requested and disable cancel button -->
+                            <button class="return-btn" disabled>Return Requested</button>
+                        {% elif item.status == 'Returned' %}
                             <!-- If the item is in "Requested Return" status, show return requested and disable cancel button -->
                             <button class="return-btn" disabled>Return Requested</button>
                         {% elif item.status != 'Cancelled' %}
@@ -278,15 +289,45 @@ onmouseout="this.style.backgroundColor='transparent'; this.style.color='#007bff'
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="cancelForm-{{ item.orderitem_id }}" method="POST" action="{% url 'order:update_orderitem_status' orderitem_id=item.orderitem_id %}">
-                <p>id: {{ item.orderitem_id }}</p>
+              
                 {% csrf_token %}
-                <input type="hidden" name="status" value="request cancel">
-                <div class="modal-body">
+                <input type="hidden" name="status" value="Cancelled">
+                <input type="hidden" name="total_price" value="{{ updated_total_price }}">
+                <input type="hidden" name="cupon_discount" value="{{ cupon_discount }}">
+                {% for item in order_items %}
+                      <input type="hidden" name="subtotal_price" value="{{ item.subtotal_price }} ">
+                {% endfor %}
+                 <div class="modal-body">
                     <p>Are you sure you want to cancel this order?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                     <button type="submit" form="cancelForm-{{ item.orderitem_id }}" class="btn btn-danger">Yes, Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %} 
+{% for item in order_items %}
+<div class="modal fade" id="returnModal-{{ item.orderitem_id }}" tabindex="-1" aria-labelledby="returnModalLabel-{{ item.orderitem_id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel-{{ item.orderitem_id }}">Return Confirm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form  method="POST" action="{% url 'order:update_orderitem_status' orderitem_id=item.orderitem_id %}">
+               
+                {% csrf_token %}
+                {% comment %} <input type="hidden" name="status" value="Request Return"> {% endcomment %}
+                <input type="hidden" name="status" value="Requested Return">
+                <div class="modal-body">
+                    <p>Are you sure you want to return this order?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="submit"   class="btn btn-success">Yes, Return</button>
                 </div>
             </form>
         </div>
@@ -329,8 +370,10 @@ onmouseout="this.style.backgroundColor='transparent'; this.style.color='#007bff'
                          <td>{{ order.items.count }}</td>
                          <td>{{ order.payment_type }}</td>
                          <td>
-                            {% if order.payment %}
+                            {% if order.payment == 'Success' %}
                             <span class="badge bg-success">Payment: Success</span>
+                            {% elif order.payment == 'pending' %}
+                            <span class="badge bg-warning">Payment: pending</span>
                         {% else %}
                             <span class="badge bg-danger">Payment: Failure</span>
                          {% endif %}
@@ -338,7 +381,6 @@ onmouseout="this.style.backgroundColor='transparent'; this.style.color='#007bff'
                         
                         <td>{{ order.created_at|date:"M d, Y" }}</td>
                         <td class="text-center">
-                            <p>id:{{order.order_id}}</p>
                             <a href="{% url 'order:order_with_order' order_id=order.order_id %}" class="btn btn-primary btn-sm">View Order</a>
                         </td>
                     </tr>

@@ -498,7 +498,7 @@
     {% if selected_order_id %}
     <div class="container mt-4" style=''>
         <h3 class="section-heading">Order Items</h3>
-        <div class="table-responsive" style='width:130%;'>
+        <div class="table-responsive" style='width:110%;'>
             <table class="table table-dark table-hover align-middle">
                 <thead class="bg-dark text-light">
                     <tr>
@@ -538,6 +538,8 @@
                                     <option value="Delivered" {% if item.status == 'Delivered' %}selected{% endif %}>Delivered</option>
                                     <option value="request cancel" {% if item.status == 'request cancel' %}selected{% endif %}>request Cancel</option>
                                     <option value="Cancelled" {% if item.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                                    <option value="Returned" {% if item.status == 'Returned' %}selected{% endif %}>returened</option>
+                                    <option value="Requested Return" {% if item.status == 'Requested Return' %}selected{% endif %}>request return</option>
                                 </select>
                             </form>
                             <div id="status-error-{{ item.orderitem_id }}" class="alert alert-danger mt-2" style="display: none;">
@@ -595,7 +597,11 @@
                     var status = $(this).val();
                     var orderItemId = $(this).attr('id').split('-')[2]; // Extract the orderitem_id
                     var csrf_token = $('[name=csrfmiddlewaretoken]').val();
-            
+                    console.log({
+                        'status': status,
+                        'csrfmiddlewaretoken': csrf_token
+                    });
+                    
                     $.ajax({
                         url: "/orders/update_orderitem_status/" + orderItemId + "/",
                         method: 'POST',
@@ -612,6 +618,7 @@
                             $('#toast-message').text('Failed to update order item status!').css('color', 'red');
                             $('#toast').toast({ delay: 3000 }).toast('show');
                         }
+                        
                     });
                 });
             });
@@ -648,6 +655,12 @@
                         break;
                     case 'Cancelled':
                         disableOptions(dropdown, ['Order Pending', 'Order Confirmed', 'Shipped', 'Out For Delivery', 'Delivered']);
+                        break;
+                    case 'Returned':
+                        disableOptions(dropdown, ['Order Pending', 'Order Confirmed', 'Shipped', 'Out For Delivery', 'Delivered','cancelled','request cancel']);
+                        break;
+                    case 'Requested Returen':
+                        disableOptions(dropdown, ['Order Pending', 'Order Confirmed', 'Shipped', 'Out For Delivery', 'Delivered','cancelled','request cancel']);
                         break;
                     default:
                         break;

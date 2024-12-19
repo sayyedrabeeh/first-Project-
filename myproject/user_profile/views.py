@@ -14,6 +14,7 @@ from products.models import Size,ProductSize
 from offers_coupons.models import Coupon,CouponUsage
 import os
 import uuid
+from wallet.models import Wallet
 
 User = get_user_model()
 def admin_required(function):
@@ -26,7 +27,8 @@ def admin_required(function):
 @login_required(login_url='authentication:login')
 def address(request):
     next_page = request.GET.get('next', None) 
-    
+    wallet, created = Wallet.objects.get_or_create(user=request.user)
+    wallet_balance = wallet.balance
     address = Address.objects.filter(user=request.user, status='listed').order_by('-id')
     coupon_code=request.POST.get('coupon_code','')
     msg=None
@@ -119,6 +121,7 @@ def address(request):
                 'coupon_code':coupon_code,
                 'total_price': total_price - (discount if 'discount' in locals() else 0),
                 'discount': discount if 'discount' in locals() else 0,
+                'wallet_balance':wallet_balance
             }
             return render(request, 'cart/payment.html', context)
         return redirect('user_profile:address')
@@ -129,6 +132,7 @@ def address(request):
         'msg':msg,
         'next_page': next_page,
         'field_errors':field_errors,
+        'wallet_balance':wallet_balance,
 
     }
     return render(request,'user_profile/address.html',context)  

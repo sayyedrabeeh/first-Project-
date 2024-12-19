@@ -133,6 +133,32 @@
                     padding: 20px;
                 }
             }
+            /* Removes default spinner styles for better control */
+            input[type="number"] {
+                -webkit-appearance: none; /* Removes default spinner in Chrome/Safari */
+                -moz-appearance: textfield; /* Removes spinner in Firefox */
+                appearance: textfield; /* Standard reset */
+                width: 70px; /* Adjust width for buttons */
+                padding: 5px; /* Add padding */
+                text-align: center; /* Center the text */
+                position: relative; /* Required for custom styles */
+                border: 1px solid #ccc; /* Default border */
+                border-radius: 4px; /* Rounded edges */
+            }
+            
+            /* Always show increase/decrease buttons */
+            input[type="number"]::-webkit-inner-spin-button,
+            input[type="number"]::-webkit-outer-spin-button {
+                opacity: 1 !important; /* Force buttons to always show */
+                pointer-events: all; /* Ensure they're interactive */
+            }
+            
+            /* Optional: Add focus styling */
+            input[type="number"]:focus {
+                outline: none;
+                border-color: #007bff;
+            }
+            
             
         </style>
     </head>
@@ -194,7 +220,7 @@
                             <a href="{% url 'products:products' %}">Shop</a>
                         </li>
 
-                        <li class="label1" data-label1="hot">
+                        {% comment %} <li class="label1" data-label1="hot">
                             <a href="#">Features</a>
                         </li>
 
@@ -208,21 +234,21 @@
 
                         <li>
                             <a href="#">Contact</a>
-                        </li>
+                        </li> {% endcomment %}
                     </ul>
                 </div>	
 
                 <!-- Icon header -->
                 <div class="wrap-icon-header flex-w flex-r-m">
-                    <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+                    {% comment %} <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
                         <i class="zmdi zmdi-search"></i>
-                    </div>
-
-                    <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="{{ cart_items_count }}">
+                    </div> {% endcomment %}
+                    <a href="{% url 'cart:cart_view'  %}">
+                    <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11   js-show-cart" >
                         <i class="zmdi zmdi-shopping-cart"></i>
-                    </div>
-
-                    <a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
+                    </div>  
+                       </a>
+                    <a href="{% url 'products:wishlist' 'view' %}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11  " data-notify="0">
                         <i class="zmdi zmdi-favorite-outline"></i>
                     </a>
                 </div>
@@ -303,7 +329,7 @@
                 <a href="product.html">Shop</a>
             </li>
 
-            <li>
+            {% comment %} <li>
                 <a href="shoping-cart.html" class="label1 rs1" data-label1="hot">Features</a>
             </li>
 
@@ -317,12 +343,12 @@
 
             <li>
                 <a href="contact.html">Contact</a>
-            </li>
+            </li> {% endcomment %}
         </ul>
     </div>
 
     <!-- Modal Search -->
-    <div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+    {% comment %} <div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
         <div class="container-search-header">
             <button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
                 <img src="{% static 'images/icons/icon-close2.png' %}" alt="CLOSE">
@@ -335,7 +361,7 @@
                 <input class="plh3" type="text" name="search" placeholder="Search...">
             </form>
         </div>
-    </div>
+    </div> {% endcomment %}
 </header>
 
 
@@ -684,14 +710,14 @@
 	</footer>
 
 
-	<!-- Back to top -->
+ 
 	<div class="btn-back-to-top" id="myBtn">
 		<span class="symbol-btn-back-to-top">
 			<i class="zmdi zmdi-chevron-up"></i>
 		</span>
 	</div>
 
-<!--===============================================================================================-->	
+ 
 <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
 <script src="{% static 'vendor/animsition/js/animsition.min.js' %}"></script>
 <script src="{% static 'vendor/bootstrap/js/popper.js' %}"></script>
@@ -725,8 +751,8 @@
 <script src="{% static 'js/main.js' %}"></script>
 <script>
 {% if out_of_stock_items %}
-    document.getElementById('payment-btn').style.pointerEvents = 'none';  // Disables clicks
-    document.getElementById('payment-btn').style.opacity = '0.5';  // Fades the link
+    document.getElementById('payment-btn').style.pointerEvents = 'none';  
+    document.getElementById('payment-btn').style.opacity = '0.5';   
 {% endif %}  
 </script>
 

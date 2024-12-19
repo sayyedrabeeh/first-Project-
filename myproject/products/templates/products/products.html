@@ -249,6 +249,55 @@
             .shadow-sm {
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
+
+            .toast-message {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px;
+                border-radius: 8px;
+                font-size: 16px;
+                color: white;
+                max-width: 350px;
+                display: none;
+                z-index: 9999;
+                transition: all 0.5s ease;
+            }
+            
+            /* Success message */
+            .toast-message.success {
+                background: linear-gradient(145deg, #56ab2f, #a8e063); 
+                border-left: 6px solid #388e3c;
+            }
+            
+            /* Error message */
+            .toast-message.error {
+                background: linear-gradient(145deg, #f85032, #e73827);
+                border-left: 6px solid #d32f2f;
+            }
+            
+            /* Info message */
+            .toast-message.info {
+                background: linear-gradient(145deg, #1e3c72, #2a5298);
+                border-left: 6px solid #0288d1;
+            }
+            
+            /* Warning message */
+            .toast-message.warning {
+                background: linear-gradient(145deg, #ff6a00, #ee0979);
+                border-left: 6px solid #ff5722;
+            }
+            
+            /* Close button */
+            .toast-close {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                cursor: pointer;
+                font-weight: bold;
+                color: white;
+            }
+            
         </style>
     </head>
 
@@ -309,15 +358,15 @@
     
                     <!-- Icon header -->
                     <div class="wrap-icon-header flex-w flex-r-m">
-                        <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+                        {% comment %} <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
                             <i class="zmdi zmdi-search"></i>
-                        </div>
-    
-                        <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="{{ cart_items_count }}">
+                        </div> {% endcomment %}
+                        <a href="{% url 'cart:cart_view'  %}">
+                        <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11   js-show-cart" >
                             <i class="zmdi zmdi-shopping-cart"></i>
-                        </div>
-    
-                        <a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
+                        </div>  
+                           </a>
+                        <a href="{% url 'products:wishlist' 'view' %}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11  " data-notify="0">
                             <i class="zmdi zmdi-favorite-outline"></i>
                         </a>
                     </div>
@@ -398,7 +447,7 @@
                     <a href="">Shop</a>
                 </li>
     
-                <li>
+                {% comment %} <li>
                     <a href="" class="label1 rs1" data-label1="hot">Features</a>
                 </li>
     
@@ -412,12 +461,12 @@
     
                 <li>
                     <a href="">Contact</a>
-                </li>
+                </li> {% endcomment %}
             </ul>
         </div>
     
         <!-- Modal Search -->
-        <div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+        {% comment %} <div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
             <div class="container-search-header">
                 <button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
                     <img src="{% static 'images/icons/icon-close2.png' %}" alt="CLOSE">
@@ -430,7 +479,7 @@
                     <input class="plh3" type="text" name="search" placeholder="Search...">
                 </form>
             </div>
-        </div>
+        </div> {% endcomment %}
     </header>
 
 
@@ -446,7 +495,7 @@
 
 	
 	<!-- Product -->
-	<div class="bg0 m-t-23 p-b-140">
+	{% comment %} <div class="bg0 m-t-23 p-b-140">
 		<div class="container">
 			<div class="flex-w flex-sb-m p-b-52">
 				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
@@ -483,79 +532,40 @@
                     </form>
                 
                     <!-- Search Bar -->
-                    <form method="get" action="{% url 'products:products' %}" class="d-flex align-items-center mt-3 mt-md-0">
-                        <input type="hidden" name="sort" value="{{ request.GET.sort }}">
-                        
-                        <!-- Search input field with clear button -->
-                        <div class="position-relative" style="max-width: 350px; display:flex;">
-                            <!-- Search input -->
-                            <input type="text" name="q" class="form-control border-bottom shadow-none pe-5" 
-                                   placeholder="Search products..." value="{{ request.GET.q }}">
-                            
-                            <!-- Clear button (X) inside the input field -->
-                            <button type="button" class="position-absolute top-50 end-0 translate-middle-y btn-clear" onclick="clearSearch()" 
-                                    style="border: none; background: transparent; cursor: pointer; padding: 0;margin-left:-10px">
-                                <i class="fas fa-times" style="font-size: 18px; color: #999;"></i>
-                            </button>
-                        </div>
-                        
-                        <!-- Search button -->
-                        <button type="submit" class="btn btn-primary ms-2" style='margin-left :10px;'>
-                            <i class="fas fa-search"></i> Search
-                        </button>
-                    </form>
+                   
                     
                 </div>
                 
-                <button id="filter-btn" class="filter-btn">
-                    Filter Options
-                </button>
-                {% comment %} <form method="get" action="{% url 'products:products' %}" class="filters-form" style='display:flex;'>
-                  
-                 
-                    <!-- Filter by categories (checkboxes) -->
-                    <div class="checkbox-group" style='display:flex;'>
-                        <p><strong>Select Categories</strong></p>
-                        {% for category in categories %}
-                            <label>
-                                <input type="checkbox" name="category" value="{{ category.id }}" {% if category.id in category_ids %}checked{% endif %}>
-                                {{ category.category }}
-                            </label><br>
-                        {% endfor %}
-                    </div>
                 
-               
-                    <div class="checkbox-group"style='display:flex;'>
-                        <p><strong>Select Brands</strong></p>
-                        {% for category in categories %}
-                            <label>
-                                <input type="checkbox" name="brand" value="{{ category.brand_name }}" {% if category.brand_name in brand_names %}checked{% endif %}>
-                                {{ category.brand_name }}
-                            </label><br>
-                        {% endfor %}
-                    </div>
                 
-                    <!-- Filter by price range -->
-                    <div class="price-range"style='display:flex;'>
-                        <input type="number" name="min_price" value="{{ min_price }}" placeholder="Min Price" class="form-control">
-                        <input type="number" name="max_price" value="{{ max_price }}" placeholder="Max Price" class="form-control">
-                    </div>
-                
-                    <!-- Sorting options -->
-                    
-                
-                    <button type="submit" class="btn btn-primary">Apply Filters</button>
-                </form> {% endcomment %}
 				<!-- Filter -->
-                <form id="filters-form" method="get" action="{% url 'products:products' %}" class="filters-form card shadow-sm p-4" style="display: none;">
+                <form id="filters-form" method="get" action="{% url 'products:products' %}" class="filters-form card shadow-sm p-4" style="width:1120px;">
                     <!-- Filter by Categories -->
+
+                    <!-- Search input field with clear button -->
+                    <div class="position-relative" style="max-width: 350px; display:flex;">
+                        <!-- Search input -->
+                        <input type="text" name="q" class="form-control border-bottom shadow-none pe-5" 
+                               placeholder="Search products..." value="{{ request.GET.q }}">
+                        
+                        <!-- Clear button (X) inside the input field -->
+                        <button type="button" class="position-absolute top-50 end-0 translate-middle-y btn-clear" onclick="clearSearch()" 
+                                style="border: none; background: transparent; cursor: pointer; padding: 0;margin-left:-10px">
+                            <i class="fas fa-times" style="font-size: 18px; color: #999;"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Search button -->
+                    <button type="submit" class="btn btn-primary ms-2" style='margin-left :10px;'>
+                        <i class="fas fa-search"></i> Search
+                    </button>
                     <div class="filter-group mb-4">
                         <h5 class="text-primary">Select Categories</h5>
                         <div class="row">
                             {% for category in Type %}
                                 <div class="col-md-6">
                                     <label class="d-flex align-items-center">
-                                        <input type="checkbox" name="category" value="{{ category.id }}" {% if category.id in category_ids %}checked{% endif %} class="me-2">
+                                        <input type="checkbox" name="type" value="{{ category.id }}" {% if category.id in category_ids %}checked{% endif %} class="me-2">
                                         {{ category.category }}
                                     </label>
                                 </div>
@@ -676,7 +686,180 @@
                 {% endif %}
             </div>
         </div>
-       </div>     
+       </div>      {% endcomment %}
+
+
+       <div class="bg0 m-t-23 p-b-140">
+        <div class="container">
+            <div class="row">
+                <!-- Filter Form Section -->
+                <div class="col-lg-3 col-md-4">
+                    <form id="filters-form" method="get" action="{% url 'products:products' %}" class="filters-form card shadow-sm p-4">
+                        <!-- Search Bar -->
+                        <div class="d-flex align-items-center mb-4">
+                            <input type="text" name="q" class="form-control" placeholder="Search products..." value="{{ request.GET.q }}">
+                            <button type="submit" class="btn btn-outline-primary ms-2">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <div class="text-center mb-4">
+                            <button type="button" class="btn btn-outline-secondary" onclick="clearSearch()">Clear Search</button>
+                        </div>
+                        <div id="toastMessage" class="toast-message">
+                            <span id="toastMsgText"></span>
+                            <span class="toast-close" onclick="closeToast()">x</span>
+                        </div>
+    
+                        <!-- Category Filter -->
+                        <div class="filter-group mb-4">
+                            <h5 class="text-primary">Categories</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="type" value="all" id="categoryAll" {% if 'all' in category_ids %}checked{% endif %}>
+                                <label class="form-check-label" for="categoryAll">All Categories</label>
+                            </div>
+                            {% for category in Type %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="type" value="{{ category.id }}" {% if category.id in category_ids %}checked{% endif %} id="category-{{ category.id }}">
+                                    <label class="form-check-label" for="category-{{ category.id }}">{{ category.category }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+    
+                        <!-- Brand Filter -->
+                        <div class="filter-group mb-4">
+                            <h5 class="text-primary">Brands</h5>
+                            {% for category in categories %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="brand" value="{{ category.brand_name }}" {% if category.brand_name in brand_names %}checked{% endif %} id="brand-{{ category.brand_name }}">
+                                    <label class="form-check-label" for="brand-{{ category.brand_name }}">{{ category.brand_name }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+    
+                        <!-- Price Range Filter -->
+                        <div class="filter-group mb-4">
+                            <h5 class="text-primary">Price Range</h5>
+                            <div class="d-flex">
+                                <input type="number" name="min_price" value="{{ min_price }}" placeholder="Min Price" class="form-control me-2" style="max-width: 150px;">
+                                <input type="number" name="max_price" value="{{ max_price }}" placeholder="Max Price" class="form-control" style="max-width: 150px;">
+                            </div>
+                        </div>
+                        <div class="text-center mb-4">
+                            <button type="button" class="btn btn-outline-secondary" onclick="clearFilters()">Clear Filters</button>
+                        </div>
+                        <!-- Apply Filters -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fa fa-check"></i> Apply Filters
+                            </button>
+                        </div>
+                    </form>
+                </div>
+    
+                <!-- Product Listing Section -->
+                <div class="col-lg-9 col-md-8">
+                    <!-- Sorting and Filter Buttons -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="filter-tope-group">
+                            <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
+                                All Products
+                            </button>
+    
+                            {% if categories %}
+                                {% for category in categories %}
+                                    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".{{ category.brand_name|slugify }}">
+                                        {{ category.brand_name }}
+                                    </button>
+                                {% endfor %}
+                            {% else %}
+                                <p>No categories found.</p>
+                            {% endif %}
+                        </div>
+    
+                        <!-- Sorting Dropdown -->
+                        <form method="get" action="{% url 'products:products' %}" class="d-flex align-items-center">
+                            <select id="sort" name="sort" class="form-select" onchange="this.form.submit()">
+                                <option value="default" {% if request.GET.sort == 'default' %}selected{% endif %}>Default</option>
+                                <option value="popularity" {% if request.GET.sort == 'popularity' %}selected{% endif %}>Popularity</option>
+                                <option value="rating" {% if request.GET.sort == 'rating' %}selected{% endif %}>Average Rating</option>
+                                <option value="newness" {% if request.GET.sort == 'newness' %}selected{% endif %}>Newness</option>
+                                <option value="price_low_to_high" {% if request.GET.sort == 'price_low_to_high' %}selected{% endif %}>Price: Low to High</option>
+                                <option value="price_high_to_low" {% if request.GET.sort == 'price_high_to_low' %}selected{% endif %}>Price: High to Low</option>
+                                <option value="a_z" {% if request.GET.sort == 'a_z' %}selected{% endif %}>A-Z</option>
+                                <option value="z_a" {% if request.GET.sort == 'z_a' %}selected{% endif %}>Z-A</option>
+                            </select>
+                        </form>
+                    </div>
+    
+                    <!-- Product Grid -->
+                    <div class="row isotope-grid">
+                        {% for i in products %}
+                            <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item {{ i.category.brand_name|slugify }}">
+                                <div class="block2">
+                                    <a href="{% url 'products:products_detail' i.id %}">
+                                        <div class="block2-pic hov-img0 label-new" data-label="New">
+                                            {% if i.additional_images.all %}
+                                                <img src="{{ i.additional_images.first.image.url }}" alt="IMG-PRODUCT">
+                                            {% else %}
+                                                <img src="{% static 'images/default-product.jpg' %}" alt="IMG-PRODUCT">
+                                            {% endif %}
+                                        </div>
+    
+                                        <div class="block2-txt flex-w flex-t p-t-14">
+                                            <div class="block2-txt-child1 flex-col-l">
+                                                <a href="{% url 'products:products_detail' i.id %}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                                    {{ i.name }}
+                                                </a>
+                                                <span class="stext-105 cl3">₹{{ i.price }}</span>
+                                            </div>
+    
+                                            <div class="block2-txt-child2 flex-r p-t-3">
+                                               
+                                                <a href="{% url 'products:wishlist' 'add' i.id %}" class=" ">
+                                                    <img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                                                   {% comment %} <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON"> {% endcomment %}
+                                               </a>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+    
+                    <!-- Pagination -->
+                    <div class="pagination-container">
+                        {% if products.has_previous %}
+                            <a href="{% url 'products:home' %}?page={{ products.previous_page_number }}&q={{ query }}&sort={{ sort_by }}" class="pagination-link pagination-prev">
+                                &laquo; Previous
+                            </a>
+                        {% else %}
+                            <span class="pagination-link pagination-prev disabled">&laquo; Previous</span>
+                        {% endif %}
+    
+                        {% for page_num in products.paginator.page_range %}
+                            {% if page_num == products.number %}
+                                <span class="pagination-link active">{{ page_num }}</span>
+                            {% else %}
+                                <a href="{% url 'products:products' %}?page={{ page_num }}&q={{ query }}&sort={{ sort_by }}" class="pagination-link">
+                                    {{ page_num }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+    
+                        {% if products.has_next %}
+                            <a href="{% url 'products:products' %}?page={{ products.next_page_number }}&q={{ query }}&sort={{ sort_by }}" class="pagination-link pagination-next">
+                                Next &raquo;
+                            </a>
+                        {% else %}
+                            <span class="pagination-link pagination-next disabled">Next &raquo;</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 
 	<!-- Footer -->
 	<footer class="bg3 p-t-75 p-b-32">
@@ -942,14 +1125,54 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script>
-    $(document).ready(function () {
-        // Toggle filter form visibility
-        $("#filter-btn").click(function () {
-            $("#filters-form").toggle();
-        });
-    });
-</script>
+  function clearSearch() {
+        document.querySelector('input[name="q"]').value = ''; // Clear search input
+        document.querySelector('form').submit(); // Trigger form submit to reset the page
+    }
 
+    // Function to clear the filter checkboxes
+    function clearFilters() {
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.checked = false); // Uncheck all checkboxes
+        document.querySelector('input[name="min_price"]').value = ''; // Clear min price input
+        document.querySelector('input[name="max_price"]').value = ''; // Clear max price input
+        document.querySelector('form').submit(); // Trigger form submit to reset the page
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+ 
+      // Function to show the toast message
+      function showToast(message, type) {
+        const toastMessage = document.getElementById('toastMessage');
+        const toastText = document.getElementById('toastMsgText');
+
+        toastMessage.classList.add(type);  // Add the specific type class (success, error, etc.)
+        toastText.textContent = message;  // Set the message text
+
+        toastMessage.style.display = 'block';  // Show the toast message
+
+        // Auto hide after 5 seconds
+        setTimeout(() => {
+            toastMessage.style.display = 'none';
+            toastMessage.classList.remove(type);  // Remove the class after the message disappears
+        }, 3000);  // Adjust the duration as needed
+    }
+
+    // Close button action for the toast message
+    function closeToast() {
+        const toastMessage = document.getElementById('toastMessage');
+        toastMessage.style.display = 'none';
+    }
+
+    // Trigger toast only if Django messages are present
+    {% if messages %}
+        {% for message in messages %}
+            showToast("{{ message }}", "{{ message.tags }}");  // Show the message with its type (success, error)
+        {% endfor %}
+    {% endif %}
+
+    
+</script>
 
 </body>
 </html>

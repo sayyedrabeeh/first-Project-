@@ -54,20 +54,22 @@ def products(request):
     query = request.GET.get('q', '')  
     sort_by = request.GET.get('sort', 'default')   
     page_number = request.GET.get('page', 1)  
-
-    # Filter by selected categories (multiple categories allowed)
+ 
     category_ids = request.GET.getlist('category')
     if category_ids:
         products = Product.objects.filter(category__id__in=category_ids, status='listed')
     else:
         products = Product.objects.filter(status='listed')
+    type_ids = request.GET.getlist('type')   
+    if type_ids:
+        products = products.filter(Types__id__in=type_ids)
 
-    # Filter by selected brands (multiple brands allowed)
+    
     brand_names = request.GET.getlist('brand')
     if brand_names:
         products = products.filter(category__brand_name__in=brand_names)
 
-    # Filter by price range (if provided)
+  
     min_price = request.GET.get('min_price', None)
     max_price = request.GET.get('max_price', None)
     if min_price:
@@ -111,7 +113,8 @@ def products(request):
   
     cart_items_count = CartItem.objects.filter(cart__user=request.user).count()
 
-  
+    user_wishlist = Wishlist.objects.filter(user=request.user).values_list('product', flat=True)
+
     context = {
         'products': paginated_products,
         'categories': categories,
@@ -123,6 +126,7 @@ def products(request):
         'max_price': max_price,
         'category_ids': category_ids,
         'brand_names': brand_names,
+        'user_wishlist':user_wishlist
     }
 
     return render(request, 'products/products.html', context)
@@ -321,26 +325,33 @@ def Type(request):
     return render(request, 'products/Type.html', context)
 
 @login_required(login_url='authentication:login')    
-def wishlist(request,action,product_id=None):
-    if action=='view':
-         wishlist_items = Wishlist.objects.filter(user=request.user)
-         return render(request, 'products/wishlist.html', {'wishlist_items': wishlist_items})
-    elif action=='add' and product_id:
+def wishlist(request, action, product_id=None):
+    
+    if action == 'view':
+        wishlist_items = Wishlist.objects.filter(user=request.user)
+        return render(request, 'products/wishlist.html', {'wishlist_items': wishlist_items})
+    elif action == 'add' and product_id:
         product = get_object_or_404(Product, id=product_id)
-        wishlist, created = Wishlist.objects.get_or_create(user=request.user, product=product)
-        messages.success(request, f"{product.name} has been added to your wishlist!")
-        return redirect('products:wishlist','view')  
-    elif action =='remove' and product_id:
-            product = get_object_or_404(Product, id=product_id)
-            wishlist_item = Wishlist.objects.filter(user=request.user, product=product).first()
-            if wishlist_item:
-                wishlist_item.delete()
-                messages.success(request, f"{product.name} has been removed from your wishlist.")
-            else:
-                messages.info(request, f"{product.name} was not in your wishlist.")
-            return redirect('products:wishlist','view')
+        wishlist_item, created = Wishlist.objects.get_or_create(user=request.user, product=product)
+        if created:
+            messages.success(request, f"{product.name} has been added to your wishlist!")
+        else:
+            messages.info(request, f"{product.name} is already in your wishlist.")
+       
+        return redirect(f"{request.META.get('HTTP_REFERER')}#wishlist-section")
+    elif action == 'remove' and product_id:
+        product = get_object_or_404(Product, id=product_id)
+        wishlist_item = Wishlist.objects.filter(user=request.user, product=product).first()
+        if wishlist_item:
+            wishlist_item.delete()
+            messages.success(request, f"{product.name} has been removed from your wishlist.")
+        else:
+            messages.info(request, f"{product.name} was not in your wishlist.")
+        # Redirect back to the same page and focus on the wishlist section
+        return redirect(f"{request.META.get('HTTP_REFERER')}#wishlist-section")
     messages.error(request, "Invalid action.")
-    return redirect('products:wishlist','view')       
+    return redirect(request.META.get('HTTP_REFERER'))
+  
 @never_cache
 @admin_required 
 def products_admin(request):

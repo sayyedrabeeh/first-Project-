@@ -517,7 +517,7 @@
                             <a href="{% url 'products:products' %}">Shop</a>
                         </li>
 
-                        <li class="label1" data-label1="hot">
+                        {% comment %} <li class="label1" data-label1="hot">
                             <a href="#">Features</a>
                         </li>
 
@@ -531,21 +531,21 @@
 
                         <li>
                             <a href="#">Contact</a>
-                        </li>
+                        </li> {% endcomment %}
                     </ul>
                 </div>	
 
                 <!-- Icon header -->
                 <div class="wrap-icon-header flex-w flex-r-m">
-                    <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+                    {% comment %} <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
                         <i class="zmdi zmdi-search"></i>
-                    </div>
-
-                    <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="{{ cart_items_count }}">
+                    </div> {% endcomment %}
+                    <a href="{% url 'cart:cart_view'  %}">
+                    <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11   js-show-cart" >
                         <i class="zmdi zmdi-shopping-cart"></i>
-                    </div>
-
-                    <a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
+                    </div>  
+                       </a>
+                    <a href="{% url 'products:wishlist' 'view' %}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11  " data-notify="0">
                         <i class="zmdi zmdi-favorite-outline"></i>
                     </a>
                 </div>
@@ -561,16 +561,16 @@
         </div>
 
         <!-- Icon header -->
-        <div class="wrap-icon-header flex-w flex-r-m m-r-15">
-            <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-show-modal-search">
+        <div class="wrap-icon-header flex-w flex-r-m">
+            {% comment %} <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
                 <i class="zmdi zmdi-search"></i>
-            </div>
-
-            <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="2">
+            </div> {% endcomment %}
+            <a href="{% url 'cart:cart_view'  %}">
+            <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11   js-show-cart" >
                 <i class="zmdi zmdi-shopping-cart"></i>
-            </div>
-
-            <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify="0">
+            </div>  
+               </a>
+            <a href="{% url 'products:wishlist' 'view' %}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11  " data-notify="0">
                 <i class="zmdi zmdi-favorite-outline"></i>
             </a>
         </div>
@@ -626,7 +626,7 @@
                 <a href="product.html">Shop</a>
             </li>
 
-            <li>
+            {% comment %} <li>
                 <a href="shoping-cart.html" class="label1 rs1" data-label1="hot">Features</a>
             </li>
 
@@ -640,12 +640,12 @@
 
             <li>
                 <a href="contact.html">Contact</a>
-            </li>
+            </li> {% endcomment %}
         </ul>
     </div>
 
     <!-- Modal Search -->
-    <div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
+    {% comment %} <div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
         <div class="container-search-header">
             <button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
                 <img src="{% static 'images/icons/icon-close2.png' %}" alt="CLOSE">
@@ -658,7 +658,7 @@
                 <input class="plh3" type="text" name="search" placeholder="Search...">
             </form>
         </div>
-    </div>
+    </div> {% endcomment %}
 </header>
 
 
@@ -789,88 +789,88 @@
 
 
 <div class="container py-5">
-    <!-- Centered row for alignment -->
-    <div class="row justify-content-center" style='margin-bottom:30px;'>
+    <!-- Row for alignment -->
+    <div class="row justify-content-center" style="margin-bottom: 30px;">
         <!-- Column for the form -->
         <div class="col-md-6">
             <!-- Card wrapper for form -->
             <div class="card custom-card shadow-lg border-light rounded-3">
-                <!-- Card body for spacing -->
                 <div class="card-body p-5">
                     <!-- Form title -->
                     <h5 class="card-title text-center mb-4">Apply Coupon</h5>
 
-                    <!-- Coupon form -->
-                    {% comment %} <form method="POST" action="{% url 'cart:apply_coupon' %}">
+                    <!-- Coupon Form -->
+                    <form method="POST" action="{% url 'cart:apply_coupon' %}">
                         {% csrf_token %}
-    
-                    
-                        <!-- Full-width input group for the coupon code -->
-                        <div class="mb-4">
-                            <!-- Coupon code input field with full width -->
-                             
+                        <div class="form-group">
+                            <label for="coupon_code">Coupon Code</label>
                             <input 
-                            type="text" 
-                            name="coupon_code" 
-                            class="form-control" 
-                            placeholder="Enter Coupon Code" 
-                            value="{{ coupon_code|default:'' }}" >
-                            {% if messages %}
-                            <div class="messages">
-                                {% for message in messages %}
-                                    <div class="alert alert-{{ message.tags }}">
-                                        {{ message }}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                        
-                             <button 
-                             type="submit" 
-                             class="btn btn-primary" 
-                             {% if coupon_code %}name="remove_coupon"{% endif %}
-                             onclick="{% if coupon_code %}clearCouponField(event){% endif %}"
-                         >
-                             {% if coupon_code %}Remove Coupon{% else %}Apply Coupon{% endif %}
-                         </button>
-                    </form> {% endcomment %}
+                                type="text" 
+                                id="coupon_code" 
+                                name="coupon_code" 
+                                class="form-control" 
+                                placeholder="Enter Coupon Code" 
+                                value="{{ coupon_code }}"
+                                {% if coupon_code %}readonly{% endif %}
+                            >
+                        </div>
 
-                                     <!-- Coupon Form -->
-                  <form method="POST" action="{% url 'cart:apply_coupon' %}">
-                      {% csrf_token %}
-                      <div class="form-group">
-                          <label for="coupon_code">Coupon Code</label>
-                          <input 
-                              type="text" 
-                              id="coupon_code" 
-                              name="coupon_code" 
-                              class="form-control" 
-                              placeholder="Enter Coupon Code" 
-                              value="{{ coupon_code }}"
-                              {% if messages %}
-                             
-                              {% if coupon_code %}readonly{% endif %}
-                          >
-                          <div class="messages">
+                        <!-- Messages -->
+                        <div class="messages mt-3">
                             {% for message in messages %}
                                 <div class="alert alert-{{ message.tags }}">
                                     {{ message }}
                                 </div>
                             {% endfor %}
                         </div>
-                    {% endif %}
-                      </div>
-                      <button 
-                          type="submit" 
-                          class="btn {% if coupon_code %}btn-danger{% else %}btn-primary{% endif %}" 
-                          name="{% if coupon_code %}remove_coupon{% else %}apply_coupon{% endif %}">
-                          {% if coupon_code %}Remove Coupon{% else %}Apply Coupon{% endif %}
-                      </button>
-                  </form>
-                  
 
+                        <button 
+                            type="submit" 
+                            class="btn {% if coupon_code %}btn-danger{% else %}btn-primary{% endif %} mt-3" 
+                            name="{% if coupon_code %}remove_coupon{% else %}apply_coupon{% endif %}">
+                            {% if coupon_code %}Remove Coupon{% else %}Apply Coupon{% endif %}
+                        </button>
+                    </form>
                 </div>
             </div>
+        </div>
+
+        <!-- Column for instructions or fallback message -->
+        <div class="col-md-5">
+            <!-- Show this if coupon is applied -->
+            {% if coupon_code %}
+            <div class="card custom-card shadow-lg border-light rounded-3">
+                <div class="card-body p-4">
+                    <h5 class="card-title text-center mb-4">Coupon Details</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <strong>Coupon Code:</strong> {{ coupon_code }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Discount:</strong> ₹{{ discount }}
+                        </li>
+                        
+                    </ul>
+                    <div class="mt-3">
+                        <p class="text-muted">
+                            Your coupon has been successfully applied! The discount will be reflected in your cart total. If you'd like to remove the coupon, click the "Remove Coupon" button.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- Show this if no coupon is applied -->
+            <div class="card custom-card shadow-lg border-light rounded-3">
+                <div class="card-body p-4">
+                    <h5 class="card-title text-center mb-4">No Coupon Applied</h5>
+                    <p class="text-muted text-center">
+                        You have not applied any coupon yet. Enter a valid coupon code in the form to enjoy discounts on your order.
+                        if you apply a coupon  don't go back without remove the coupon if you go back without remove the coupon ,
+                        wil be expire.
+                    </p>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -928,14 +928,10 @@
             
     </div>
               <div class="col-sm-10  m-b-50">
-                <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm"style='width:800px;'>
+                <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-165 m-r-40 m-lr-0-xl p-lr-15-sm"style='width:900px;'>
                     <h4 class="mtext-109 cl2 p-b-30">
                         Cart Totals
                     </h4>
-
-                   
-              
-
             <div class="cart-items">
                 {% for i in cart_items %}
                 <div class="cart-item" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e6e6e6; padding: 15px 0;">
@@ -955,34 +951,15 @@
                         <span style="font-size: 18px; font-weight: bold; color: #007bff;">₹{{ i.item_total }}</span>
                     </div>
 
-                 {% if discount %}
-                    <br>  <p>Discounted Price: ₹{{ discount }}</p>
-                 {% endif %}
+                
                     
                 </div>
                 {% endfor %}
+                {% if discount %}
+                <br>  <p>Discounted Price: ₹{{ discount }}</p>
+             {% endif %}
             </div>
-            {% comment %} <div class="input-group">
-                <form method="POST" action="{% url 'cart:apply_coupon' %}">
-                    {% csrf_token %}
-                    <div class="input-group">
-                        <input type="text" name="coupon_code" class="form-control" placeholder="Enter Coupon Code">
-                        <button type="submit" class="btn btn-primary">Apply Coupon</button>
-                    </div>
-                </form>
-                
-            </div> {% endcomment %}
-            
-            <!-- Total Section -->
-            {% comment %} {% if messages %}
-            <div class="alert alert-info">{{ messages }}</div>
-        {% endif %} {% endcomment %}
-{% comment %} 
-             {% if message %}
-              <div class="alert alert-danger" style='margin-top:10px;' role="alert">
-                  {{ message }}
-              </div>
-              {% endif %} {% endcomment %}
+           
               
             <div class="cart-total" style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #ddd;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -1241,7 +1218,14 @@ addressForm.addEventListener('submit', (e) => {
         },
         "theme": {
             "color": "#3399cc"
+        },
+        "modal": {
+        "ondismiss": function() {
+            // Redirect to the success page if the modal is closed without payment
+            const successUrl = "{% url 'cart:success_page' %}";
+            window.location.href = successUrl;
         }
+    }
          
     };
     var rzp1 = new Razorpay(options);
