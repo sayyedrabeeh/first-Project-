@@ -801,17 +801,9 @@
                     <h5 class="card-title text-center mb-4">Apply Coupon</h5>
 
                     <!-- Coupon form -->
-                    <form method="POST" action="{% url 'cart:apply_coupon' %}">
+                    {% comment %} <form method="POST" action="{% url 'cart:apply_coupon' %}">
                         {% csrf_token %}
-   {% comment %} {% if messages %}
-                        <div class="messages">
-                            {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }}">
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %} {% endcomment %}
+    
                     
                         <!-- Full-width input group for the coupon code -->
                         <div class="mb-4">
@@ -841,7 +833,42 @@
                          >
                              {% if coupon_code %}Remove Coupon{% else %}Apply Coupon{% endif %}
                          </button>
-                    </form>
+                    </form> {% endcomment %}
+
+                                     <!-- Coupon Form -->
+                  <form method="POST" action="{% url 'cart:apply_coupon' %}">
+                      {% csrf_token %}
+                      <div class="form-group">
+                          <label for="coupon_code">Coupon Code</label>
+                          <input 
+                              type="text" 
+                              id="coupon_code" 
+                              name="coupon_code" 
+                              class="form-control" 
+                              placeholder="Enter Coupon Code" 
+                              value="{{ coupon_code }}"
+                              {% if messages %}
+                             
+                              {% if coupon_code %}readonly{% endif %}
+                          >
+                          <div class="messages">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                      </div>
+                      <button 
+                          type="submit" 
+                          class="btn {% if coupon_code %}btn-danger{% else %}btn-primary{% endif %}" 
+                          name="{% if coupon_code %}remove_coupon{% else %}apply_coupon{% endif %}">
+                          {% if coupon_code %}Remove Coupon{% else %}Apply Coupon{% endif %}
+                      </button>
+                  </form>
+                  
+
                 </div>
             </div>
         </div>

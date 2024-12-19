@@ -12,6 +12,8 @@ from django.http import JsonResponse
 from cart.models import Cart,CartItem
 from products.models import Size,ProductSize
 from offers_coupons.models import Coupon,CouponUsage
+import os
+import uuid
 
 User = get_user_model()
 def admin_required(function):
@@ -184,20 +186,20 @@ def users(request):
 @never_cache
 @login_required(login_url='authentication:login')
 def profile(request):
-    user=request.user
-  
-  
-    if request.method=='POST' and request.FILES.get('profile_picture'):
-        profile_picture=request.FILES.get('profile_picture')
-        user.profile_image=profile_picture
+    user = request.user
+
+    if request.method == 'POST' and request.FILES.get('profile_picture'):
+        profile_picture = request.FILES.get('profile_picture')
+        ext = os.path.splitext(profile_picture.name)[1]  
+        new_filename = f"profile_{uuid.uuid4().hex[:10]}{ext}"
+        profile_picture.name = new_filename
+        user.profile_image = profile_picture
         user.save()
         return redirect('user_profile:profile')
-    
-    context={
-         'user': user
+    context = {
+        'user': user,
     }
-    return render(request,'user_profile/profile.html',context)
-
+    return render(request, 'user_profile/profile.html', context)
 @never_cache
 @login_required(login_url='authentication:login')
 def editprofile(request):

@@ -273,82 +273,146 @@ def success_page(request):
     return render(request, 'cart/succes.html')
 
 def apply_coupon(request):
-    try:
-        cart = Cart.objects.get(user=request.user)
-    except Cart.DoesNotExist:
-        messages.error(request, "Your cart is empty.")
-        return redirect('cart:cart_view')
+     try:
+         cart = Cart.objects.get(user=request.user)
+     except Cart.DoesNotExist:
+         messages.error(request, "Your cart is empty.")
+         return redirect('cart:cart_view')
+     cart_items = []
+     total_price = 0
+     for item in cart.items.all():
+         product_size = get_object_or_404(ProductSize, product=item.product, size=item.size)
+         item_total = item.product.price * item.quantity
+         total_price += item_total
+         cart_items.append({
+             'product': item.product,
+             'quantity': item.quantity,
+             'size': item.size,
+             'item_total': item_total,
+         })
+     if request.method == 'POST':
+         coupon_code = request.POST.get('coupon_code', '').strip()
+         if 'remove_coupon' in request.POST:   
+           CouponUsage.objects.filter(user=request.user, coupon__code=coupon_code).delete()
+           coupon_code = None
+           messages.success(request,"removed")
+         elif coupon_code:
+             try:
+                 coupon = Coupon.objects.get(code=coupon_code)
+                 if not coupon.is_active():
+                     messages.error(request, "This coupon is either inactive or has reached its usage limit.")
+                     context={
+                         'cart_items': cart_items,
+                         'addresses': Address.objects.filter(user=request.user, status='listed'),
+                         'total_price':total_price,
+                     }
+                     return render(request, 'cart/payment.html',context)
+                 elif CouponUsage.objects.filter(user=request.user, coupon=coupon).exists():
+                     messages.error(request, "You have already applied this coupon.")
+                     context={
+                         'cart_items': cart_items,
+                         'addresses': Address.objects.filter(user=request.user, status='listed'),
+                         'total_price':total_price,
+                     }
+                     return render(request, 'cart/payment.html',context)
+                 else:
+                     order = Order.objects.filter(user=request.user)
+                     discount = coupon.discount
+                     if total_price >= 1000:
+                         # order.coupon_code = coupon.code
+                         # order.save()
+                         CouponUsage.objects.create(user=request.user, coupon=coupon)
+              
+                         messages.success(request, f"Coupon applied! You saved ₹{discount}.")
+                     else:
+                         messages.error(
+                             request,
+                             f"This coupon is valid only for orders above ₹1000."
+                         )
+                         context={
+                         'cart_items': cart_items,
+                         'addresses': Address.objects.filter(user=request.user, status='listed'),
+                         'total_price':total_price,
+                         }
+                         return render(request, 'cart/payment.html',context)
+             except Coupon.DoesNotExist:
+                 messages.error(request, "Invalid coupon code.")
+                 context={
+                         'cart_items': cart_items,
+                         'addresses': Address.objects.filter(user=request.user, status='listed'),
+                         'total_price':total_price,
+                     }
+                 return render(request, 'cart/payment.html',context)
+         else:
+             messages.error(request, "Please enter a coupon code.")
+     return render(request, 'cart/payment.html', {
+         'cart_items': cart_items,
+         'total_price': total_price - (discount if 'discount' in locals() else 0),
+         'discount': discount if 'discount' in locals() else 0,
+         'addresses': Address.objects.filter(user=request.user, status='listed'),
+         'coupon_code':coupon_code
+     })
 
-    cart_items = []
-    total_price = 0
-    for item in cart.items.all():
-        product_size = get_object_or_404(ProductSize, product=item.product, size=item.size)
-        item_total = item.product.price * item.quantity
-        total_price += item_total
-        cart_items.append({
-            'product': item.product,
-            'quantity': item.quantity,
-            'size': item.size,
-            'item_total': item_total,
-        })
 
-    if request.method == 'POST':
-        coupon_code = request.POST.get('coupon_code', '').strip()
-       
-        if coupon_code:
-            try:
-                coupon = Coupon.objects.get(code=coupon_code)
-                if not coupon.is_active():
-                    messages.error(request, "This coupon is either inactive or has reached its usage limit.")
-                    context={
-                        'cart_items': cart_items,
-                        'addresses': Address.objects.filter(user=request.user, status='listed'),
-                        'total_price':total_price,
-                    }
-                    return render(request, 'cart/payment.html',context)
-                elif CouponUsage.objects.filter(user=request.user, coupon=coupon).exists():
-                    messages.error(request, "You have already applied this coupon.")
-                    context={
-                        'cart_items': cart_items,
-                        'addresses': Address.objects.filter(user=request.user, status='listed'),
-                        'total_price':total_price,
-                    }
-                    return render(request, 'cart/payment.html',context)
-                else:
-                    order = Order.objects.filter(user=request.user, payment_status='Pending').first()
-                    discount = coupon.discount
-                    if total_price >= 1000:
-                        order.coupon_code = coupon.code
-                        order.save()
-                        CouponUsage.objects.create(user=request.user, coupon=coupon)
-               
-                        messages.success(request, f"Coupon applied! You saved ₹{discount}.")
-                    else:
-                        messages.error(
-                            request,
-                            f"This coupon is valid only for orders above ₹1000."
-                        )
-                        context={
-                        'cart_items': cart_items,
-                        'addresses': Address.objects.filter(user=request.user, status='listed'),
-                        'total_price':total_price,
-                        }
-                        return render(request, 'cart/payment.html',context)
-            except Coupon.DoesNotExist:
-                messages.error(request, "Invalid coupon code.")
-                context={
-                        'cart_items': cart_items,
-                        'addresses': Address.objects.filter(user=request.user, status='listed'),
-                        'total_price':total_price,
-                    }
-                return render(request, 'cart/payment.html',context)
-        else:
-            messages.error(request, "Please enter a coupon code.")
+# def apply_coupon(request):
+#     # Fetch the user's cart
+#     try:
+#         cart = Cart.objects.get(user=request.user)
+#     except Cart.DoesNotExist:
+#         messages.error(request, "Your cart is empty.")
+#         return redirect('cart:cart_view')
 
-    return render(request, 'cart/payment.html', {
-        'cart_items': cart_items,
-        'total_price': total_price - (discount if 'discount' in locals() else 0),
-        'discount': discount if 'discount' in locals() else 0,
-        'addresses': Address.objects.filter(user=request.user, status='listed'),
-        'coupon_code':coupon_code
-    })
+#     # Calculate cart items and total price
+#     cart_items = []
+#     total_price = 0
+#     for item in cart.items.all():
+#         product_size = get_object_or_404(ProductSize, product=item.product, size=item.size)
+#         item_total = item.product.price * item.quantity
+#         total_price += item_total
+#         cart_items.append({
+#             'product': item.product,
+#             'quantity': item.quantity,
+#             'size': item.size,
+#             'item_total': item_total,
+#         })
+
+#     discount = 0  # Default discount
+#     coupon_code = request.POST.get('coupon_code', '').strip() if request.method == 'POST' else None
+
+#     if coupon_code:  # Handle apply/remove coupon
+#         if request.POST.get('remove_coupon'):  # If "Remove Coupon" button was clicked
+#             # Remove coupon usage
+#             CouponUsage.objects.filter(user=request.user, coupon__code=coupon_code).delete()
+#             messages.success(request, "Coupon removed successfully.")
+#             coupon_code = None  # Clear the coupon code
+#         else:  # If "Apply Coupon" button was clicked
+#             try:
+#                 # Fetch the coupon
+#                 coupon = Coupon.objects.get(code=coupon_code)
+
+#                 # Validate coupon status
+#                 if not coupon.is_active():
+#                     messages.error(request, "This coupon is either inactive or has reached its usage limit.")
+#                 elif CouponUsage.objects.filter(user=request.user, coupon=coupon).exists():
+#                     messages.error(request, "You have already applied this coupon.")
+#                 elif total_price < 1000:  # Minimum order value condition
+#                     messages.error(request, f"This coupon is valid only for orders above ₹1000.")
+#                 else:
+                   
+#                     discount = coupon.discount
+#                     CouponUsage.objects.create(user=request.user, coupon=coupon)
+#                     messages.success(request, f"Coupon applied! You saved ₹{discount}.")
+#             except Coupon.DoesNotExist:
+#                 messages.error(request, "Invalid coupon code.")
+#     elif request.method == 'POST':  
+#         messages.error(request, "Please enter a coupon code.")
+
+#     # Render the payment page with updated context
+#     context = {
+#         'cart_items': cart_items,
+#         'total_price': total_price - discount,
+#         'discount': discount,
+#         'addresses': Address.objects.filter(user=request.user, status='listed'),
+#         'coupon_code': coupon_code if discount > 0 else '',
+#     }
+#     return render(request, 'cart/payment.html', context)

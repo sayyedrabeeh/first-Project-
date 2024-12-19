@@ -17,7 +17,7 @@ import razorpay
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from xhtml2pdf import pisa
-
+from decimal import Decimal
 
 def admin_required(function):
     return user_passes_test(
@@ -25,15 +25,17 @@ def admin_required(function):
         login_url='misc_pages:custom_404')(function)
  
 
-@never_cache
+# @never_cache
 
 @login_required(login_url='authentication:login')
 def order(request, order_id=None):
+   
     if order_id:
        
         selected_order = get_object_or_404(Order, order_id=order_id, user=request.user)
         order_items = OrderItem.objects.filter(order=selected_order)
-     
+        total_subtotal_price = sum(item.subtotal_price for item in order_items)
+        cupon_discount = Decimal(total_subtotal_price) - Decimal(selected_order.total_price)
         total_price_in_paise = int(selected_order.total_price * 100)
         coupon = None
         if selected_order.coupon_code:
@@ -57,11 +59,12 @@ def order(request, order_id=None):
             'razorpay_key': settings.RAZORPAY_KEY_ID,
             'total_price_in_paise': total_price_in_paise,
             'order_id': selected_order.order_id,
-            'coupon':coupon
+            'coupon':coupon,
+            'cupon_discount':cupon_discount
         }
 
     else:
-        
+        print("KKKKKK")
         orders = Order.objects.filter(user=request.user).order_by('-created_at')
         order_items = None
 
@@ -157,44 +160,25 @@ def order_admin(request, order_id=None):
         }
     return render(request, 'order/order_admin.html', context)
 
-@never_cache
-
-
-
+# @never_cache
 
 def update_orderitem_status(request, orderitem_id):
     if request.method != 'POST':
         return JsonResponse({'error': 'Invalid request method'}, status=400)
-
     try:
-      
-
-        # Use the correct field name 'orderitem_id'
         order_item = get_object_or_404(OrderItem, orderitem_id=orderitem_id)
-     
         new_status = request.POST.get('status')
-      
         return_reason = request.POST.get('return_reason', '')   
         order_item.status = new_status
         order_item.save()
-     
-
         if not new_status:
             return JsonResponse({'error': 'Status is required'}, status=400)
-
         transaction_instance = None  
-
-        
         with transaction.atomic():
             if order_item.status == "Cancelled":
-      
-
                 product_size = get_object_or_404(ProductSize, product=order_item.product, size=order_item.size)
                 product_size.stock += order_item.quantity
                 product_size.save()
-                
-
-                
                 wallet, _ = Wallet.objects.get_or_create(user=order_item.order.user)
                 if wallet.add_funds(order_item.subtotal_price):
                     transaction_id = str(uuid.uuid4().hex[:8])
@@ -205,21 +189,13 @@ def update_orderitem_status(request, orderitem_id):
                         status='Completed',
                         transaction_type='Credit'
                     )
-                   
                     messages.success(request, f"Order item cancelled and ${order_item.price} added to your wallet!")
                 else:
-                 
                     return JsonResponse({'error': 'Failed to add funds to wallet'}, status=500)
-
             elif new_status == "Requested Return":
-               
- 
                 product_size = get_object_or_404(ProductSize, product=order_item.product, size=order_item.size)
                 product_size.stock += order_item.quantity
                 product_size.save()
-                
-
-               
                 wallet, _ = Wallet.objects.get_or_create(user=order_item.order.user)
                 if wallet.add_funds(order_item.price):
                     transaction_id = str(uuid.uuid4().hex[:8])
@@ -230,81 +206,42 @@ def update_orderitem_status(request, orderitem_id):
                         status='Completed',
                         transaction_type='Credit'
                     )
-                     
                     messages.success(request, f"Order item returned and ${order_item.price} credited to your wallet!")
                 else:
-                   
-                    return JsonResponse({'error': 'Failed to add funds to wallet for return'}, status=500)
-
-            
+                    return JsonResponse({'error': 'Failed to add funds to wallet for return'}, status=500) 
             order_item.status = new_status
             order_item.save()
-           
-
-          
             if transaction_instance:
-               
-
-             
-             return redirect('order:orders') 
-
+                messages.success(request, 'Order item status updated successfully.')
+            else:
+               messages.error(request, 'Failed to update order item status.')
+            return redirect('order:orders')
     except Exception as e:
-       
-      
-
-      
         return JsonResponse({'error': f'Something went wrong: {str(e)}'}, status=500)
+    
 @never_cache
 # @admin_required
-
 def update_return_orderitem_status(request, orderitem_id):
     if request.method == 'POST':
         try:
-            
-         
-             
             order_item = get_object_or_404(OrderItem, orderitem_id=orderitem_id)
             new_status = request.POST.get('status')
             return_reason = request.POST.get('return_reason', '')   
-            
-            
-           
-
             if not new_status:
                 return JsonResponse({'error': 'Status is required'}, status=400)
-
             if new_status == "Approve Returned":
-                
                 product_size = get_object_or_404(ProductSize, product=order_item.product, size=order_item.size)
                 product_size.stock += order_item.quantity
                 product_size.save()
-
-               
                 order_item.return_reason = return_reason
                 order_item.save()
-
-            
             order_item.status = new_status
             order_item.save()
-
-           
             response = JsonResponse({'message': 'Order item return request updated successfully!', 'new_status': new_status}, status=200)
-
-          
-  
-             
             return response
-
         except Exception as e:
-           
-            
-
-           
             return JsonResponse({'error': f'Something went wrong: {str(e)}'}, status=500)
-
     else:
-         
         return JsonResponse({'error': 'Invalid request method'}, status=400)
-    
     
     
