@@ -228,19 +228,20 @@
                 <i class="bi bi-bag-fill"></i>
                 <span>Products</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="{% url 'offers_coupons:coupon' %}" class="nav-item">
                 <i class="bi bi-credit-card-fill"></i>
                 <span>Coupons</span>
             </a>
-            <a href="#" class="nav-item">
-                <i class="bi bi-gift-fill"></i>
-                <span>Offers</span>
-            </a>
-            <a href="#" class="nav-item">
+             
+            <a href="{% url 'products:catogery' %}" class="nav-item">
                 <i class="bi bi-grid-fill"></i>
                 <span>Categories</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="{% url 'products:Type' %}" class="nav-item">
+                <i class="bi bi-grid-fill"></i>
+                <span>Type</span>
+            </a>
+            <a href="{% url 'reports:reports'%}" class="nav-item">
                 <i class="bi bi-file-earmark-text"></i>
                 <span>Report</span>
             </a>

@@ -234,7 +234,7 @@
         }
         .ad{
             margin-left: 220px;
-            width: 1060px;
+            width: 920px;
         }
         .text-gray {
             color: gray;
@@ -350,7 +350,7 @@
                         <i class="bi bi-house-door-fill"></i>
                         <span>home</span>
                     </a>
-                    <a href="#" class="nav-item">
+                    <a href="{% url 'reports:admin_dashboard' %}" class="nav-item">
                         <i class="bi bi-bar-chart-fill"></i>
                         <span>Dashboard</span>
                     </a>
@@ -358,7 +358,7 @@
                         <i class="bi bi-people-fill"></i>
                         <span>Customers</span>
                     </a>
-                    <a href="#" class="nav-item">
+                    <a href="{% url 'orders:order' %}" class="nav-item">
                         <i class="bi bi-cart-fill"></i>
                         <span>Orders</span>
                     </a>
@@ -374,6 +374,10 @@
                     <a href="{% url 'products:catogery' %}" class="nav-item">
                         <i class="bi bi-grid-fill"></i>
                         <span>Categories</span>
+                    </a>
+                    <a href="{% url 'products:Type' %}" class="nav-item">
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Type</span>
                     </a>
                     <a href="{% url 'reports:sales_report'%}" class="nav-item">
                         <i class="bi bi-file-earmark-text"></i>
