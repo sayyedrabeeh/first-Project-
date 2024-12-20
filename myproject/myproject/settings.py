@@ -21,9 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('DJANGO_SECRET_KEY', default='fallback-secret-key')
 
 # Debug mode
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*','nanoride.zapto.org','www.nanoride.zapto.org']
+
+DOMAIN = 'nanoride.zapto.org'
 
 # Application definition
 INSTALLED_APPS = [
@@ -91,7 +93,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': config('DB_NAME', default='nanoride_latest'),
         'USER': config('DB_USER', default='postgres'),
-        'PASSWORD': config('DB_PASSWORD', default=''),
+        'PASSWORD': config('DB_PASSWORD', default='920728'),
         'HOST': config('DB_HOST', default='localhost'),
         'PORT': config('DB_PORT', default='5432'),
     }
