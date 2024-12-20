@@ -156,7 +156,6 @@ def payment(request):
         shipping_address_id = request.POST.get('selected_address')
         payment_method = request.POST.get('payment_method')
         coupon_code = request.POST.get('coupon_code', '').strip()
-        print('coupon_code:',coupon_code)
         discount = request.POST.get('discount')
     
         message = ""
@@ -222,9 +221,9 @@ def payment(request):
                    if not CouponUsage.objects.filter(user=request.user, coupon=coupon).exists():
                        CouponUsage.objects.create(user=request.user, coupon=coupon)
                    else:
-                       print("Coupon already used by this user.")
+                      messages.error(request, "Coupon already used by this user.")
                except Coupon.DoesNotExist:
-                   print("Invalid coupon code.")
+                          messages.error(request, "Invalid coupon code.")
         if payment_method == 'razorpay':
             discounted_price = total_price - discount
 
