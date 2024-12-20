@@ -575,7 +575,7 @@
                             <label for="Type" class="form-label">Type</label>
                             <select class="form-select" id="Type" name="Type" required>
                                 <option value="" disabled selected>Select Type</option>
-                                {% for category in Types %}
+                                {% for category in types %}
                                     <option style='color:black;' value="{{ category.id }}">{{ category.category }}</option>
                                 {% endfor %}
                             </select>

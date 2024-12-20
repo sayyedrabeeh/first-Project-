@@ -194,7 +194,10 @@ def catogery(request):
                 offer=offer
             )
             catogeryimage = request.FILES.get('catogeryimage')
-            
+            if catogeryimage:
+               catogery.image = catogeryimage
+               catogery.save()
+           
           
             messages.success(request, "Category added successfully!")
             return redirect('products:catogery')
