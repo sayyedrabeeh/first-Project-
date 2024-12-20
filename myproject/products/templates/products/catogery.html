@@ -369,6 +369,10 @@
                         <i class="bi bi-grid-fill"></i>
                         <span>Categories</span>
                     </a>
+                    <a href="{% url 'products:Type'%}" class="nav-item">
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Types</span>
+                    </a>
                     <a href="{% url 'reports:sales_report'%}" class="nav-item">
                         <i class="bi bi-file-earmark-text"></i>
                         <span>Report</span>
@@ -387,7 +391,7 @@
         
             <div class="container mt-4 ad">
                 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-                    <h3>Categories</h3>
+                    <h3 style='color:#fff;'>Categories</h3>
                     <button class="btn btn-outline-primary mt-2"style=' margin-right:-110px;'  data-bs-toggle="modal" data-bs-target="#createModal">Create New</button>
                 </div>
         
@@ -419,6 +423,7 @@
                     </div>
         
                     <!-- Table -->
+                 
                     <div class="container mt-4" style="width: 110%;">
                         <div class="table-responsive">
                             <table class="table table-dark table-hover align-middle">
@@ -433,6 +438,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% if messages %}
+                                    <div>
+                                        {% for message in messages %}
+                                        <p style="padding: 10px; border-radius: 4px; margin-bottom: 10px; 
+                                                  {% if message.tags == 'error' %}
+                                                      background-color: #f8d7da; color: #721c24;
+                                                  {% elif message.tags == 'success' %}
+                                                      background-color: #d4edda; color: #155724;
+                                                  {% endif %}">
+                                            {{ message }}
+                                        </p>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
                                     {% for i in categories %}
                                     <tr>
                                         <td class="text-center">
@@ -501,12 +520,12 @@
                     </div>
                     
 
-
+                 
 
 
         <div id="createModal" class="modal {% if modal_open %}show{% endif %}" tabindex="-1" role="dialog" 
                 style="display: {% if modal_open %}block{% else %}none{% endif %};" 
-                aria-labelledby="createModalLabel" aria-hidden="true">
+                aria-labelledby="createModalLabel" aria-hidden="true">  
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">

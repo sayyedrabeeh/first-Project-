@@ -167,9 +167,9 @@ def catogery(request):
     action=request.POST.get('action')
     if request.method=='POST':
         if action =='add':
-            brand_name=request.POST.get('brand_name')
-            offer=request.POST.get('offer',0)
-            status=request.POST.get('status','True')
+            brand_name=request.POST.get('brand_name').strip()
+            offer=request.POST.get('offer',0).strip()
+            status=request.POST.get('status','True').strip()
             if not brand_name:
                 messages.error(request, "Brand name is required.")
                 return redirect('products:catogery')
@@ -182,8 +182,8 @@ def catogery(request):
                     offer = 0   
                 else:
                     offer = Decimal(offer)
-                if offer < 0 or offer > 100:
-                    raise ValueError("Offer must be between 0 and 100.")
+                if offer < 0 or offer > 80:
+                    raise ValueError("Offer must be between 0 and 80.")
             except (InvalidOperation, ValueError) as e:
                 messages.error(request, f"Invalid offer: {e}")
                 return redirect('products:catogery')
@@ -200,17 +200,41 @@ def catogery(request):
             return redirect('products:catogery')
         elif action=='edit'  :
         
-            catogery_id=request.POST.get('catogery_id')
-            catogery=get_object_or_404(Categories,id=catogery_id)
-            catogery.brand_name=request.POST.get('brand_name')
-            catogery.offer=request.POST.get('offer')
-            catogery.active=request.POST.get('active','True')
-            catogery.save()
+            category_id = request.POST.get('catogery_id')
+            category_obj = get_object_or_404(Categories, id=category_id)
+            brand_name = request.POST.get('brand_name', '').strip()
+            offer = request.POST.get('offer', '').strip()
+            active = request.POST.get('active', 'True').strip()
             image = request.FILES.get('image')
+    
+            # Validation
+            if not brand_name:
+                messages.error(request, "Category name is required.")
+                return redirect('products:catogery')
+    
+            if Categories.objects.filter(brand_name__iexact=brand_name).exclude(id=category_id).exists():
+
+                messages.error(request, "A type with this category name already exists.")
+                return redirect('products:catogery')
+    
+            try:
+                offer = Decimal(offer) if offer else 0
+                if offer < 0 or offer > 80:
+                    raise ValueError("Offer must be between 0 and 80.")
+            except (InvalidOperation, ValueError) as e:
+                messages.error(request, f"Invalid offer: {e}")
+                return redirect('products:catogery')
+    
+        
+            category_obj.brand_name = brand_name
+            category_obj.offer = offer
+            category_obj.active = active
+    
             if image:
-                catogery.image.save(image.name, image)
-                catogery.save()
-          
+                category_obj.image.save(image.name, image)
+    
+            category_obj.save()
+            messages.success(request, "Category updated successfully!")
             return redirect('products:catogery')
         elif action =='toggle':
             catogery_id=request.POST.get('catogery_id')
@@ -246,9 +270,9 @@ def Type(request):
     action=request.POST.get('action')
     if request.method=='POST':
         if action =='add':
-            category=request.POST.get('category')
-            offer=request.POST.get('offer')
-            status=request.POST.get('status','True')
+            category = request.POST.get('category', '').strip()
+            offer = request.POST.get('offer', '').strip()
+            status = request.POST.get('status', 'True').strip()
                
             if not category:
                 messages.error(request, "Category name is required.")
@@ -263,8 +287,8 @@ def Type(request):
                     offer = 0   
                 else:
                     offer = Decimal(offer)
-                if offer < 0 or offer > 100:
-                    raise ValueError("Offer must be between 0 and 100.")
+                if offer < 0 or offer > 80:
+                    raise ValueError("Offer must be between 0 and 80.")
             except (InvalidOperation, ValueError) as e:
                 messages.error(request, f"Invalid offer: {e}")
                 return redirect('products:catogery')
@@ -276,23 +300,47 @@ def Type(request):
                 offer=offer
             )
             catogeryimage = request.FILES.get('catogeryimage')
-          
+            if catogeryimage:
+                catogery.image.save(catogeryimage.name, catogeryimage)
+                catogery.save()        
            
             messages.success(request, "Category added successfully!")
             return redirect('products:Type')
-        elif action=='edit'  :
-           
-            catogery_id=request.POST.get('catogery_id')
-            catogery=get_object_or_404(Types,id=catogery_id)
-            catogery.category=request.POST.get('category')
-            catogery.offer=request.POST.get('offer')
-            catogery.active=request.POST.get('active','True')
-            catogery.save()
+        elif action == 'edit':
+            category_id = request.POST.get('catogery_id')
+            category_obj = get_object_or_404(Types, id=category_id)
+            category = request.POST.get('category', '').strip()
+            offer = request.POST.get('offer', '').strip()
+            active = request.POST.get('active', 'True').strip()
             image = request.FILES.get('image')
+    
+            # Validation
+            if not category:
+                messages.error(request, "Category name is required.")
+                return redirect('products:Type')
+    
+            if Types.objects.filter(category__iexact=category).exclude(id=category_id).exists():
+                messages.error(request, "A type with this category name already exists.")
+                return redirect('products:Type')
+    
+            try:
+                offer = Decimal(offer) if offer else 0
+                if offer < 0 or offer > 80:
+                    raise ValueError("Offer must be between 0 and 80.")
+            except (InvalidOperation, ValueError) as e:
+                messages.error(request, f"Invalid offer: {e}")
+                return redirect('products:Type')
+    
+            # Update Category
+            category_obj.category = category
+            category_obj.offer = offer
+            category_obj.active = active
+    
             if image:
-                catogery.image.save(image.name, image)
-                catogery.save()
-              
+                category_obj.image.save(image.name, image)
+    
+            category_obj.save()
+            messages.success(request, "Category updated successfully!")
             return redirect('products:Type')
         elif action =='toggle':
             catogery_id=request.POST.get('catogery_id')
@@ -304,13 +352,17 @@ def Type(request):
                 catogery.status='listed'
             catogery.save()
         return redirect('products:Type')
+    
     error_message = None
     modal_open = False
     search_query = request.GET.get('search', '')
     categories = Types.objects.all()
     if search_query:
-        categories = categories.filter(brand_name__icontains=search_query)
-    sort_field = request.GET.get('sort', '-id')   
+        categories = categories.filter(category__icontains=search_query)
+    sort_field = request.GET.get('sort', '-id')
+    valid_sort_fields = ['id', '-id', 'category', '-category', 'offer', '-offer', 'status', '-status']
+    if sort_field not in valid_sort_fields:
+        sort_field = '-id'   
     categories = categories.order_by(sort_field)
     paginator = Paginator(categories, 5)  
     page_number = request.GET.get('page')
@@ -323,6 +375,10 @@ def Type(request):
         'sort_field': sort_field,
     }
     return render(request, 'products/Type.html', context)
+
+
+
+
 
 @login_required(login_url='authentication:login')    
 def wishlist(request, action, product_id=None):
@@ -354,13 +410,20 @@ def wishlist(request, action, product_id=None):
   
 @never_cache
 @admin_required 
+
 def products_admin(request):
-    if request.method =='POST':
-        action=request.POST.get('action')
-        if action =='add':
-            product_name=request.POST.get('product_name')
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        # Add a new product
+        if action == 'add':
+            product_name = request.POST.get('product_name')
             size_data = request.POST.getlist('size')
- 
+           
+            if not size_data:
+                messages.error(request, "Please select at least one size.")
+                return redirect('products:products_admin')
+
             try:
                 price = Decimal(request.POST.get('price', '0'))  
             except InvalidOperation:
@@ -370,36 +433,44 @@ def products_admin(request):
                 offer = Decimal(request.POST.get('offer', '0'))   
             except InvalidOperation:
                 offer = Decimal('0')
+                
             description = request.POST.get('description', '').strip()
             category_id = request.POST.get('category')
             Type_id = request.POST.get('Type')
             category = Categories.objects.get(id=category_id) if category_id else None
             Type = Types.objects.get(id=Type_id) if Type_id else None
+            
+            # Create the product
             product = Product.objects.create(
-              name=product_name,
-              description=description,
-              original_price=price,
-              offer=offer,
-              category=category,
-              Types=Type,
-          )
+                name=product_name,
+                description=description,
+                original_price=price,
+                offer=offer,
+                category=category,
+                Types=Type,
+            )
+
             for size in size_data:
-               size_stock = request.POST.get(f'stock_{size}')
-               if size_stock:
-                  try:
-                      size_obj, created = Size.objects.get_or_create(name=size)
-                      ProductSize.objects.create(product=product, size=size_obj, stock=int(size_stock))
-                  except Size.DoesNotExist:
-                      messages.error(request, f"Size '{size}' does not exist.")
-                  except ValueError:
-                      messages.error(request, f"Invalid stock value for size '{size}'.")            
+                size_stock = request.POST.get(f'stock_{size}')
+                if size_stock:
+                    try:
+                        size_obj, created = Size.objects.get_or_create(name=size)
+                        ProductSize.objects.create(product=product, size=size_obj, stock=int(size_stock))
+                    except Size.DoesNotExist:
+                        messages.error(request, f"Size '{size}' does not exist.")
+                    except ValueError:
+                        messages.error(request, f"Invalid stock value for size '{size}'.")            
+
             cropped_images_data = request.POST.get('cropped_images')
             if cropped_images_data:
-               cropped_images = json.loads(cropped_images_data)
-               for image_data in cropped_images:
-                   image_content = ContentFile(base64.b64decode(image_data.split(",")[1]), name='product_image')
-                   ProductImage.objects.create(product=product, image=image_content)
+                cropped_images = json.loads(cropped_images_data)
+                for image_data in cropped_images:
+                    image_content = ContentFile(base64.b64decode(image_data.split(",")[1]), name='product_image')
+                    ProductImage.objects.create(product=product, image=image_content)
+
             return redirect('products:products_admin')
+
+        # Edit a product
         elif action == "edit":
             product_id = request.POST.get("product_id")
             product = get_object_or_404(Product, id=product_id)
@@ -410,6 +481,10 @@ def products_admin(request):
             product.offer = Decimal(request.POST.get("offer", 0))
             product.description = request.POST.get("description", "").strip()
             product.save()
+            if request.FILES.get('image'):
+                 product_image = request.FILES['image']
+                 product.image = product_image  
+                 product.save()
             sizes = ["XS", "S", "M", "L", "XL"]
             for size in sizes:
                 size_stock = request.POST.get(f'stock_{size}')
@@ -423,29 +498,58 @@ def products_admin(request):
                         messages.error(request, f"Size '{size}' does not exist.")
                     except ValueError:
                         messages.error(request, f"Invalid stock value for size '{size}'.")
+            
             messages.success(request, "Product updated successfully!")
             return redirect("products:products_admin")
+        
+        # Toggle product status
         elif action == "toggle_status":
-                 product_id = request.POST.get("product_id")
-                 product = get_object_or_404(Product, id=product_id)
-                 product.status = "listed" if product.status == "dislisted" else "dislisted"
-                 product.save()
-                 messages.success(request, f"Product status changed to {product.status}!")
-                 return redirect("products:products_admin")
+            product_id = request.POST.get("product_id")
+            product = get_object_or_404(Product, id=product_id)
+            product.status = "listed" if product.status == "dislisted" else "dislisted"
+            product.save()
+            messages.success(request, f"Product status changed to {product.status}!")
+            return redirect("products:products_admin")
+    
+    # Pagination, Search, and Sorting
+    search_query = request.GET.get('search', '')
+    sort_by = request.GET.get('sort_by', 'name')   
+    sort_order = request.GET.get('sort_order', 'asc')   
+    
+    products = Product.objects.prefetch_related("category")
+    
+    if search_query:
+        products = products.filter(Q(name__icontains=search_query) | Q(description__icontains=search_query))
+    
+    if sort_by:
+        if sort_order == 'asc':
+            products = products.order_by(sort_by)
+        else:
+            products = products.order_by(f'-{sort_by}')
+    
+    # Pagination logic
+    paginator = Paginator(products, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Fetch categories, types, and sizes
     categories = Categories.objects.all().order_by("-id")
-    Type = Types.objects.all().order_by("-id")
-    products = Product.objects.prefetch_related("category").all().order_by("-id")
-    sizes = Size.objects.all()  
-    for product in products:
+    types = Types.objects.all().order_by("-id")
+    sizes = Size.objects.all()
+
+    for product in page_obj:
         product_sizes = ProductSize.objects.filter(product=product)
         total_stock = product_sizes.aggregate(Sum("stock"))["stock__sum"] or 0
         product.total_stock = total_stock
         product.size_stock = [{"size_name": ps.size.name, "stock": ps.stock} for ps in product_sizes]
-    context={
-        'categories':categories,
-        'Types':Type,
-        'products':products,
-        'sizes':sizes,
-        
+
+    context = {
+        'categories': categories,
+        'types': types,
+        'products': page_obj,   
+        'sizes': sizes,
+        'search_query': search_query,
+        'sort_by': sort_by,
+        'sort_order': sort_order,
     }
-    return render(request, 'products/products_admin.html',context)
+    return render(request, 'products/products_admin.html', context)

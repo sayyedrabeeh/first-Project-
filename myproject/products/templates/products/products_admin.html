@@ -9,6 +9,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
+
     <title>NanoRide Dashboard</title>
     <style>
         body {
@@ -235,7 +237,7 @@
         }
         .ad{
             margin-left: 220px;
-            width: 920px;
+            width: 1000px;
         }
         .text-gray {
             color: gray;
@@ -397,34 +399,34 @@
     
         <!-- Search and Filter Section -->
         <div class="row mb-3 g-3">
-            <!-- Search bar -->
+            <!-- Search and Sort Bar -->
             <div class="col-12 col-md-4">
-                <div class="input-group">
-                    <form method="get" class="input-group mb-3">
-                        <button type="button" class="btn btn-outline-secondary" onclick="clearSearch()">
-                            <i class="bi bi-x"></i>
-                        </button>
-                        <input type="text" name="search" value="{{ search_query }}" class="form-control" placeholder="Search">
-                        <button type="submit" class="btn btn-outline-secondary">Search</button>
-                    </form>
-                </div>
+                <form method="GET" class="input-group">
+                    <!-- Search Bar -->
+                    <input type="text" name="search" value="{{ search_query }}" placeholder="Search products..." class="form-control">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
             </div>
         
-            <!-- Sort Dropdown -->
-            <div class="col-12 col-md-8 d-flex align-items-center flex-wrap">
-                <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" style='margin-bottom:15px;' data-bs-toggle="dropdown" aria-expanded="false">Sort</button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="?search={{ search_query }}&sort=brand_name">Sort by Name</a></li>
-                        <li><a class="dropdown-item" href="?search={{ search_query }}&sort=-id">Sort by ID</a></li>
-                    </ul>
-                </div>
+            <div class="col-12 col-md-4">
+                <form method="GET" class="input-group">
+                    <!-- Sort Form -->
+                    <select name="sort_by" class="form-select">
+                        <option value="name" {% if sort_by == "name" %}selected{% endif %}>Name</option>
+                        <option value="price" {% if sort_by == "price" %}selected{% endif %}>Price</option>
+                        <option value="category" {% if sort_by == "category" %}selected{% endif %}>Category</option>
+                    </select>
+                    <select name="sort_order" class="form-select">
+                        <option value="asc" {% if sort_order == "asc" %}selected{% endif %}>Ascending</option>
+                        <option value="desc" {% if sort_order == "desc" %}selected{% endif %}>Descending</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Sort</button>
+                </form>
             </div>
         </div>
         
-
         <!-- Product Grid -->
-        <div class="container mt-4" style='width:110%;'>
+        <div class="container mt-4" style="width: 110%;">
             <div class="table-responsive">
                 <table class="table table-dark table-hover align-middle">
                     <thead class="bg-dark text-light">
@@ -441,6 +443,21 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% if messages %}
+                            <div class="alert alert-danger">
+                                <ul>
+                                    {% for message in messages %}
+                                        <li>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Toast container -->
+                        <div class="toast-container position-fixed top-0 end-0 p-3" id="toastContainer">
+                            <!-- Toast will appear here -->
+                        </div>
+        
                         {% for i in products %}
                         <tr>
                             <td class="text-center">
@@ -483,21 +500,44 @@
             </div>
         
             <!-- Pagination Controls -->
-            <div class="pagination-controls d-flex justify-content-between align-items-center mt-4">
-                <div>
-                    {{ products.start_index }}–{{ products.end_index }} of {{ products.paginator.count }}
+            <div class="pagination d-flex justify-content-center">
+                <ul class="pagination justify-content-center">
                     {% if products.has_previous %}
-                        <a href="?page={{ products.previous_page_number }}&search={{ search_query }}&sort={{ sort_field }}" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-chevron-left"></i>
-                        </a>
+                        <li class="page-item">
+                            <a href="?page=1&search={{ search_query }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}" class="page-link">
+                                <i class="bi bi-arrow-left-circle-fill"></i> First
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="?page={{ products.previous_page_number }}&search={{ search_query }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}" class="page-link">
+                                <i class="bi bi-chevron-left"></i> Previous
+                            </a>
+                        </li>
                     {% endif %}
+                    
+                    <!-- Current Page Information -->
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            Page {{ products.number }} of {{ products.paginator.num_pages }}
+                        </span>
+                    </li>
+            
                     {% if products.has_next %}
-                        <a href="?page={{ products.next_page_number }}&search={{ search_query }}&sort={{ sort_field }}" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-chevron-right"></i>
-                        </a>
+                        <li class="page-item">
+                            <a href="?page={{ products.next_page_number }}&search={{ search_query }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}" class="page-link">
+                                Next <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a href="?page={{ products.paginator.num_pages }}&search={{ search_query }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}" class="page-link">
+                                Last <i class="bi bi-arrow-right-circle-fill"></i>
+                            </a>
+                        </li>
                     {% endif %}
-                </div>
+                </ul>
             </div>
+            
+        </div>
         
     
     <div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="createProductModalLabel" aria-hidden="true">
@@ -512,7 +552,16 @@
                         <input type="hidden" name="action" value="add">
                         {% csrf_token %}
                         <!-- Brand Name -->
-                         
+                        {% if messages %}
+                        <div class="alert alert-danger">
+                          <ul>
+                            {% for message in messages %}
+                              <li>{{ message }}</li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      {% endif %}
+                      
                         <div class="mb-3">
                             <label for="category" class="form-label">Brand</label>
                             <select class="form-select" id="category" name="category" required>
@@ -550,6 +599,7 @@
                         <div class="mb-3">
                             <label for="productSizeCreate" class="form-label fw-bold">Size</label>
                             <div id="productSizeCreate" class="border rounded p-3">
+                                <fieldset required>
                                 <div class="row align-items-center mb-2">
                                     <div class="col-6">
                                         <div class="form-check">
@@ -605,20 +655,21 @@
                                         <input type="number" class="form-control" name="stock_XL" id="stock_XL" placeholder="Stock for XL" min="1" disabled>
                                     </div>
                                 </div>
+                            </fieldset>
                             </div>
                         </div>
                         
                         <input type="hidden" name="size_required" id="size_required" required>
                            <!-- Offer Input -->
                            <div class="mb-3">
-                               <label for="offerName" class="form-label">Offer Name</label>
-                               <input type="number" class="form-control" id="offerName" name="offer" placeholder="Enter offer name" min=0>
+                               <label for="offerName" class="form-label">Offer</label>
+                               <input type="number" class="form-control" id="offerName" name="offer" placeholder="Enter offer name" min='0' max='80' >
                            </div>
                            
                      <!-- Price -->
                      <div class="mb-3">
                          <label for="productPriceCreate" class="form-label">Price</label>
-                         <input type="number" class="form-control" id="productPriceCreate" name="price" required min="1" >
+                         <input type="number" class="form-control" id="productPriceCreate" name="price" required min="1" max='100000' >
                      </div>
                      
                         <!-- Stock -->
@@ -690,17 +741,17 @@
                         
                     </div>
 
+                     
                     <div class="mb-3">
                         <label for="Type{{ i.id }}" class="form-label">Type</label>
                         <select class="form-select" id="Type{{ i.id }}" name="Type" required>
-                            <option value="" disabled>Select Brand</option>
-                            {% for category in Types %}
-                            <option value="{{ category.id }}" {% if category.id == i.category.id %}selected{% endif %}>
-                                {{ category.brand_name }}
-                            </option>
-                        {% endfor %}
+                            <option value="" disabled>Select Type</option>
+                            {% for type in types %}  <!-- Change this to `type` instead of `category` -->
+                                <option value="{{ type.id }}" {% if type.id == i.Types.id %}selected{% endif %}>  <!-- Compare `type.id` with `i.Types.id` -->
+                                    {{ type.category }} <!-- Make sure this field exists in your `Types` model, or change to an appropriate field -->
+                                </option>
+                            {% endfor %}
                         </select>
-                        
                     </div>
 
                     <!-- Product Name -->
@@ -820,7 +871,12 @@
                         <label for="productDescription{{ i.id }}" class="form-label">Description</label>
                         <textarea class="form-control" id="productDescription{{ i.id }}" name="description" rows="3" required>{{ i.description }}</textarea>
                     </div>
-                     
+                     <!-- Image Input -->
+                   <div class="mb-3">
+                       <label for="productImage{{ i.id }}" class="form-label">Product Image</label>
+                       <input type="file" class="form-control" id="productImage{{ i.id }}" name="image" accept="image/*">
+                   </div>
+                   
                     <!-- Modal Footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -919,7 +975,66 @@
         function clearSearch() {
             window.location.href = "?search=";  
         }
+
+
+         
     </script>
+    
+    <script>
+        document.getElementById("createProductForm").addEventListener("submit", function(event) {
+            // Get all the checkboxes in the 'size' group
+            const sizeCheckboxes = document.querySelectorAll('input[name="size"]');
+            let isChecked = false;
+        
+            // Check if at least one checkbox is checked
+            sizeCheckboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    isChecked = true;
+                }
+            });
+        
+            // If no checkbox is checked, prevent form submission and show a toast
+            if (!isChecked) {
+                event.preventDefault();  // Prevent form submission
+        
+                // Create a toast message
+                const toastHTML = `
+                    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto">Error</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            Please select at least one size.
+                        </div>
+                    </div>
+                `;
+        
+                // Append the toast to the container
+                const toastContainer = document.getElementById("toastContainer");
+        
+                // Clear any previous toast messages
+                toastContainer.innerHTML = "";
+        
+                // Add the new toast message
+                toastContainer.innerHTML = toastHTML;
+        
+                // Set timeout to automatically remove the toast after 3 seconds
+                setTimeout(function() {
+                    toastContainer.innerHTML = ""; // Clear the toast after 3 seconds
+                }, 3000);
+        
+                // Optionally, scroll to the size section to prompt the user
+                const productSizeSection = document.getElementById("productSizeCreate");
+                if (productSizeSection) {
+                    productSizeSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+        
+    </script>
+    
+    
 </body>
 
 </html>

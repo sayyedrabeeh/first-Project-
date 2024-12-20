@@ -365,9 +365,13 @@
                         <span>Coupons</span>
                     </a>
                     
-                    <a href="#" class="nav-item">
+                    <a href="{% url 'products:catogery'%}" class="nav-item">
                         <i class="bi bi-grid-fill"></i>
                         <span>Categories</span>
+                    </a>
+                    <a href="" class="nav-item">
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Types</span>
                     </a>
                     <a href="{% url 'reports:sales_report'%}" class="nav-item">
                         <i class="bi bi-file-earmark-text"></i>
@@ -387,7 +391,7 @@
         
             <div class="container mt-4 ad">
                 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-                    <h3>Categories</h3>
+                    <h3 style ='color:#fff;'>Types</h3>
                     <button class="btn btn-outline-primary mt-2"style=' margin-right:-110px;'  data-bs-toggle="modal" data-bs-target="#createModal">Create New</button>
                 </div>
         
@@ -411,11 +415,18 @@
                             <div class="dropdown">
                                 <button class="btn btn-outline-secondary dropdown-toggle" style='margin-bottom:15px;' data-bs-toggle="dropdown" aria-expanded="false">Sort</button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="?search={{ search_query }}&sort=brand_name">Sort by Name</a></li>
-                                    <li><a class="dropdown-item" href="?search={{ search_query }}&sort=-id">Sort by ID</a></li>
+                                    <li><a class="dropdown-item" href="?search={{ search_query }}&sort=category">Sort by Category (A-Z)</a></li>
+                                    <li><a class="dropdown-item" href="?search={{ search_query }}&sort=-category">Sort by Category (Z-A)</a></li>
+                                    <li><a class="dropdown-item" href="?search={{ search_query }}&sort=offer">Sort by Offer (Low to High)</a></li>
+                                    <li><a class="dropdown-item" href="?search={{ search_query }}&sort=-offer">Sort by Offer (High to Low)</a></li>
+                                    <li><a class="dropdown-item" href="?search={{ search_query }}&sort=status">Sort by Status (A-Z)</a></li>
+                                    <li><a class="dropdown-item" href="?search={{ search_query }}&sort=-status">Sort by Status (Z-A)</a></li>
+                                    <li><a class="dropdown-item" href="?search={{ search_query }}&sort=id">Sort by ID (Low to High)</a></li>
+                                    <li><a class="dropdown-item" href="?search={{ search_query }}&sort=-id">Sort by ID (High to Low)</a></li>
                                 </ul>
                             </div>
                         </div>
+                        
                     </div>
         
                     <!-- Table -->
@@ -433,6 +444,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% if messages %}
+                                    <div>
+                                        {% for message in messages %}
+                                        <p style="padding: 10px; border-radius: 4px; margin-bottom: 10px; 
+                                                  {% if message.tags == 'error' %}
+                                                      background-color: #f8d7da; color: #721c24;
+                                                  {% elif message.tags == 'success' %}
+                                                      background-color: #d4edda; color: #155724;
+                                                  {% endif %}">
+                                            {{ message }}
+                                        </p>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
                                     {% for i in categories %}
                                     <tr>
                                         <td class="text-center">
@@ -502,15 +527,15 @@
                     
 
 
+                   
 
-
-        <div id="createModal" class="modal {% if modal_open %}show{% endif %}" tabindex="-1" role="dialog" 
+         <div id="createModal" class="modal {% if modal_open %}show{% endif %}" tabindex="-1" role="dialog" 
                 style="display: {% if modal_open %}block{% else %}none{% endif %};" 
-                aria-labelledby="createModalLabel" aria-hidden="true">
+                aria-labelledby="createModalLabel" aria-hidden="true">  
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="createModalLabel">Create New Category</h5>
+                        <h5 class="modal-title" id="createModalLabel">Create New Type</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -534,7 +559,7 @@
                             <input type="hidden" name="action" value="add">
                             <!-- Category Image Input -->
                             <div class="mb-3">
-                                <label for="createCategoryImage" class="form-label">Category Image</label>
+                                <label for="createCategoryImage" class="form-label">type Image</label>
                                 <input type="file" class="form-control" name='catogeryimage' id="createCategoryImage" accept="image/*" required>
                             </div>
                             <div id="previewContainer"></div> <!-- Container for image previews -->
@@ -542,7 +567,7 @@
                             <!-- Category Name Input -->
                              
                             <div class="mb-3">
-                                <label for="createCategoryName" class="form-label">Category Name</label>
+                                <label for="createCategoryName" class="form-label">type Name</label>
                                 <input type="text" class="form-control" name='category' id="createCategoryName" placeholder="Enter category name" required>
                             </div>
                             <div class="mb-3">
@@ -550,7 +575,7 @@
                                 <input type="number" class="form-control" name='offer' id="createCategoryName" placeholder="Enter offer price  ">
                             </div>
                             <div class="mb-3">
-                                <label for="createCategoryStatus" class="form-label">Category Status</label>
+                                <label for="createCategoryStatus" class="form-label">type Status</label>
                                 <select class="form-control" name="status" id="createCategoryStatus">
                                     <option value="True" selected>Active</option>
                                     <option value="False">Inactive</option>
@@ -576,7 +601,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel{{ i.id }}">Edit Category</h5>
+                <h5 class="modal-title" id="editModalLabel{{ i.id }}">Edit type</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -594,7 +619,7 @@
                     </div>
                      
                      <div class="mb-3">
-                        <label for="editCategoryName" class="form-label">Category Name</label>
+                        <label for="editCategoryName" class="form-label">Type Name</label>
                         <input type="text" class="form-control" id="editCategoryName" name="category" value="{{ i.category }}" required>
                     </div>
                      <div class="mb-3">
@@ -609,7 +634,7 @@
                         </select>
                     </div>
                      <div class="mb-3">
-                        <label for="editCategoryImage" class="form-label">Change Category Image</label>
+                        <label for="editCategoryImage" class="form-label">Change Type Image</label>
                         <input type="file" class="form-control" id="editCategoryImage" name="image" accept="image/*">
                     </div>
                     <div class="modal-footer">
