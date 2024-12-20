@@ -35,9 +35,10 @@ def order(request, order_id=None):
     if order_id:
        
         selected_order = get_object_or_404(Order, order_id=order_id, user=request.user)
-        print('selected_order:',selected_order)
-        print('payment:',selected_order.payment)
+ 
         order_items = OrderItem.objects.filter(order=selected_order)
+ 
+
         total_subtotal_price = sum(item.subtotal_price for item in order_items)
         cupon_discount = Decimal(total_subtotal_price) - Decimal(selected_order.total_price)
         total_price_in_paise = int(selected_order.total_price * 100)
@@ -48,7 +49,7 @@ def order(request, order_id=None):
         if 'updated_total_price' in request.GET:
           updated_total_price = request.GET.get('updated_total_price')
          
-        print('updated_total_price in or :',updated_total_price)
+  
         if updated_total_price:
             updated_total_price = Decimal(updated_total_price)
         else:
@@ -285,28 +286,28 @@ def update_orderitem_status(request, orderitem_id):
         order = order_item.order
         new_status = request.POST.get('status')
         total_price = Decimal(request.POST.get('total_price', '0'))
-        print('total_price:', total_price)
+       
         cupon_discount = Decimal(request.POST.get('cupon_discount', '0'))
-        print('cupon_discount:', cupon_discount)
+      
         subtotal_price = Decimal(request.POST.get('subtotal_price', '0'))
-        print('subtotal_price:', subtotal_price)
+       
         return_reason = request.POST.get('return_reason', '')
 
         totalprice = total_price + cupon_discount
-        print("totalprice:", totalprice)
+       
 
         if not new_status:
             return JsonResponse({'error': 'Status is required'}, status=400)
-
+         
         def update_stock_and_wallet(amount):
             product_size = get_object_or_404(ProductSize, product=order_item.product, size=order_item.size)
             product_size.stock += order_item.quantity
             product_size.save()
 
             wallet, _ = Wallet.objects.get_or_create(user=order.user)
-            print(f"Current wallet balance for user {order_item.order.user.username}: {wallet.balance}")
+            
             amount_to_add = subtotal_price - cupon_discount if order.coupon_used else subtotal_price
-            print(f"Trying to add amount: {amount_to_add}")
+            
             if wallet.add_funds(amount_to_add):
                 transaction_id = str(uuid.uuid4().hex[:8])
                 Transaction.objects.create(
@@ -320,33 +321,39 @@ def update_orderitem_status(request, orderitem_id):
             return False
 
         with transaction.atomic():
+            
             updated_total_price = total_price
             if new_status == "Cancelled":
                 updated_total_price = totalprice - subtotal_price
         
-                
-                if totalprice - subtotal_price >= 1000:
-                    if update_stock_and_wallet(subtotal_price):
-                        messages.success(request, f"Order item cancelled and ${subtotal_price} added to your wallet!")
+                order_items = OrderItem.objects.filter(order=order)   
+
+ 
+                if order.payment_status not in ["Pending", "Failure"]:
+                    if totalprice - subtotal_price >= 1000:
+                        if update_stock_and_wallet(subtotal_price):
+                            messages.success(request, f"Order item cancelled and ${subtotal_price} added to your wallet!")
+                        else:
+                            return JsonResponse({'error': 'Failed to add funds to wallet'}, status=500)
                     else:
-                        return JsonResponse({'error': 'Failed to add funds to wallet'}, status=500)
-                else:
+                         
+                        # adjusted_amount = subtotal_price - cupon_discount
+                        if order.coupon_used:
+                        
+                               adjusted_amount = subtotal_price
+                        else:
                      
-                    # adjusted_amount = subtotal_price - cupon_discount
-                    if order.coupon_used:
-                    
-                           adjusted_amount = subtotal_price
-                    else:
-                 
-                          adjusted_amount = subtotal_price - cupon_discount
-                    print(f"Adjusted amount for transaction: {adjusted_amount}")
-                    if update_stock_and_wallet(adjusted_amount):
-                        if not order.coupon_used:
-                            order.coupon_used = True
-                            order.save()
-                        messages.success(request, f"Order item cancelled and ${adjusted_amount} added to your wallet!")
-                    else:
-                        return JsonResponse({'error': 'Failed to add funds to wallet'}, status=500)
+                              adjusted_amount = subtotal_price - cupon_discount
+                       
+                        if update_stock_and_wallet(adjusted_amount):
+                            if not order.coupon_used:
+                                order.coupon_used = True
+                                order.save()
+                            messages.success(request, f"Order item cancelled and ${adjusted_amount} added to your wallet!")
+                        else:
+                            return JsonResponse({'error': 'Failed to add funds to wallet'}, status=500)
+                else:
+                   messages.error(request, "The order item cannot be cancelled as its status is either 'Pending' or 'Failure'.")        
             elif new_status == "Returned":
               
                 product_size = get_object_or_404(ProductSize, product=order_item.product, size=order_item.size)
@@ -369,7 +376,7 @@ def update_orderitem_status(request, orderitem_id):
             order_item.save()
 
         messages.success(request, 'Order item status updated successfully.')
-        print('updated_total_price in up:',updated_total_price)
+       
         return redirect(reverse('order:order_with_order', kwargs={'order_id': order.order_id}) + f'?updated_total_price={updated_total_price}')
 
     except Exception as e:
