@@ -21,11 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('DJANGO_SECRET_KEY', default='fallback-secret-key')
 
 # Debug mode
+<<<<<<< HEAD
 DEBUG = True
 
 ALLOWED_HOSTS = ['*','nanoride.zapto.org','www.nanoride.zapto.org']
 
 DOMAIN = 'nanoride.zapto.org'
+=======
+DEBUG = False
+ALLOWED_HOSTS = ['*','nanoride.zapto.org','www.nanoride.zapto.org']
+>>>>>>> edd2663 (Add media and product images)
 
 # Application definition
 INSTALLED_APPS = [
@@ -108,6 +113,10 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
 
+
+DOMAIN = 'nanoride.zapto.org'
+
+
 # Razorpay credentials
 RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID')
 RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET')
@@ -148,7 +157,7 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10 MB
 # Custom user model
 AUTH_USER_MODEL = 'user_profile.CustomUser'
 
-SITE_ID = 1
+SITE_ID = 2
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'

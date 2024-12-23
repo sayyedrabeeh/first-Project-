@@ -170,9 +170,7 @@ def order_admin(request, order_id=None):
         }
     return render(request, 'order/order_admin.html', context)
 
-# @never_cache
-
-# 
+ 
 
 def update_orderitem_status(request, orderitem_id):
     if request.method != 'POST':
