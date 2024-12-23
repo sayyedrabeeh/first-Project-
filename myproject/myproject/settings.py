@@ -21,16 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('DJANGO_SECRET_KEY', default='fallback-secret-key')
 
 # Debug mode
-<<<<<<< HEAD
 DEBUG = True
 
 ALLOWED_HOSTS = ['*','nanoride.zapto.org','www.nanoride.zapto.org']
 
 DOMAIN = 'nanoride.zapto.org'
-=======
-DEBUG = False
-ALLOWED_HOSTS = ['*','nanoride.zapto.org','www.nanoride.zapto.org']
->>>>>>> edd2663 (Add media and product images)
+
 
 # Application definition
 INSTALLED_APPS = [
