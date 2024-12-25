@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('DJANGO_SECRET_KEY', default='fallback-secret-key')
 
 # Debug mode
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*','nanoride.zapto.org','www.nanoride.zapto.org']
 
