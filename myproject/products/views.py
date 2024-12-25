@@ -16,7 +16,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from decimal import Decimal, InvalidOperation
-from .models import Wishlist 
+from .models import Wishlist
+from django.db.models import Q
+ 
 
 def admin_required(function):
     return user_passes_test(

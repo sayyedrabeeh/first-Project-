@@ -26,15 +26,17 @@ def coupon(request, coupon_id=None):
         discount = int(request.POST.get('discount'))   
    
         if coupon:
-            code = code
-            discount = discount
-            if discount > 200:
-                messages.error(request, "Coupon discount must be under ₹200.")
-                return redirect('offers_coupons:coupon')
-            else:
-                coupon(code=code,discount=discount)
-                coupon.save()
-                messages.success(request, f"Coupon {coupon.code} updated successfully.")
+      
+         coupon.code = code
+         coupon.discount = discount
+ 
+         if discount > 200:
+             messages.error(request, "Coupon discount must be under ₹200.")
+             return redirect('offers_coupons:coupon')
+         else:
+             coupon.save()  
+             messages.success(request, "Coupon updated successfully.")
+             return redirect('offers_coupons:coupon')
         else:
             if Coupon.objects.filter(code=code).exists():
                 messages.error(request, "Coupon code already exists.")

@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 
 
 User = get_user_model()
-# Create your models here.
+ 
 class Wallet(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
@@ -14,13 +14,13 @@ class Wallet(models.Model):
         return f"Wallet of {self.user.username}"
     
     def add_funds(self, amount):
-     print(f"Adding ${amount} to wallet for user {self.user}")
+ 
      if amount > 0:
         self.balance += amount
         self.save()  # Save the updated balance
-        print(f"New wallet balance: ${self.balance}")
+       
         return True
-     print("Amount is zero or negative, cannot add funds.")
+      
      return False
 
 
