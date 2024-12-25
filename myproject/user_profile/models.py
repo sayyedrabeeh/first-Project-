@@ -42,6 +42,9 @@ class Address(models.Model):
     is_default = models.BooleanField(default=False)
     status  =models.CharField(default='listed')
 
+    def full_address(self):
+        """Returns the full address as a single string."""
+        return f"{self.address_line1}, {self.address_line2 if self.address_line2 else ''}, {self.city}, {self.state} - {self.postal_code}, {self.country}"
 
     def __str__(self):
         return f"{self.address_line1}, {self.city}, {self.state} - {self.postal_code}"

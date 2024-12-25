@@ -2,7 +2,7 @@ from django.db import models
 from decimal import Decimal, InvalidOperation
 from django.conf import settings
 
-# Create your models here.
+
 class Categories(models.Model):
     brand_name = models.CharField(max_length=100)
     active = models.BooleanField(default=True)
@@ -45,7 +45,14 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2, default=0)  
     offer = models.DecimalField(max_digits=8, decimal_places=2, default=0) 
     category = models.ForeignKey('Categories', on_delete=models.CASCADE,null=True,blank=True )      
-    Types = models.ForeignKey('Types', on_delete=models.CASCADE,null=True,blank=True )      
+    Types = models.ForeignKey('Types', on_delete=models.CASCADE,null=True,blank=True ) 
+    applied_offer = models.CharField(max_length=50, null=True, blank=True, choices=[
+        ('category', 'Category Offer'),
+        ('type', 'Type Offer'),
+        ('product', 'Product Offer'),
+        ('none', 'No Offer')
+    ])
+         
     def __str__(self):
         return self.name
     
@@ -57,26 +64,50 @@ class Product(models.Model):
             discount = (self.offer / 100) * self.original_price
             return self.original_price - discount
         return self.original_price   
-
-    def save(self, *args, **kwargs):
-       """Override the save method to store the discounted price in the database."""
-       try:
-           
-           offer_value = Decimal(self.offer) if self.offer else Decimal(0)
-           original_price_value = Decimal(self.original_price) if self.original_price else Decimal(0)
-   
-           if offer_value > 0:
-               discount = (offer_value / Decimal(100)) * original_price_value
-               self.price = original_price_value - discount
-           else:
-               self.price = original_price_value
-   
-       except (ValueError, InvalidOperation):
-           self.price = Decimal('0.00')   
-   
-       super(Product, self).save(*args, **kwargs)
-
     
+    def max_offer(self):
+        """Returns the maximum offer between category, type, and product."""
+        category_offer = Decimal(self.category.offer) if self.category else Decimal(0)
+        type_offer = Decimal(self.Types.offer) if self.Types else Decimal(0)
+        product_offer = Decimal(self.offer) if self.offer else Decimal(0)
+
+        return max(category_offer, type_offer, product_offer)
+    def save(self, *args, **kwargs):
+        """Override the save method to store the discounted price in the database."""
+        try:
+            # Get the offers from category, type, and product
+            category_offer = Decimal(self.category.offer) if self.category else Decimal(0)
+            type_offer = Decimal(self.Types.offer) if self.Types else Decimal(0)
+            product_offer = Decimal(self.offer) if self.offer else Decimal(0)
+            
+          
+            max_offer = max(category_offer, type_offer, product_offer)
+            
+            
+            original_price_value = Decimal(self.original_price) if self.original_price else Decimal(0)
+            
+            if original_price_value > 0 and max_offer > 0:
+        
+                discount = (max_offer / Decimal(100)) * original_price_value
+                self.price = original_price_value - discount
+                
+                if max_offer == category_offer:
+                    self.applied_offer = 'category'
+                elif max_offer == type_offer:
+                    self.applied_offer = 'type'
+                elif max_offer == product_offer:
+                    self.applied_offer = 'product'
+            else:
+               
+                self.price = original_price_value
+                self.applied_offer = 'none'
+                
+        except (ValueError, InvalidOperation):
+          
+            self.price = Decimal('0.00')
+            self.applied_offer = 'none'
+ 
+        super(Product, self).save(*args, **kwargs)
     
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='additional_images', on_delete=models.CASCADE)

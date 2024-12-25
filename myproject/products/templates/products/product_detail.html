@@ -293,6 +293,55 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); /* Shadow with more intensity */
 }
 
+
+.toast-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    color: white;
+    max-width: 350px;
+    display: none;
+    z-index: 9999;
+    transition: all 0.5s ease;
+}
+
+/* Success message */
+.toast-message.success {
+    background: linear-gradient(145deg, #56ab2f, #a8e063); 
+    border-left: 6px solid #388e3c;
+}
+
+/* Error message */
+.toast-message.error {
+    background: linear-gradient(145deg, #f85032, #e73827);
+    border-left: 6px solid #d32f2f;
+}
+
+/* Info message */
+.toast-message.info {
+    background: linear-gradient(145deg, #1e3c72, #2a5298);
+    border-left: 6px solid #0288d1;
+}
+
+/* Warning message */
+.toast-message.warning {
+    background: linear-gradient(145deg, #ff6a00, #ee0979);
+    border-left: 6px solid #ff5722;
+}
+
+/* Close button */
+.toast-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+}
+
         </style>
     </head>
     
@@ -559,27 +608,31 @@
                         </div>
                     </div>
                 </div>
-    
+                <div id="toastMessage" class="toast-message">
+                    <span id="toastMsgText"></span>
+                    <span class="toast-close" onclick="closeToast()">x</span>
+                </div>
                 <!-- Product Details Section -->
                 <div class="col-md-6 col-lg-5 p-b-30">
                     <div class="p-r-50 p-t-5 p-lr-0-lg">
                         <h4 class="mtext-105 cl2 js-name-detail p-b-14">{{ product.name }}</h4>
-    
+                        
                                <!-- Original Price -->
                                <span class="mtext-106 cl2">
                                 ₹{{ product.original_price|floatformat:2 }}
                             </span>
                     
                             <!-- Check if there is an offer/discount -->
-                            {% if product.offer %}
-                                <div class="offer-info mt-3">
-                                    <span class="text-muted">Offer: </span>
-                                    <span class="fw-bold text-danger">{{ product.offer }}% OFF</span>
-                                </div>
+                            {% if product.max_offer %}
+                            <div class="offer-info mt-3">
+                                <span class="text-muted">Offer: </span>
+                                <span class="fw-bold text-danger">{{ product.max_offer }}% OFF</span>
+                            </div>
+                         
                     
                                 <!-- Display the discounted price -->
                                 <div class="mt-2">
-                                    <span class="text-success">Discounted Price: ₹{{ product.discounted_price|floatformat:2 }}</span>
+                                    <span class="text-success">Discounted Price: ₹{{ product.price }}</span>
                                 </div>
                             {% endif %}
 
@@ -679,9 +732,12 @@
                         <!-- Wishlist and Social Media Links -->
                         <div class="flex-w flex-m p-l-100 p-t-40 respon7">
                             <div class="flex-m bor9 p-r-10 m-r-11">
-                                <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist">
-                                    <i class="zmdi zmdi-favorite"></i>
-                                </a>
+                                <div class="block2-txt-child2 flex-r p-t-3">
+                                    <a href="{% url 'products:wishlist' 'add' product.id %}" class=" ">
+                                         <img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                                        {% comment %} <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON"> {% endcomment %}
+                                    </a>
+                                </div>
                             </div>
                             <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Facebook">
                                 <i class="fa fa-facebook"></i>
@@ -1442,6 +1498,39 @@
         const zooming = new Zooming();
         zooming.listen('.zoom-img');
     });
+
+
+
+       // Function to show the toast message
+       function showToast(message, type) {
+        const toastMessage = document.getElementById('toastMessage');
+        const toastText = document.getElementById('toastMsgText');
+
+        toastMessage.classList.add(type);  // Add the specific type class (success, error, etc.)
+        toastText.textContent = message;  // Set the message text
+
+        toastMessage.style.display = 'block';  // Show the toast message
+
+        // Auto hide after 5 seconds
+        setTimeout(() => {
+            toastMessage.style.display = 'none';
+            toastMessage.classList.remove(type);  // Remove the class after the message disappears
+        }, 3000);  // Adjust the duration as needed
+    }
+
+    // Close button action for the toast message
+    function closeToast() {
+        const toastMessage = document.getElementById('toastMessage');
+        toastMessage.style.display = 'none';
+    }
+
+    // Trigger toast only if Django messages are present
+    {% if messages %}
+        {% for message in messages %}
+            showToast("{{ message }}", "{{ message.tags }}");  // Show the message with its type (success, error)
+        {% endfor %}
+    {% endif %}
+
 </script>
     
 </script>

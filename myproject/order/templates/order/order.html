@@ -360,7 +360,9 @@ onmouseout="this.style.backgroundColor='transparent'; this.style.color='#007bff'
                             {% for item in order.items.all %}
                                 {% if forloop.first %}
                                     {% if item.product.additional_images.exists %}
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#orderModal{{ order.order_id }}">
                                         <img src="{{ item.product.additional_images.first.image.url }}" alt="Product Image" class="rounded" style="max-width: 200px; height: auto;">
+                                    </a>
                                     {% else %}
                                         <img src="{% static 'images/default-product-image.jpg' %}" alt="Default Product Image" class="img-fluid rounded" style="height: 100px; object-fit: cover;">
                                     {% endif %}
@@ -410,6 +412,50 @@ onmouseout="this.style.backgroundColor='transparent'; this.style.color='#007bff'
     </div>
 </div>
   {% endif %}
+
+
+  <!-- Modal for each order -->
+{% for order in orders %}
+<div class="modal fade" id="orderModal{{ order.order_id }}" tabindex="-1" aria-labelledby="orderModalLabel{{ order.order_id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderModalLabel{{ order.order_id }}">Order Details: #{{ order.tracking_number }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Display order details -->
+                <p><strong>Order ID:</strong> #{{ order.order_id }}</p>
+                <p><strong>Tracking Number:</strong> {{ order.tracking_number }}</p>
+                <p><strong>Customer Name:</strong> {{ order.user.username }}</p>
+                <p><strong>Payment Method:</strong> {{ order.payment_type }}</p>
+                <p><strong>Payment Status:</strong> {{ order.payment_status }}</p>
+                <p><strong>Created At:</strong> {{ order.created_at|date:"M d, Y" }}</p>
+
+                <h5>Order Items:</h5>
+                <ul>
+                    {% for item in order.items.all %}
+                        <li>{{ item.product.name }} - {{ item.quantity }} x {{ item.price }} = {{ item.subtotal_price }}</li>
+                    {% endfor %}
+                </ul>
+
+                <p><strong>Total Price:</strong> {{ order.total_price }}</p>
+
+                <!-- Display the full shipping address -->
+                {% if order.shipping_address %}
+                    <p><strong>Shipping Address:</strong> {{ order.shipping_address.full_address }}</p>
+                {% else %}
+                    <p><strong>Shipping Address:</strong> Not available</p>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>

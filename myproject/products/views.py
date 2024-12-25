@@ -473,15 +473,22 @@ def products_admin(request):
 
             return redirect('products:products_admin')
 
-        # Edit a product
         elif action == "edit":
             product_id = request.POST.get("product_id")
             product = get_object_or_404(Product, id=product_id)
             product.name = request.POST.get("name")
             product.category_id = request.POST.get("category")
             product.Types_id = request.POST.get("Type")
-            product.original_price = Decimal(request.POST.get("price", 0))
-            product.offer = Decimal(request.POST.get("offer", 0))
+            try:
+                   product.original_price = Decimal(request.POST.get("price", '0') or '0')
+            except InvalidOperation:
+                product.original_price = Decimal('0')
+        
+            try:
+                product.offer = Decimal(request.POST.get("offer", '0') or '0')
+            except InvalidOperation:
+                product.offer = Decimal('0')
+                   
             product.description = request.POST.get("description", "").strip()
             product.save()
             if request.FILES.get('image'):
@@ -505,7 +512,6 @@ def products_admin(request):
             messages.success(request, "Product updated successfully!")
             return redirect("products:products_admin")
         
-        # Toggle product status
         elif action == "toggle_status":
             product_id = request.POST.get("product_id")
             product = get_object_or_404(Product, id=product_id)
@@ -514,11 +520,9 @@ def products_admin(request):
             messages.success(request, f"Product status changed to {product.status}!")
             return redirect("products:products_admin")
     
-    # Pagination, Search, and Sorting
     search_query = request.GET.get('search', '')
     sort_by = request.GET.get('sort_by', 'name')   
     sort_order = request.GET.get('sort_order', 'asc')   
-    
     products = Product.objects.prefetch_related("category")
     
     if search_query:
@@ -530,15 +534,21 @@ def products_admin(request):
         else:
             products = products.order_by(f'-{sort_by}')
     
-    # Pagination logic
-    paginator = Paginator(products, 10)  # Show 10 products per page
+    paginator = Paginator(products, 5)   
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
-    # Fetch categories, types, and sizes
+  
     categories = Categories.objects.all().order_by("-id")
     types = Types.objects.all().order_by("-id")
     sizes = Size.objects.all()
+    sizes_stock = {}
+    for product in products:
+        sizes_stock[product.id] = {}
+        
+        # Fetch the ProductSize objects directly from ProductSize model
+        for product_size in ProductSize.objects.filter(product=product):
+            sizes_stock[product.id][product_size.size.name] = product_size.stock
 
     for product in page_obj:
         product_sizes = ProductSize.objects.filter(product=product)
@@ -551,6 +561,7 @@ def products_admin(request):
         'types': types,
         'products': page_obj,   
         'sizes': sizes,
+        'sizes_stock':sizes_stock,
         'search_query': search_query,
         'sort_by': sort_by,
         'sort_order': sort_order,

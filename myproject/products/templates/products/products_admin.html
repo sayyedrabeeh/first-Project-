@@ -10,7 +10,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
-
     <title>NanoRide Dashboard</title>
     <style>
         body {
@@ -28,23 +27,19 @@
             height: 100%;
             overflow: auto;
         }
-        
         .logo {
             width: 180px;
             margin-bottom: 30px; /* Matches with the dashboard sidebar */
         }
-        
         .profile img {
             width: 40px;
             border-radius: 50%;
             margin-right: 10px;
         }
-        
         .nav-menu {
             display: flex;
             flex-direction: column;
         }
-        
         .nav-item {
             display: flex;
             align-items: center;
@@ -54,39 +49,31 @@
             margin-bottom: 10px;
             transition: background-color 0.3s ease;
         }
-        
         .nav-item:hover, .nav-item.active {
             background-color: #f4f4f4;
             color:black;
             border-radius: 8px;
         }
-        
         .nav-icon {
             width: 24px;
             margin-right: 15px;
         }
-        
-        /* Responsive behavior */
         @media (max-width: 767px) {
             .sidebar {
                 width: 100%;
                 height: auto;
             }
         }
-        
         @media (min-width: 768px) {
             .sidebar {
                 width: 220px;
                 position: fixed;
             }
-        
             .main-content {
                 margin-left: 220px;
                 padding: 20px;
             }
         }
-        
-        /* Add these for the search bar */
         .search-bar {
             margin-bottom: 20px;
             display: flex;
@@ -96,50 +83,37 @@
             padding: 10px;
             border: 1px solid #ddd;
         }
-        
         .search-bar input {
             border: none;
             outline: none;
             width: 100%;
             padding: 0 10px;
         }
-        
         .search-icon {
             color: #888;
         }
-        
- 
         .sidebar::-webkit-scrollbar {
             width: 6px; /* Make scrollbar thinner */
         }
-
         .sidebar::-webkit-scrollbar-thumb {
             background-color: #555; /* Customize thumb color */
             border-radius: 10px;
         }
-
         .sidebar::-webkit-scrollbar-thumb:hover {
             background-color: #777; /* Change color on hover */
         }
-
         .sidebar::-webkit-scrollbar-track {
             background: transparent; /* Track background */
         }
-
- 
-  
         .nav-item i {
             font-size: 1.2rem;
         }
-
-        /* Responsive behavior */
         @media (max-width: 767px) {
             .sidebar {
                 width: 100%;
                 height: auto;
             }
         }
-
         @media (min-width: 768px) {
             .sidebar {
                 width: 220px;
@@ -151,8 +125,6 @@
                 padding: 20px;
             }
         }
-
-        /* Navbar styles */
         .navbar-custom {
             background-color: #fff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -161,7 +133,6 @@
         body {
             background-color: #f8f9fa;
         }
-
         .product-card {
             width: 100%;
             max-width: 280px;
@@ -174,62 +145,48 @@
             background-color: #fff;
             min-width:280px;
         }
-        
-        
-        
         .product-title {
             font-size: 1.1rem;
             margin-top: 10px;
         }
-        
         .product-model, .product-size, .product-stock, .product-description, .product-price {
             font-size: 0.9rem;
         }
-        
         .product-description {
             color: #666;
             font-size: 0.85rem;
             margin: 8px 0;
         }
-        
         .product-price {
             font-weight: bold;
             font-size: 1.1rem;
             color: #28a745;
         }
-       
         .pagination-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: 20px;
-        }  
-        
-
+        }
         .btn-action {
             margin-right: 5px;
         }
-
         .search-bar {
             margin-bottom: 20px;
         }
-
         .pagination-controls {
             margin-top: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         .pagination-controls select {
             width: auto;
         }
-
         .filter-buttons {
             display: flex;
             gap: 10px;
         }
-
         .filter-buttons button {
             display: flex;
             align-items: center;
@@ -250,7 +207,6 @@
             padding: 10px; /* Padding inside the container */
             border: 1px solid #ccc; /* Optional: border for visibility */
         }
-        
         #previewContainer img {
             width: 100%; /* Full width of the grid cell */
             height: 250px; /* Increased height for larger previews */
@@ -258,16 +214,13 @@
             border-radius: 8px; /* Slightly rounded corners */
             transition: transform 0.2s; /* Smooth hover effect */
         }
-        
         #previewContainer img:hover {
             transform: scale(1.1); /* Slightly enlarge image on hover */
         }
-        
         .custom-modal-dialog {
             max-width: 800px; /* Adjust the width as needed */
             width: 100%; /* Ensures it fills the container */
         }
-        
         @media (max-width: 768px) {
             .custom-modal-dialog {
                 max-width: 90%; /* Use a smaller width on mobile devices */
@@ -287,16 +240,13 @@
             padding: 10px 15px;
             transition: background-color 0.2s ease;
         }
-    
         .nav-menu .nav-item:hover {
             background-color: #f0f0f0; /* Change background on hover */
             color:black;
         }
-    
         .nav-menu .nav-item:focus {
             outline: none; /* Remove focus outline */
         }
-    
         .nav-menu .nav-item i {
             margin-right: 8px; /* Spacing between icon and text */
         }
@@ -315,25 +265,19 @@
             max-width: 80%;  /* Adjust the percentage to your desired width */
             width: 80%;      /* You can also use px, em, or % */
         }
-        
         .modal.fade.show {
             display: block !important;
             opacity: 1 !important;
-        }
-        
+        } 
     </style>
 </head>
-
 <body>
     <div class="dashboard-container">
         <div class="d-flex">
-            
             <button class="btn btn-primary d-lg-none m-2" type="button" data-toggle="collapse" data-target="#sidebarMenu"
                 aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="bi bi-list"></i>
             </button>
-
-            <!-- Sidebar -->
             <div class="collapse d-lg-block sidebar" id="sidebarMenu">
                 <h5 class="text-center">NANORIDE</h5>
                 <div class="sidebar-header text-center">
@@ -363,8 +307,7 @@
                     <a href="{% url 'offers_coupons:coupon'%}" class="nav-item">
                         <i class="bi bi-credit-card-fill"></i>
                         <span>Coupons</span>
-                    </a>
-                    
+                    </a>  
                     <a href="{% url 'products:catogery' %}" class="nav-item">
                         <i class="bi bi-grid-fill"></i>
                         <span>Categories</span>
@@ -379,14 +322,7 @@
                     </a>
                 </nav>
             </div>
-            
         </div>
-
-       
-
-
-    
-
     <div class="container ad">
         <div class="d-flex justify-content-between align-items-center my-4">
             <h1 style='color:#FFF;'>Products</h1>
@@ -394,23 +330,15 @@
                  <button class="btn"style='background-color:#fabd08 ;' data-bs-toggle="modal" data-bs-target="#createProductModal">Create</button>
             </div>
              </div>
-             
-       
-    
-        <!-- Search and Filter Section -->
         <div class="row mb-3 g-3">
-            <!-- Search and Sort Bar -->
             <div class="col-12 col-md-4">
                 <form method="GET" class="input-group">
-                    <!-- Search Bar -->
                     <input type="text" name="search" value="{{ search_query }}" placeholder="Search products..." class="form-control">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </form>
             </div>
-        
             <div class="col-12 col-md-4">
                 <form method="GET" class="input-group">
-                    <!-- Sort Form -->
                     <select name="sort_by" class="form-select">
                         <option value="name" {% if sort_by == "name" %}selected{% endif %}>Name</option>
                         <option value="price" {% if sort_by == "price" %}selected{% endif %}>Price</option>
@@ -424,8 +352,6 @@
                 </form>
             </div>
         </div>
-        
-        <!-- Product Grid -->
         <div class="container mt-4" style="width: 110%;">
             <div class="table-responsive">
                 <table class="table table-dark table-hover align-middle">
@@ -444,25 +370,34 @@
                     </thead>
                     <tbody>
                         {% if messages %}
-                            <div class="alert alert-danger">
-                                <ul>
-                                    {% for message in messages %}
-                                        <li>{{ message }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        {% endif %}
-                        
-                        <!-- Toast container -->
+                                    <div>
+                                        {% for message in messages %}
+                                        <p style="padding: 10px; border-radius: 4px; margin-bottom: 10px; 
+                                                  {% if message.tags == 'error' %}
+                                                      background-color: #f8d7da; color: #721c24;
+                                                  {% elif message.tags == 'success' %}
+                                                      background-color: #d4edda; color: #155724;
+                                                  {% endif %}">
+                                            {{ message }}
+                                        </p>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
                         <div class="toast-container position-fixed top-0 end-0 p-3" id="toastContainer">
-                            <!-- Toast will appear here -->
                         </div>
-        
                         {% for i in products %}
                         <tr>
-                            <td class="text-center">
+                            {% comment %} <td class="text-center">
                                 <img src="{{ i.additional_images.all.0.image.url }}" alt="Product Image" class="rounded" style="max-width: 200px; height: auto;">
+                            </td> {% endcomment %}
+
+                            <td class="text-center">
+     
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#productModal{{ i.id }}">
+                                    <img src="{{ i.additional_images.all.0.image.url }}" alt="Product Image" class="rounded" style="max-width: 200px; height: auto;">
+                                </a>
                             </td>
+
                             <td>{{ i.category.brand_name }}</td>
                             <td>{{ i.name }}</td>
                             <td>{{ i.offer }}%</td>
@@ -498,8 +433,6 @@
                     </tbody>
                 </table>
             </div>
-        
-            <!-- Pagination Controls -->
             <div class="pagination d-flex justify-content-center">
                 <ul class="pagination justify-content-center">
                     {% if products.has_previous %}
@@ -514,14 +447,11 @@
                             </a>
                         </li>
                     {% endif %}
-                    
-                    <!-- Current Page Information -->
                     <li class="page-item disabled">
                         <span class="page-link">
                             Page {{ products.number }} of {{ products.paginator.num_pages }}
                         </span>
                     </li>
-            
                     {% if products.has_next %}
                         <li class="page-item">
                             <a href="?page={{ products.next_page_number }}&search={{ search_query }}&sort_by={{ sort_by }}&sort_order={{ sort_order }}" class="page-link">
@@ -536,10 +466,54 @@
                     {% endif %}
                 </ul>
             </div>
-            
         </div>
+
+
+        {% for i in products %}
+        <div class="modal fade" id="productModal{{ i.id }}" tabindex="-1" aria-labelledby="productModalLabel{{ i.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="productModalLabel{{ i.id }}">{{ i.name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div><strong>Product Name:</strong> {{ i.name }}</div>
+                        <div><strong>Category:</strong> {{ i.category.brand_name }}</div>
+                        <div><strong>Type:</strong> {{ i.Types.category }}</div>
+                        <div><strong>Price:</strong> ₹{{ i.original_price }}</div>
+                        <h6>product Offer: {{ i.offer }}%</h6>
+                        <h6>Category Offer: {{ i.category.offer }}%</h6>
+                        <h6>Type Offer: {{ i.Types.offer }}%</h6>
+                        <h6>Applied Offer: {{ i.applied_offer }}offer</h6>
+                        <p><strong>Price After Discount: ₹{{ i.price }}</strong></p>
+                        <div><strong>Description:</strong> <span style="word-wrap: break-word; overflow-wrap: break-word;">{{ i.description }}</span></div>
+                        <div><strong>Status:</strong> {{ i.status }}</div>
+                        <div><strong>Sizes & Stock:</strong>
+                            <td>
+                                {% for product_size in i.productsize_set.all %}
+                                    <span class="d-block">{{ product_size.size.name }} - {{ product_size.stock }}</span>  <!-- Display size and stock -->
+                                {% endfor %}
+                            </td>
+                              <td>Total Stock :{{ i.total_stock }}</td>
+                        </div>
+                      
+                        <div><strong>Images:</strong>
+                            <div>
+                                {% for image in i.additional_images.all %}
+                                    <img src="{{ image.image.url }}" alt="{{ i.name }}" style="max-width: 100px; margin: 5px;">
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
         
-    
+
+        
+
     <div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="createProductModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered  custom-modal-width">
             <div class="modal-content">
@@ -551,7 +525,6 @@
                     <form method="POST" id="createProductForm"enctype="multipart/form-data" action={% url 'products:products_admin' %}>
                         <input type="hidden" name="action" value="add">
                         {% csrf_token %}
-                        <!-- Brand Name -->
                         {% if messages %}
                         <div class="alert alert-danger">
                           <ul>
@@ -561,7 +534,6 @@
                           </ul>
                         </div>
                       {% endif %}
-                      
                         <div class="mb-3">
                             <label for="category" class="form-label">Brand</label>
                             <select class="form-select" id="category" name="category" required>
@@ -580,7 +552,6 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <!-- Product Name -->
                         <div class="mb-3">
                             <label for="productNameCreate" class="form-label">Product Name</label>
                             <input 
@@ -593,9 +564,6 @@
                                 title="Spaces are not allowed at the beginning."
                             >
                         </div>
-                        
-                        
-                        <!-- Product Size -->
                         <div class="mb-3">
                             <label for="productSizeCreate" class="form-label fw-bold">Size</label>
                             <div id="productSizeCreate" class="border rounded p-3">
@@ -658,25 +626,15 @@
                             </fieldset>
                             </div>
                         </div>
-                        
                         <input type="hidden" name="size_required" id="size_required" required>
-                           <!-- Offer Input -->
                            <div class="mb-3">
                                <label for="offerName" class="form-label">Offer</label>
-                               <input type="number" class="form-control" id="offerName" name="offer" placeholder="Enter offer name" min='0' max='80' >
+                               <input type="number" class="form-control" id="offerName" name="offer" placeholder="Enter offer " min='0' max='80' >
                            </div>
-                           
-                     <!-- Price -->
                      <div class="mb-3">
                          <label for="productPriceCreate" class="form-label">Price</label>
-                         <input type="number" class="form-control" id="productPriceCreate" name="price" required min="1" max='100000' >
+                         <input type="number" class="form-control" id="productPriceCreate" name="price" required min="500" max='10000' >
                      </div>
-                     
-                        <!-- Stock -->
-                         
-                    
-                        <!-- Description -->
-                       <!-- Description -->
                        <div class="mb-3">
                         <label for="productDescriptionCreate" class="form-label">Description</label>
                         <textarea 
@@ -685,33 +643,25 @@
                             name="description" 
                             rows="6" 
                             required 
-                            minlength="500" 
-                           
+                            minlength="500"  
                             title="Description must be exactly 1000 characters."></textarea>
                         <small id="characterRequirement" class="text-muted">Minimum  1000 characters are required.</small>
                     </div>
-                        
-                    
-                        <!-- Images -->
                         <div class="mb-3">
                             <label for="productImagesCreate" class="form-label">Images</label>
                             <input type="file" class="form-control" id="productImagesCreate" name="images" accept="image/*" multiple required>
                         </div>
-                        <div id="previewContainer"></div> <!-- Container for image previews -->
+                        <div id="previewContainer"></div> 
                         <input type="hidden" name="cropped_images" id="croppedImages" />
-
-                        <!-- Modal Footer -->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-primary">Create</button>
                         </div>
                     </form>
-                    
-            </div>
+              </div>
         </div>
     </div>
 </div>
- <!-- Modal for Editing a Product -->
  {% for i in products %}
  <div class="modal fade" id="editProductModal{{ i.id }}" tabindex="-1" aria-labelledby="editProductModalLabel{{ i.id }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered custom-modal-width">
@@ -724,10 +674,7 @@
                 <form method="POST" enctype="multipart/form-data" action="{% url 'products:products_admin' %}">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="edit">
-                    {% comment %} <input type="hidden" name="product_id" value="{{ product.id }}"> {% endcomment %}
                     <input type="hidden" name="product_id" value="{{ i.id }}">
-
-                    <!-- Brand Name -->
                     <div class="mb-3">
                         <label for="brand{{ i.id }}" class="form-label">Brand</label>
                         <select class="form-select" id="brand{{ i.id }}" name="category" required>
@@ -738,32 +685,25 @@
                             </option>
                         {% endfor %}
                         </select>
-                        
                     </div>
-
-                     
                     <div class="mb-3">
                         <label for="Type{{ i.id }}" class="form-label">Type</label>
                         <select class="form-select" id="Type{{ i.id }}" name="Type" required>
                             <option value="" disabled>Select Type</option>
-                            {% for type in types %}  <!-- Change this to `type` instead of `category` -->
-                                <option value="{{ type.id }}" {% if type.id == i.Types.id %}selected{% endif %}>  <!-- Compare `type.id` with `i.Types.id` -->
+                            {% for type in types %}   
+                                <option value="{{ type.id }}" {% if type.id == i.Types.id %}selected{% endif %}>   
                                     {{ type.category }} <!-- Make sure this field exists in your `Types` model, or change to an appropriate field -->
                                 </option>
                             {% endfor %}
                         </select>
                     </div>
-
-                    <!-- Product Name -->
                     <div class="mb-3">
                         <label for="productName{{ i.id }}" class="form-label">Product Name</label>
                         <input type="text" class="form-control" id="productName{{ i.id }}" name="name" value="{{ i.name }}" required>
                     </div>
-
                     <div class="mb-3">
                         <label for="productSize{{ product.id }}" class="form-label">Sizes</label>
                         <div id="productSize{{ product.id }}" class="border rounded p-3">
-                            <!-- XS -->
                             <div class="row align-items-center mb-2">
                                 <div class="col-6">
                                     <div class="form-check">
@@ -773,14 +713,9 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
- 
                                     <input type="number" class="form-control" name="stock_XS" placeholder="Stock for XS" min='0'value="{{ sizes_stock.XS }}">
-  
- 
                                 </div>
                             </div>
-                    
-                            <!-- S -->
                             <div class="row align-items-center mb-2">
                                 <div class="col-6">
                                     <div class="form-check">
@@ -790,13 +725,9 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
- 
                                     <input type="number" class="form-control" name="stock_S" placeholder="Stock for S" min='0' value="{{ sizes_stock.S }}">
-  
                                 </div>
                             </div>
-                    
-                            <!-- M -->
                             <div class="row align-items-center mb-2">
                                 <div class="col-6">
                                     <div class="form-check">
@@ -806,14 +737,9 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
- 
                                     <input type="number" class="form-control" name="stock_M" placeholder="Stock for M" min='0' value="{{ sizes_stock.M }}">
-          
- 
                                 </div>
                             </div>
-                    
-                            <!-- L -->
                             <div class="row align-items-center mb-2">
                                 <div class="col-6">
                                     <div class="form-check">
@@ -823,14 +749,9 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
- 
                                     <input type="number" class="form-control" name="stock_L" placeholder="Stock for L" min='0' value="{{ sizes_stock.L }}">
-  
- 
                                 </div>
                             </div>
-                    
-                            <!-- XL -->
                             <div class="row align-items-center">
                                 <div class="col-6">
                                     <div class="form-check">
@@ -840,44 +761,27 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
- 
                                     <input type="number" class="form-control" name="stock_XL" placeholder="Stock for XL" min='0' value="{{ sizes_stock.XL }}">
-  
- 
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Offer Input -->
                          <div class="mb-3">
-                             <label for="offerName" class="form-label">Offer Name</label>
-                             <input type="number" class="form-control" id="offerName" name="offer"value="{{i.offer}}" placeholder="Enter offer " min=0>
+                             <label for="offerName" class="form-label">Offer </label>
+                             <input type="number" class="form-control" id="offerName" name="offer"value="{{i.offer}}" placeholder="Enter offer " min='0' max='80'>
                          </div>
-
-                    
-                    <!-- Price -->
                     <div class="mb-3">
                         <label for="productPrice{{ i.id }}" class="form-label">Price</label>
-  
-                        <input type="number" class="form-control" id="productPrice{{ i.id }}" name="price" min='1' value="{{ i.price }}" required>
- 
-     
- 
+                        <input type="number" class="form-control" id="productPrice{{ i.id }}" name="price" min='500' value="{{ i.original_price }}" required>
                     </div>
-
-                    <!-- Description -->
                     <div class="mb-3">
                         <label for="productDescription{{ i.id }}" class="form-label">Description</label>
                         <textarea class="form-control" id="productDescription{{ i.id }}" name="description" rows="3" required>{{ i.description }}</textarea>
                     </div>
-                     <!-- Image Input -->
                    <div class="mb-3">
                        <label for="productImage{{ i.id }}" class="form-label">Product Image</label>
                        <input type="file" class="form-control" id="productImage{{ i.id }}" name="image" accept="image/*">
                    </div>
-                   
-                    <!-- Modal Footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -888,17 +792,12 @@
     </div>
 </div>
 {% endfor %}
-    
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
-    <!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-
-
-
     <script>
         let croppers = [];   
         const previewContainer = document.getElementById('previewContainer');
@@ -957,47 +856,32 @@
             const stockField = document.getElementById(`stock_${checkbox.value}`);
             stockField.disabled = !checkbox.checked;
         }
-        
-
         function toggleStockField(checkbox) {
             const stockField = document.getElementById(`stock_${checkbox.value}`);
-            
             if (checkbox.checked) {
                 stockField.disabled = false;
                 stockField.setAttribute('required', 'true');
             } else {
                 stockField.disabled = true;
                 stockField.removeAttribute('required');
-                stockField.value = ''; // Clear value if checkbox is unchecked
+                stockField.value = ''; 
             }
         }
-
         function clearSearch() {
             window.location.href = "?search=";  
         }
-
-
-         
     </script>
-    
     <script>
         document.getElementById("createProductForm").addEventListener("submit", function(event) {
-            // Get all the checkboxes in the 'size' group
             const sizeCheckboxes = document.querySelectorAll('input[name="size"]');
             let isChecked = false;
-        
-            // Check if at least one checkbox is checked
             sizeCheckboxes.forEach(function(checkbox) {
                 if (checkbox.checked) {
                     isChecked = true;
                 }
             });
-        
-            // If no checkbox is checked, prevent form submission and show a toast
             if (!isChecked) {
-                event.preventDefault();  // Prevent form submission
-        
-                // Create a toast message
+                event.preventDefault();  
                 const toastHTML = `
                     <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
                         <div class="toast-header">
@@ -1009,32 +893,18 @@
                         </div>
                     </div>
                 `;
-        
-                // Append the toast to the container
                 const toastContainer = document.getElementById("toastContainer");
-        
-                // Clear any previous toast messages
                 toastContainer.innerHTML = "";
-        
-                // Add the new toast message
                 toastContainer.innerHTML = toastHTML;
-        
-                // Set timeout to automatically remove the toast after 3 seconds
                 setTimeout(function() {
-                    toastContainer.innerHTML = ""; // Clear the toast after 3 seconds
-                }, 3000);
-        
-                // Optionally, scroll to the size section to prompt the user
+                    toastContainer.innerHTML = "";  
+                }, 3000);    
                 const productSizeSection = document.getElementById("productSizeCreate");
                 if (productSizeSection) {
                     productSizeSection.scrollIntoView({ behavior: 'smooth' });
                 }
             }
         });
-        
     </script>
-    
-    
 </body>
-
 </html>
