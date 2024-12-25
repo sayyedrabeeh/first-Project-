@@ -1,3 +1,11 @@
+
+
+
+
+
+
+
+
 """
 Django settings for myproject project.
 
@@ -21,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('DJANGO_SECRET_KEY', default='fallback-secret-key')
 
 # Debug mode
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*','nanoride.zapto.org','www.nanoride.zapto.org']
 
